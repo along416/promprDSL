@@ -42,7 +42,7 @@ func promptdslParserInit() {
 		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 		"", "", "", "", "PROMPT", "PARAMS", "SYSTEM", "USER", "NOTE", "IN",
 		"OUTPUT", "FORMAT", "TYPE", "STRUCT", "SCHEMA", "ID", "STRING", "NUMBER",
-		"BOOL", "PIPE", "SEMI", "TEXT", "WS", "LINE_COMMENT", "BLOCK_COMMENT",
+		"BOOL", "PIPE", "SEMI", "WS", "LINE_COMMENT", "BLOCK_COMMENT",
 	}
 	staticData.RuleNames = []string{
 		"promptFile", "promptDef", "promptBlock", "paramBody", "paramSection",
@@ -53,7 +53,7 @@ func promptdslParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 41, 242, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 40, 242, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 1,
@@ -79,7 +79,7 @@ func promptdslParserInit() {
 		18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 3, 18, 236, 8, 18,
 		1, 19, 1, 19, 1, 20, 1, 20, 1, 20, 0, 0, 21, 0, 2, 4, 6, 8, 10, 12, 14,
 		16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 0, 4, 2, 0, 14, 14,
-		32, 33, 4, 0, 3, 3, 15, 15, 32, 34, 38, 39, 1, 0, 33, 35, 1, 0, 19, 20,
+		32, 33, 4, 0, 3, 3, 15, 15, 32, 34, 38, 38, 1, 0, 33, 35, 1, 0, 19, 20,
 		253, 0, 43, 1, 0, 0, 0, 2, 49, 1, 0, 0, 0, 4, 79, 1, 0, 0, 0, 6, 82, 1,
 		0, 0, 0, 8, 103, 1, 0, 0, 0, 10, 108, 1, 0, 0, 0, 12, 121, 1, 0, 0, 0,
 		14, 137, 1, 0, 0, 0, 16, 147, 1, 0, 0, 0, 18, 155, 1, 0, 0, 0, 20, 165,
@@ -233,10 +233,9 @@ const (
 	PromptDSLParserBOOL          = 35
 	PromptDSLParserPIPE          = 36
 	PromptDSLParserSEMI          = 37
-	PromptDSLParserTEXT          = 38
-	PromptDSLParserWS            = 39
-	PromptDSLParserLINE_COMMENT  = 40
-	PromptDSLParserBLOCK_COMMENT = 41
+	PromptDSLParserWS            = 38
+	PromptDSLParserLINE_COMMENT  = 39
+	PromptDSLParserBLOCK_COMMENT = 40
 )
 
 // PromptDSLParser rules.
@@ -3100,7 +3099,7 @@ func (p *PromptDSLParser) UserBlock() (localctx IUserBlockContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&854698539016) != 0) {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&304942725128) != 0) {
 		p.SetState(184)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
@@ -3108,7 +3107,7 @@ func (p *PromptDSLParser) UserBlock() (localctx IUserBlockContext) {
 		}
 
 		switch p.GetTokenStream().LA(1) {
-		case PromptDSLParserT__2, PromptDSLParserT__14, PromptDSLParserID, PromptDSLParserSTRING, PromptDSLParserNUMBER, PromptDSLParserTEXT, PromptDSLParserWS:
+		case PromptDSLParserT__2, PromptDSLParserT__14, PromptDSLParserID, PromptDSLParserSTRING, PromptDSLParserNUMBER, PromptDSLParserWS:
 			{
 				p.SetState(180)
 				p.TextBlock()
@@ -3849,8 +3848,6 @@ type ITextBlockContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllTEXT() []antlr.TerminalNode
-	TEXT(i int) antlr.TerminalNode
 	AllSTRING() []antlr.TerminalNode
 	STRING(i int) antlr.TerminalNode
 	AllID() []antlr.TerminalNode
@@ -3895,14 +3892,6 @@ func NewTextBlockContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 }
 
 func (s *TextBlockContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *TextBlockContext) AllTEXT() []antlr.TerminalNode {
-	return s.GetTokens(PromptDSLParserTEXT)
-}
-
-func (s *TextBlockContext) TEXT(i int) antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserTEXT, i)
-}
 
 func (s *TextBlockContext) AllSTRING() []antlr.TerminalNode {
 	return s.GetTokens(PromptDSLParserSTRING)
@@ -3987,7 +3976,7 @@ func (p *PromptDSLParser) TextBlock() (localctx ITextBlockContext) {
 				p.SetState(222)
 				_la = p.GetTokenStream().LA(1)
 
-				if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&854698524680) != 0) {
+				if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&304942710792) != 0) {
 					p.GetErrorHandler().RecoverInline(p)
 				} else {
 					p.GetErrorHandler().ReportMatch(p)
