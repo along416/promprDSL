@@ -25,7 +25,7 @@ func main() {
             question: string;
         }
         output: {
-            format: md | json;
+            format: json;
             type step struct {
                 Conditions: []string;
                 KnowledgePoint: string;
