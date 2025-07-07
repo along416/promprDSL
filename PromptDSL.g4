@@ -1,21 +1,21 @@
 grammar PromptDSL;
 
-@lexer::header {
-import "strings"
-}
+// @lexer::header {
+// import "strings"
+// }
 
-@lexer::members {
-func (l *PromptDSLLexer) isKeyword(text string) bool {
-    keywords := []string{"prompt", "params", "system", "user", "note"}
-    trimmed := strings.TrimSpace(text)
-    for _, kw := range keywords {
-        if trimmed == kw {
-            return true
-        }
-    }
-    return false
-}
-}
+//@lexer::members {
+//func (l *PromptDSLLexer) isKeyword(text string) bool {
+//    keywords := []string{"prompt", "params", "system", "user", "note"}
+//    trimmed := strings.TrimSpace(text)
+//    for _, kw := range keywords {
+//        if trimmed == kw {
+//            return true
+//        }
+//    }
+//    return false
+//}
+//}
 
 // 解析规则
 promptFile  : promptDef+ EOF ;
@@ -94,7 +94,7 @@ kvPair
 
 // 纯文本段
 textBlock
-    : (TEXT | STRING | '-' | ':' | ID | NUMBER | WS)+ 
+    : (STRING | '-' | ':' | ID | NUMBER | WS)+ 
     ;
 
 // 类型定义
@@ -140,20 +140,20 @@ PIPE    : '|';
 SEMI    : ';';
 
 // 特殊文本规则
-TEXT: ~[{}:";@[\]\r\n]+ {
-    switch l.GetText() {
-    case "prompt":
-        l.SetType(PromptDSLLexerPROMPT)
-    case "params":
-        l.SetType(PromptDSLLexerPARAMS)
-    case "system":
-        l.SetType(PromptDSLLexerSYSTEM)
-    case "user":
-        l.SetType(PromptDSLLexerUSER)
-    case "note":
-        l.SetType(PromptDSLLexerNOTE)
-    }
-};
+// TEXT: ~[{}:";@[\]\r\n]+ {
+//     switch l.GetText() {
+//     case "prompt":
+//         l.SetType(PromptDSLLexerPROMPT)
+//     case "params":
+//         l.SetType(PromptDSLLexerPARAMS)
+//     case "system":
+//         l.SetType(PromptDSLLexerSYSTEM)
+//     case "user":
+//         l.SetType(PromptDSLLexerUSER)
+//     case "note":
+//         l.SetType(PromptDSLLexerNOTE)
+//     }
+// };
 
 // 空白和注释
 WS      : [ \t\r\n]+ -> skip ;
