@@ -22,32 +22,92 @@ promptFile  : promptDef+ EOF ;
 
 promptDef   : PROMPT ID '{' promptBlock+ '}' ;
 
-promptBlock : 
-      PARAMS '{' paramBody '}' 
-    | SYSTEM '{' textBlock '}' 
-    | USER   '{' userBlock '}' 
-    | NOTE   '{' textBlock '}' ;
-
-// params 结构
-paramBody   : paramSection+ ;
-
-paramSection
-    : IN ':' '{' fieldDef+ '}'                 # inputSection
-    | OUTPUT ':' '{' outputBody '}'            # outputSection
-    | fieldDef                                 # singleField
+promptBlock 
+    : inputSection
+    | outputSection
+    | systemSection
+    | userSection
+    | noteSection 
+    | afterSection
+    ;
+//input
+inputSection
+    : 'input'  '{' fieldDef+ '}'
     ;
 
-outputBody
-    : (FORMAT ':' formatType)? 
-      (TYPE structDef)? 
-      (SCHEMA ':' '[' ID ']')? 
+//output
+outputSection
+    : 'output' '{' outputEntry+ '}'
+    ;
+outputEntry
+    : 'format' ':' formatType SEMI?
+    | 'type' ID 'struct' '{' fieldDef+ '}'        // type step struct { ... }
+    | 'schema' ':' type SEMI?
     ;
 
+systemSection
+    : 'system' '{' textLine+ '}'
+    ;
+
+userSection
+    : 'user' '{' textLine+ '}'
+    ;
+
+noteSection
+    : 'note' '{' textLine+ '}'
+    ;
+
+// after
+PLUS : '+';
+afterSection
+    : 'after' '{' afterContent '}'
+    ;
+
+afterContent
+    : afterEntry (PLUS afterEntry)*  // 支持多个 afterEntry 拼接
+    | JAVASCRIPT_BLOCK               // 直接支持 JavaScript 代码块
+    ;
+
+afterEntry
+    : STRING                         // 普通字符串
+    | JAVASCRIPT_BLOCK               // 支持反引号包裹的 JavaScript 代码块
+    ;
+
+// 反引号包裹的多行JS代码，支持任意字符（非贪婪）
+// 保证以反引号开始和结束，中间可换行
+JAVASCRIPT_BLOCK
+    : '`' (~'`' | '\r' | '\n')* '`'
+    ;
+//
+// afterSection
+//     : 'after' '{' afterEntry+ '}'
+//     ;
+
+// afterEntry
+//     : 'js' ':' JAVASCRIPT_BLOCK
+//     ;
+
+// // --- lexer ---
+// JAVASCRIPT_START : '`' -> pushMode(JS_MODE);  // 可选（不一定需要）
+  
+// mode JS_MODE;
+
+// JAVASCRIPT_BLOCK
+//     : ( ~'`' )* '`' -> popMode
+//     ;
 // 字段定义
 fieldDef
     : ID ':' type ( '=' value )? annotation* SEMI? 
     ;
-
+// 文本行支持    
+textLine
+    : STRING
+    | LINE_COMMENT
+    | paramPath
+    ;
+paramPath
+    : (ID | IN | OUTPUT) ('.' (ID | SCHEMA) )*
+    ;
 // 结构体定义
 structDef
     : ID STRUCT '{' fieldDef+ '}' 
@@ -71,39 +131,42 @@ arrayLiteral
     : '[' (STRING (',' STRING)*)? ']' 
     ;
 
-// 用户内容块
-userBlock
-    : (textBlock | classificationBlock | summarizationBlock | compilationBlock)+ 
-    ;
+// // 用户内容块
+// userBlock
+//     : (textBlock | classificationBlock | summarizationBlock | compilationBlock)+ 
+//     ;
 
-classificationBlock
-    : 'classification' '{' kvPair* '}' 
-    ;
+// classificationBlock
+//     : 'classification' '{' kvPair* '}' 
+//     ;
 
-summarizationBlock
-    : 'summarization' '{' kvPair* '}' 
-    ;
+// summarizationBlock
+//     : 'summarization' '{' kvPair* '}' 
+//     ;
 
-compilationBlock
-    : 'compilation' '{' kvPair* '}' 
-    ;
+// compilationBlock
+//     : 'compilation' '{' kvPair* '}' 
+//     ;
 
-kvPair
-    : ID ':' (STRING | ID | 'extra_hint') 
-    ;
+// kvPair
+//     : ID ':' (STRING | ID | 'extra_hint') 
+//     ;
 
 // 纯文本段
 textBlock
     : (STRING | '-' | ':' | ID | NUMBER | WS)+ 
     ;
 
+STRING_TYPE : 'string';
+FLOAT_TYPE  : 'float';
+INT_TYPE    : 'int';
 // 类型定义
 type
-    : 'string'
-    | 'float'
-    | 'int'
-    | '[' type ']' 
-    | ID
+    : STRING_TYPE
+    | FLOAT_TYPE
+    | INT_TYPE
+    | '[]' type   
+    | ID 
     ;
 
 value
@@ -130,6 +193,7 @@ FORMAT  : 'format';
 TYPE    : 'type';
 STRUCT  : 'struct';
 SCHEMA  : 'schema';
+AFTER   : 'after';
 
 // 基础 Tokens
 ID      : [a-zA-Z_][a-zA-Z_0-9]* ;

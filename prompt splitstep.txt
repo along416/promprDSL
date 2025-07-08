@@ -35,6 +35,4 @@ prompt SplitSolutionSteps{
         上一步结果可作为下一步条件。
     }
 
-
-
 }

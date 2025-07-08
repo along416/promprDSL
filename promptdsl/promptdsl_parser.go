@@ -32,132 +32,138 @@ var PromptDSLParserStaticData struct {
 func promptdslParserInit() {
 	staticData := &PromptDSLParserStaticData
 	staticData.LiteralNames = []string{
-		"", "'{'", "'}'", "':'", "'['", "']'", "'='", "'@'", "'('", "')'", "','",
-		"'classification'", "'summarization'", "'compilation'", "'extra_hint'",
-		"'-'", "'string'", "'float'", "'int'", "'md'", "'json'", "'prompt'",
-		"'params'", "'system'", "'user'", "'note'", "'in'", "'output'", "'format'",
-		"'type'", "'struct'", "'schema'", "", "", "", "", "'|'", "';'",
+		"", "'{'", "'}'", "'input'", "':'", "'='", "'.'", "'@'", "'('", "')'",
+		"','", "'['", "']'", "'-'", "'[]'", "'md'", "'json'", "'+'", "", "'string'",
+		"'float'", "'int'", "'prompt'", "'params'", "'system'", "'user'", "'note'",
+		"'in'", "'output'", "'format'", "'type'", "'struct'", "'schema'", "'after'",
+		"", "", "", "", "'|'", "';'",
 	}
 	staticData.SymbolicNames = []string{
 		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-		"", "", "", "", "PROMPT", "PARAMS", "SYSTEM", "USER", "NOTE", "IN",
-		"OUTPUT", "FORMAT", "TYPE", "STRUCT", "SCHEMA", "ID", "STRING", "NUMBER",
-		"BOOL", "PIPE", "SEMI", "WS", "LINE_COMMENT", "BLOCK_COMMENT",
+		"PLUS", "JAVASCRIPT_BLOCK", "STRING_TYPE", "FLOAT_TYPE", "INT_TYPE",
+		"PROMPT", "PARAMS", "SYSTEM", "USER", "NOTE", "IN", "OUTPUT", "FORMAT",
+		"TYPE", "STRUCT", "SCHEMA", "AFTER", "ID", "STRING", "NUMBER", "BOOL",
+		"PIPE", "SEMI", "WS", "LINE_COMMENT", "BLOCK_COMMENT",
 	}
 	staticData.RuleNames = []string{
-		"promptFile", "promptDef", "promptBlock", "paramBody", "paramSection",
-		"outputBody", "fieldDef", "structDef", "annotation", "annotationArgs",
-		"annotationValue", "arrayLiteral", "userBlock", "classificationBlock",
-		"summarizationBlock", "compilationBlock", "kvPair", "textBlock", "type",
-		"value", "formatType",
+		"promptFile", "promptDef", "promptBlock", "inputSection", "outputSection",
+		"outputEntry", "systemSection", "userSection", "noteSection", "afterSection",
+		"afterContent", "afterEntry", "fieldDef", "textLine", "paramPath", "structDef",
+		"annotation", "annotationArgs", "annotationValue", "arrayLiteral", "textBlock",
+		"type", "value", "formatType",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 40, 242, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 42, 251, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
-		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 1,
-		0, 4, 0, 44, 8, 0, 11, 0, 12, 0, 45, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,
-		4, 1, 54, 8, 1, 11, 1, 12, 1, 55, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1,
-		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
-		2, 1, 2, 1, 2, 1, 2, 3, 2, 80, 8, 2, 1, 3, 4, 3, 83, 8, 3, 11, 3, 12, 3,
-		84, 1, 4, 1, 4, 1, 4, 1, 4, 4, 4, 91, 8, 4, 11, 4, 12, 4, 92, 1, 4, 1,
-		4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 3, 4, 104, 8, 4, 1, 5, 1,
-		5, 1, 5, 3, 5, 109, 8, 5, 1, 5, 1, 5, 3, 5, 113, 8, 5, 1, 5, 1, 5, 1, 5,
-		1, 5, 1, 5, 3, 5, 120, 8, 5, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 3, 6, 127, 8,
-		6, 1, 6, 5, 6, 130, 8, 6, 10, 6, 12, 6, 133, 9, 6, 1, 6, 3, 6, 136, 8,
-		6, 1, 7, 1, 7, 1, 7, 1, 7, 4, 7, 142, 8, 7, 11, 7, 12, 7, 143, 1, 7, 1,
-		7, 1, 8, 1, 8, 1, 8, 1, 8, 3, 8, 152, 8, 8, 1, 8, 1, 8, 1, 9, 1, 9, 1,
-		9, 5, 9, 159, 8, 9, 10, 9, 12, 9, 162, 9, 9, 1, 10, 1, 10, 3, 10, 166,
-		8, 10, 1, 11, 1, 11, 1, 11, 1, 11, 5, 11, 172, 8, 11, 10, 11, 12, 11, 175,
-		9, 11, 3, 11, 177, 8, 11, 1, 11, 1, 11, 1, 12, 1, 12, 1, 12, 1, 12, 4,
-		12, 185, 8, 12, 11, 12, 12, 12, 186, 1, 13, 1, 13, 1, 13, 5, 13, 192, 8,
-		13, 10, 13, 12, 13, 195, 9, 13, 1, 13, 1, 13, 1, 14, 1, 14, 1, 14, 5, 14,
-		202, 8, 14, 10, 14, 12, 14, 205, 9, 14, 1, 14, 1, 14, 1, 15, 1, 15, 1,
-		15, 5, 15, 212, 8, 15, 10, 15, 12, 15, 215, 9, 15, 1, 15, 1, 15, 1, 16,
-		1, 16, 1, 16, 1, 16, 1, 17, 4, 17, 224, 8, 17, 11, 17, 12, 17, 225, 1,
-		18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 3, 18, 236, 8, 18,
-		1, 19, 1, 19, 1, 20, 1, 20, 1, 20, 0, 0, 21, 0, 2, 4, 6, 8, 10, 12, 14,
-		16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 0, 4, 2, 0, 14, 14,
-		32, 33, 4, 0, 3, 3, 15, 15, 32, 34, 38, 38, 1, 0, 33, 35, 1, 0, 19, 20,
-		253, 0, 43, 1, 0, 0, 0, 2, 49, 1, 0, 0, 0, 4, 79, 1, 0, 0, 0, 6, 82, 1,
-		0, 0, 0, 8, 103, 1, 0, 0, 0, 10, 108, 1, 0, 0, 0, 12, 121, 1, 0, 0, 0,
-		14, 137, 1, 0, 0, 0, 16, 147, 1, 0, 0, 0, 18, 155, 1, 0, 0, 0, 20, 165,
-		1, 0, 0, 0, 22, 167, 1, 0, 0, 0, 24, 184, 1, 0, 0, 0, 26, 188, 1, 0, 0,
-		0, 28, 198, 1, 0, 0, 0, 30, 208, 1, 0, 0, 0, 32, 218, 1, 0, 0, 0, 34, 223,
-		1, 0, 0, 0, 36, 235, 1, 0, 0, 0, 38, 237, 1, 0, 0, 0, 40, 239, 1, 0, 0,
-		0, 42, 44, 3, 2, 1, 0, 43, 42, 1, 0, 0, 0, 44, 45, 1, 0, 0, 0, 45, 43,
-		1, 0, 0, 0, 45, 46, 1, 0, 0, 0, 46, 47, 1, 0, 0, 0, 47, 48, 5, 0, 0, 1,
-		48, 1, 1, 0, 0, 0, 49, 50, 5, 21, 0, 0, 50, 51, 5, 32, 0, 0, 51, 53, 5,
-		1, 0, 0, 52, 54, 3, 4, 2, 0, 53, 52, 1, 0, 0, 0, 54, 55, 1, 0, 0, 0, 55,
-		53, 1, 0, 0, 0, 55, 56, 1, 0, 0, 0, 56, 57, 1, 0, 0, 0, 57, 58, 5, 2, 0,
-		0, 58, 3, 1, 0, 0, 0, 59, 60, 5, 22, 0, 0, 60, 61, 5, 1, 0, 0, 61, 62,
-		3, 6, 3, 0, 62, 63, 5, 2, 0, 0, 63, 80, 1, 0, 0, 0, 64, 65, 5, 23, 0, 0,
-		65, 66, 5, 1, 0, 0, 66, 67, 3, 34, 17, 0, 67, 68, 5, 2, 0, 0, 68, 80, 1,
-		0, 0, 0, 69, 70, 5, 24, 0, 0, 70, 71, 5, 1, 0, 0, 71, 72, 3, 24, 12, 0,
-		72, 73, 5, 2, 0, 0, 73, 80, 1, 0, 0, 0, 74, 75, 5, 25, 0, 0, 75, 76, 5,
-		1, 0, 0, 76, 77, 3, 34, 17, 0, 77, 78, 5, 2, 0, 0, 78, 80, 1, 0, 0, 0,
-		79, 59, 1, 0, 0, 0, 79, 64, 1, 0, 0, 0, 79, 69, 1, 0, 0, 0, 79, 74, 1,
-		0, 0, 0, 80, 5, 1, 0, 0, 0, 81, 83, 3, 8, 4, 0, 82, 81, 1, 0, 0, 0, 83,
-		84, 1, 0, 0, 0, 84, 82, 1, 0, 0, 0, 84, 85, 1, 0, 0, 0, 85, 7, 1, 0, 0,
-		0, 86, 87, 5, 26, 0, 0, 87, 88, 5, 3, 0, 0, 88, 90, 5, 1, 0, 0, 89, 91,
-		3, 12, 6, 0, 90, 89, 1, 0, 0, 0, 91, 92, 1, 0, 0, 0, 92, 90, 1, 0, 0, 0,
-		92, 93, 1, 0, 0, 0, 93, 94, 1, 0, 0, 0, 94, 95, 5, 2, 0, 0, 95, 104, 1,
-		0, 0, 0, 96, 97, 5, 27, 0, 0, 97, 98, 5, 3, 0, 0, 98, 99, 5, 1, 0, 0, 99,
-		100, 3, 10, 5, 0, 100, 101, 5, 2, 0, 0, 101, 104, 1, 0, 0, 0, 102, 104,
-		3, 12, 6, 0, 103, 86, 1, 0, 0, 0, 103, 96, 1, 0, 0, 0, 103, 102, 1, 0,
-		0, 0, 104, 9, 1, 0, 0, 0, 105, 106, 5, 28, 0, 0, 106, 107, 5, 3, 0, 0,
-		107, 109, 3, 40, 20, 0, 108, 105, 1, 0, 0, 0, 108, 109, 1, 0, 0, 0, 109,
-		112, 1, 0, 0, 0, 110, 111, 5, 29, 0, 0, 111, 113, 3, 14, 7, 0, 112, 110,
-		1, 0, 0, 0, 112, 113, 1, 0, 0, 0, 113, 119, 1, 0, 0, 0, 114, 115, 5, 31,
-		0, 0, 115, 116, 5, 3, 0, 0, 116, 117, 5, 4, 0, 0, 117, 118, 5, 32, 0, 0,
-		118, 120, 5, 5, 0, 0, 119, 114, 1, 0, 0, 0, 119, 120, 1, 0, 0, 0, 120,
-		11, 1, 0, 0, 0, 121, 122, 5, 32, 0, 0, 122, 123, 5, 3, 0, 0, 123, 126,
-		3, 36, 18, 0, 124, 125, 5, 6, 0, 0, 125, 127, 3, 38, 19, 0, 126, 124, 1,
-		0, 0, 0, 126, 127, 1, 0, 0, 0, 127, 131, 1, 0, 0, 0, 128, 130, 3, 16, 8,
-		0, 129, 128, 1, 0, 0, 0, 130, 133, 1, 0, 0, 0, 131, 129, 1, 0, 0, 0, 131,
-		132, 1, 0, 0, 0, 132, 135, 1, 0, 0, 0, 133, 131, 1, 0, 0, 0, 134, 136,
-		5, 37, 0, 0, 135, 134, 1, 0, 0, 0, 135, 136, 1, 0, 0, 0, 136, 13, 1, 0,
-		0, 0, 137, 138, 5, 32, 0, 0, 138, 139, 5, 30, 0, 0, 139, 141, 5, 1, 0,
-		0, 140, 142, 3, 12, 6, 0, 141, 140, 1, 0, 0, 0, 142, 143, 1, 0, 0, 0, 143,
-		141, 1, 0, 0, 0, 143, 144, 1, 0, 0, 0, 144, 145, 1, 0, 0, 0, 145, 146,
-		5, 2, 0, 0, 146, 15, 1, 0, 0, 0, 147, 148, 5, 7, 0, 0, 148, 149, 5, 32,
-		0, 0, 149, 151, 5, 8, 0, 0, 150, 152, 3, 18, 9, 0, 151, 150, 1, 0, 0, 0,
-		151, 152, 1, 0, 0, 0, 152, 153, 1, 0, 0, 0, 153, 154, 5, 9, 0, 0, 154,
-		17, 1, 0, 0, 0, 155, 160, 3, 20, 10, 0, 156, 157, 5, 10, 0, 0, 157, 159,
-		3, 20, 10, 0, 158, 156, 1, 0, 0, 0, 159, 162, 1, 0, 0, 0, 160, 158, 1,
-		0, 0, 0, 160, 161, 1, 0, 0, 0, 161, 19, 1, 0, 0, 0, 162, 160, 1, 0, 0,
-		0, 163, 166, 5, 33, 0, 0, 164, 166, 3, 22, 11, 0, 165, 163, 1, 0, 0, 0,
-		165, 164, 1, 0, 0, 0, 166, 21, 1, 0, 0, 0, 167, 176, 5, 4, 0, 0, 168, 173,
-		5, 33, 0, 0, 169, 170, 5, 10, 0, 0, 170, 172, 5, 33, 0, 0, 171, 169, 1,
-		0, 0, 0, 172, 175, 1, 0, 0, 0, 173, 171, 1, 0, 0, 0, 173, 174, 1, 0, 0,
-		0, 174, 177, 1, 0, 0, 0, 175, 173, 1, 0, 0, 0, 176, 168, 1, 0, 0, 0, 176,
-		177, 1, 0, 0, 0, 177, 178, 1, 0, 0, 0, 178, 179, 5, 5, 0, 0, 179, 23, 1,
-		0, 0, 0, 180, 185, 3, 34, 17, 0, 181, 185, 3, 26, 13, 0, 182, 185, 3, 28,
-		14, 0, 183, 185, 3, 30, 15, 0, 184, 180, 1, 0, 0, 0, 184, 181, 1, 0, 0,
-		0, 184, 182, 1, 0, 0, 0, 184, 183, 1, 0, 0, 0, 185, 186, 1, 0, 0, 0, 186,
-		184, 1, 0, 0, 0, 186, 187, 1, 0, 0, 0, 187, 25, 1, 0, 0, 0, 188, 189, 5,
-		11, 0, 0, 189, 193, 5, 1, 0, 0, 190, 192, 3, 32, 16, 0, 191, 190, 1, 0,
-		0, 0, 192, 195, 1, 0, 0, 0, 193, 191, 1, 0, 0, 0, 193, 194, 1, 0, 0, 0,
-		194, 196, 1, 0, 0, 0, 195, 193, 1, 0, 0, 0, 196, 197, 5, 2, 0, 0, 197,
-		27, 1, 0, 0, 0, 198, 199, 5, 12, 0, 0, 199, 203, 5, 1, 0, 0, 200, 202,
-		3, 32, 16, 0, 201, 200, 1, 0, 0, 0, 202, 205, 1, 0, 0, 0, 203, 201, 1,
-		0, 0, 0, 203, 204, 1, 0, 0, 0, 204, 206, 1, 0, 0, 0, 205, 203, 1, 0, 0,
-		0, 206, 207, 5, 2, 0, 0, 207, 29, 1, 0, 0, 0, 208, 209, 5, 13, 0, 0, 209,
-		213, 5, 1, 0, 0, 210, 212, 3, 32, 16, 0, 211, 210, 1, 0, 0, 0, 212, 215,
-		1, 0, 0, 0, 213, 211, 1, 0, 0, 0, 213, 214, 1, 0, 0, 0, 214, 216, 1, 0,
-		0, 0, 215, 213, 1, 0, 0, 0, 216, 217, 5, 2, 0, 0, 217, 31, 1, 0, 0, 0,
-		218, 219, 5, 32, 0, 0, 219, 220, 5, 3, 0, 0, 220, 221, 7, 0, 0, 0, 221,
-		33, 1, 0, 0, 0, 222, 224, 7, 1, 0, 0, 223, 222, 1, 0, 0, 0, 224, 225, 1,
-		0, 0, 0, 225, 223, 1, 0, 0, 0, 225, 226, 1, 0, 0, 0, 226, 35, 1, 0, 0,
-		0, 227, 236, 5, 16, 0, 0, 228, 236, 5, 17, 0, 0, 229, 236, 5, 18, 0, 0,
-		230, 231, 5, 4, 0, 0, 231, 232, 3, 36, 18, 0, 232, 233, 5, 5, 0, 0, 233,
-		236, 1, 0, 0, 0, 234, 236, 5, 32, 0, 0, 235, 227, 1, 0, 0, 0, 235, 228,
-		1, 0, 0, 0, 235, 229, 1, 0, 0, 0, 235, 230, 1, 0, 0, 0, 235, 234, 1, 0,
-		0, 0, 236, 37, 1, 0, 0, 0, 237, 238, 7, 2, 0, 0, 238, 39, 1, 0, 0, 0, 239,
-		240, 7, 3, 0, 0, 240, 41, 1, 0, 0, 0, 25, 45, 55, 79, 84, 92, 103, 108,
-		112, 119, 126, 131, 135, 143, 151, 160, 165, 173, 176, 184, 186, 193, 203,
-		213, 225, 235,
+		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
+		21, 7, 21, 2, 22, 7, 22, 2, 23, 7, 23, 1, 0, 4, 0, 50, 8, 0, 11, 0, 12,
+		0, 51, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 60, 8, 1, 11, 1, 12, 1,
+		61, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 72, 8, 2, 1,
+		3, 1, 3, 1, 3, 4, 3, 77, 8, 3, 11, 3, 12, 3, 78, 1, 3, 1, 3, 1, 4, 1, 4,
+		1, 4, 4, 4, 86, 8, 4, 11, 4, 12, 4, 87, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 1,
+		5, 3, 5, 96, 8, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 4, 5, 103, 8, 5, 11, 5,
+		12, 5, 104, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 3, 5, 113, 8, 5, 3, 5,
+		115, 8, 5, 1, 6, 1, 6, 1, 6, 4, 6, 120, 8, 6, 11, 6, 12, 6, 121, 1, 6,
+		1, 6, 1, 7, 1, 7, 1, 7, 4, 7, 129, 8, 7, 11, 7, 12, 7, 130, 1, 7, 1, 7,
+		1, 8, 1, 8, 1, 8, 4, 8, 138, 8, 8, 11, 8, 12, 8, 139, 1, 8, 1, 8, 1, 9,
+		1, 9, 1, 9, 1, 9, 1, 9, 1, 10, 1, 10, 1, 10, 5, 10, 152, 8, 10, 10, 10,
+		12, 10, 155, 9, 10, 1, 10, 3, 10, 158, 8, 10, 1, 11, 1, 11, 1, 12, 1, 12,
+		1, 12, 1, 12, 1, 12, 3, 12, 167, 8, 12, 1, 12, 5, 12, 170, 8, 12, 10, 12,
+		12, 12, 173, 9, 12, 1, 12, 3, 12, 176, 8, 12, 1, 13, 1, 13, 1, 13, 3, 13,
+		181, 8, 13, 1, 14, 1, 14, 1, 14, 5, 14, 186, 8, 14, 10, 14, 12, 14, 189,
+		9, 14, 1, 15, 1, 15, 1, 15, 1, 15, 4, 15, 195, 8, 15, 11, 15, 12, 15, 196,
+		1, 15, 1, 15, 1, 16, 1, 16, 1, 16, 1, 16, 3, 16, 205, 8, 16, 1, 16, 1,
+		16, 1, 17, 1, 17, 1, 17, 5, 17, 212, 8, 17, 10, 17, 12, 17, 215, 9, 17,
+		1, 18, 1, 18, 3, 18, 219, 8, 18, 1, 19, 1, 19, 1, 19, 1, 19, 5, 19, 225,
+		8, 19, 10, 19, 12, 19, 228, 9, 19, 3, 19, 230, 8, 19, 1, 19, 1, 19, 1,
+		20, 4, 20, 235, 8, 20, 11, 20, 12, 20, 236, 1, 21, 1, 21, 1, 21, 1, 21,
+		1, 21, 1, 21, 3, 21, 245, 8, 21, 1, 22, 1, 22, 1, 23, 1, 23, 1, 23, 0,
+		0, 24, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34,
+		36, 38, 40, 42, 44, 46, 0, 6, 2, 0, 18, 18, 35, 35, 2, 0, 27, 28, 34, 34,
+		2, 0, 32, 32, 34, 34, 4, 0, 4, 4, 13, 13, 34, 36, 40, 40, 1, 0, 35, 37,
+		1, 0, 15, 16, 262, 0, 49, 1, 0, 0, 0, 2, 55, 1, 0, 0, 0, 4, 71, 1, 0, 0,
+		0, 6, 73, 1, 0, 0, 0, 8, 82, 1, 0, 0, 0, 10, 114, 1, 0, 0, 0, 12, 116,
+		1, 0, 0, 0, 14, 125, 1, 0, 0, 0, 16, 134, 1, 0, 0, 0, 18, 143, 1, 0, 0,
+		0, 20, 157, 1, 0, 0, 0, 22, 159, 1, 0, 0, 0, 24, 161, 1, 0, 0, 0, 26, 180,
+		1, 0, 0, 0, 28, 182, 1, 0, 0, 0, 30, 190, 1, 0, 0, 0, 32, 200, 1, 0, 0,
+		0, 34, 208, 1, 0, 0, 0, 36, 218, 1, 0, 0, 0, 38, 220, 1, 0, 0, 0, 40, 234,
+		1, 0, 0, 0, 42, 244, 1, 0, 0, 0, 44, 246, 1, 0, 0, 0, 46, 248, 1, 0, 0,
+		0, 48, 50, 3, 2, 1, 0, 49, 48, 1, 0, 0, 0, 50, 51, 1, 0, 0, 0, 51, 49,
+		1, 0, 0, 0, 51, 52, 1, 0, 0, 0, 52, 53, 1, 0, 0, 0, 53, 54, 5, 0, 0, 1,
+		54, 1, 1, 0, 0, 0, 55, 56, 5, 22, 0, 0, 56, 57, 5, 34, 0, 0, 57, 59, 5,
+		1, 0, 0, 58, 60, 3, 4, 2, 0, 59, 58, 1, 0, 0, 0, 60, 61, 1, 0, 0, 0, 61,
+		59, 1, 0, 0, 0, 61, 62, 1, 0, 0, 0, 62, 63, 1, 0, 0, 0, 63, 64, 5, 2, 0,
+		0, 64, 3, 1, 0, 0, 0, 65, 72, 3, 6, 3, 0, 66, 72, 3, 8, 4, 0, 67, 72, 3,
+		12, 6, 0, 68, 72, 3, 14, 7, 0, 69, 72, 3, 16, 8, 0, 70, 72, 3, 18, 9, 0,
+		71, 65, 1, 0, 0, 0, 71, 66, 1, 0, 0, 0, 71, 67, 1, 0, 0, 0, 71, 68, 1,
+		0, 0, 0, 71, 69, 1, 0, 0, 0, 71, 70, 1, 0, 0, 0, 72, 5, 1, 0, 0, 0, 73,
+		74, 5, 3, 0, 0, 74, 76, 5, 1, 0, 0, 75, 77, 3, 24, 12, 0, 76, 75, 1, 0,
+		0, 0, 77, 78, 1, 0, 0, 0, 78, 76, 1, 0, 0, 0, 78, 79, 1, 0, 0, 0, 79, 80,
+		1, 0, 0, 0, 80, 81, 5, 2, 0, 0, 81, 7, 1, 0, 0, 0, 82, 83, 5, 28, 0, 0,
+		83, 85, 5, 1, 0, 0, 84, 86, 3, 10, 5, 0, 85, 84, 1, 0, 0, 0, 86, 87, 1,
+		0, 0, 0, 87, 85, 1, 0, 0, 0, 87, 88, 1, 0, 0, 0, 88, 89, 1, 0, 0, 0, 89,
+		90, 5, 2, 0, 0, 90, 9, 1, 0, 0, 0, 91, 92, 5, 29, 0, 0, 92, 93, 5, 4, 0,
+		0, 93, 95, 3, 46, 23, 0, 94, 96, 5, 39, 0, 0, 95, 94, 1, 0, 0, 0, 95, 96,
+		1, 0, 0, 0, 96, 115, 1, 0, 0, 0, 97, 98, 5, 30, 0, 0, 98, 99, 5, 34, 0,
+		0, 99, 100, 5, 31, 0, 0, 100, 102, 5, 1, 0, 0, 101, 103, 3, 24, 12, 0,
+		102, 101, 1, 0, 0, 0, 103, 104, 1, 0, 0, 0, 104, 102, 1, 0, 0, 0, 104,
+		105, 1, 0, 0, 0, 105, 106, 1, 0, 0, 0, 106, 107, 5, 2, 0, 0, 107, 115,
+		1, 0, 0, 0, 108, 109, 5, 32, 0, 0, 109, 110, 5, 4, 0, 0, 110, 112, 3, 42,
+		21, 0, 111, 113, 5, 39, 0, 0, 112, 111, 1, 0, 0, 0, 112, 113, 1, 0, 0,
+		0, 113, 115, 1, 0, 0, 0, 114, 91, 1, 0, 0, 0, 114, 97, 1, 0, 0, 0, 114,
+		108, 1, 0, 0, 0, 115, 11, 1, 0, 0, 0, 116, 117, 5, 24, 0, 0, 117, 119,
+		5, 1, 0, 0, 118, 120, 3, 26, 13, 0, 119, 118, 1, 0, 0, 0, 120, 121, 1,
+		0, 0, 0, 121, 119, 1, 0, 0, 0, 121, 122, 1, 0, 0, 0, 122, 123, 1, 0, 0,
+		0, 123, 124, 5, 2, 0, 0, 124, 13, 1, 0, 0, 0, 125, 126, 5, 25, 0, 0, 126,
+		128, 5, 1, 0, 0, 127, 129, 3, 26, 13, 0, 128, 127, 1, 0, 0, 0, 129, 130,
+		1, 0, 0, 0, 130, 128, 1, 0, 0, 0, 130, 131, 1, 0, 0, 0, 131, 132, 1, 0,
+		0, 0, 132, 133, 5, 2, 0, 0, 133, 15, 1, 0, 0, 0, 134, 135, 5, 26, 0, 0,
+		135, 137, 5, 1, 0, 0, 136, 138, 3, 26, 13, 0, 137, 136, 1, 0, 0, 0, 138,
+		139, 1, 0, 0, 0, 139, 137, 1, 0, 0, 0, 139, 140, 1, 0, 0, 0, 140, 141,
+		1, 0, 0, 0, 141, 142, 5, 2, 0, 0, 142, 17, 1, 0, 0, 0, 143, 144, 5, 33,
+		0, 0, 144, 145, 5, 1, 0, 0, 145, 146, 3, 20, 10, 0, 146, 147, 5, 2, 0,
+		0, 147, 19, 1, 0, 0, 0, 148, 153, 3, 22, 11, 0, 149, 150, 5, 17, 0, 0,
+		150, 152, 3, 22, 11, 0, 151, 149, 1, 0, 0, 0, 152, 155, 1, 0, 0, 0, 153,
+		151, 1, 0, 0, 0, 153, 154, 1, 0, 0, 0, 154, 158, 1, 0, 0, 0, 155, 153,
+		1, 0, 0, 0, 156, 158, 5, 18, 0, 0, 157, 148, 1, 0, 0, 0, 157, 156, 1, 0,
+		0, 0, 158, 21, 1, 0, 0, 0, 159, 160, 7, 0, 0, 0, 160, 23, 1, 0, 0, 0, 161,
+		162, 5, 34, 0, 0, 162, 163, 5, 4, 0, 0, 163, 166, 3, 42, 21, 0, 164, 165,
+		5, 5, 0, 0, 165, 167, 3, 44, 22, 0, 166, 164, 1, 0, 0, 0, 166, 167, 1,
+		0, 0, 0, 167, 171, 1, 0, 0, 0, 168, 170, 3, 32, 16, 0, 169, 168, 1, 0,
+		0, 0, 170, 173, 1, 0, 0, 0, 171, 169, 1, 0, 0, 0, 171, 172, 1, 0, 0, 0,
+		172, 175, 1, 0, 0, 0, 173, 171, 1, 0, 0, 0, 174, 176, 5, 39, 0, 0, 175,
+		174, 1, 0, 0, 0, 175, 176, 1, 0, 0, 0, 176, 25, 1, 0, 0, 0, 177, 181, 5,
+		35, 0, 0, 178, 181, 5, 41, 0, 0, 179, 181, 3, 28, 14, 0, 180, 177, 1, 0,
+		0, 0, 180, 178, 1, 0, 0, 0, 180, 179, 1, 0, 0, 0, 181, 27, 1, 0, 0, 0,
+		182, 187, 7, 1, 0, 0, 183, 184, 5, 6, 0, 0, 184, 186, 7, 2, 0, 0, 185,
+		183, 1, 0, 0, 0, 186, 189, 1, 0, 0, 0, 187, 185, 1, 0, 0, 0, 187, 188,
+		1, 0, 0, 0, 188, 29, 1, 0, 0, 0, 189, 187, 1, 0, 0, 0, 190, 191, 5, 34,
+		0, 0, 191, 192, 5, 31, 0, 0, 192, 194, 5, 1, 0, 0, 193, 195, 3, 24, 12,
+		0, 194, 193, 1, 0, 0, 0, 195, 196, 1, 0, 0, 0, 196, 194, 1, 0, 0, 0, 196,
+		197, 1, 0, 0, 0, 197, 198, 1, 0, 0, 0, 198, 199, 5, 2, 0, 0, 199, 31, 1,
+		0, 0, 0, 200, 201, 5, 7, 0, 0, 201, 202, 5, 34, 0, 0, 202, 204, 5, 8, 0,
+		0, 203, 205, 3, 34, 17, 0, 204, 203, 1, 0, 0, 0, 204, 205, 1, 0, 0, 0,
+		205, 206, 1, 0, 0, 0, 206, 207, 5, 9, 0, 0, 207, 33, 1, 0, 0, 0, 208, 213,
+		3, 36, 18, 0, 209, 210, 5, 10, 0, 0, 210, 212, 3, 36, 18, 0, 211, 209,
+		1, 0, 0, 0, 212, 215, 1, 0, 0, 0, 213, 211, 1, 0, 0, 0, 213, 214, 1, 0,
+		0, 0, 214, 35, 1, 0, 0, 0, 215, 213, 1, 0, 0, 0, 216, 219, 5, 35, 0, 0,
+		217, 219, 3, 38, 19, 0, 218, 216, 1, 0, 0, 0, 218, 217, 1, 0, 0, 0, 219,
+		37, 1, 0, 0, 0, 220, 229, 5, 11, 0, 0, 221, 226, 5, 35, 0, 0, 222, 223,
+		5, 10, 0, 0, 223, 225, 5, 35, 0, 0, 224, 222, 1, 0, 0, 0, 225, 228, 1,
+		0, 0, 0, 226, 224, 1, 0, 0, 0, 226, 227, 1, 0, 0, 0, 227, 230, 1, 0, 0,
+		0, 228, 226, 1, 0, 0, 0, 229, 221, 1, 0, 0, 0, 229, 230, 1, 0, 0, 0, 230,
+		231, 1, 0, 0, 0, 231, 232, 5, 12, 0, 0, 232, 39, 1, 0, 0, 0, 233, 235,
+		7, 3, 0, 0, 234, 233, 1, 0, 0, 0, 235, 236, 1, 0, 0, 0, 236, 234, 1, 0,
+		0, 0, 236, 237, 1, 0, 0, 0, 237, 41, 1, 0, 0, 0, 238, 245, 5, 19, 0, 0,
+		239, 245, 5, 20, 0, 0, 240, 245, 5, 21, 0, 0, 241, 242, 5, 14, 0, 0, 242,
+		245, 3, 42, 21, 0, 243, 245, 5, 34, 0, 0, 244, 238, 1, 0, 0, 0, 244, 239,
+		1, 0, 0, 0, 244, 240, 1, 0, 0, 0, 244, 241, 1, 0, 0, 0, 244, 243, 1, 0,
+		0, 0, 245, 43, 1, 0, 0, 0, 246, 247, 7, 4, 0, 0, 247, 45, 1, 0, 0, 0, 248,
+		249, 7, 5, 0, 0, 249, 47, 1, 0, 0, 0, 27, 51, 61, 71, 78, 87, 95, 104,
+		112, 114, 121, 130, 139, 153, 157, 166, 171, 175, 180, 187, 196, 204, 213,
+		218, 226, 229, 236, 244,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -195,72 +201,77 @@ func NewPromptDSLParser(input antlr.TokenStream) *PromptDSLParser {
 
 // PromptDSLParser tokens.
 const (
-	PromptDSLParserEOF           = antlr.TokenEOF
-	PromptDSLParserT__0          = 1
-	PromptDSLParserT__1          = 2
-	PromptDSLParserT__2          = 3
-	PromptDSLParserT__3          = 4
-	PromptDSLParserT__4          = 5
-	PromptDSLParserT__5          = 6
-	PromptDSLParserT__6          = 7
-	PromptDSLParserT__7          = 8
-	PromptDSLParserT__8          = 9
-	PromptDSLParserT__9          = 10
-	PromptDSLParserT__10         = 11
-	PromptDSLParserT__11         = 12
-	PromptDSLParserT__12         = 13
-	PromptDSLParserT__13         = 14
-	PromptDSLParserT__14         = 15
-	PromptDSLParserT__15         = 16
-	PromptDSLParserT__16         = 17
-	PromptDSLParserT__17         = 18
-	PromptDSLParserT__18         = 19
-	PromptDSLParserT__19         = 20
-	PromptDSLParserPROMPT        = 21
-	PromptDSLParserPARAMS        = 22
-	PromptDSLParserSYSTEM        = 23
-	PromptDSLParserUSER          = 24
-	PromptDSLParserNOTE          = 25
-	PromptDSLParserIN            = 26
-	PromptDSLParserOUTPUT        = 27
-	PromptDSLParserFORMAT        = 28
-	PromptDSLParserTYPE          = 29
-	PromptDSLParserSTRUCT        = 30
-	PromptDSLParserSCHEMA        = 31
-	PromptDSLParserID            = 32
-	PromptDSLParserSTRING        = 33
-	PromptDSLParserNUMBER        = 34
-	PromptDSLParserBOOL          = 35
-	PromptDSLParserPIPE          = 36
-	PromptDSLParserSEMI          = 37
-	PromptDSLParserWS            = 38
-	PromptDSLParserLINE_COMMENT  = 39
-	PromptDSLParserBLOCK_COMMENT = 40
+	PromptDSLParserEOF              = antlr.TokenEOF
+	PromptDSLParserT__0             = 1
+	PromptDSLParserT__1             = 2
+	PromptDSLParserT__2             = 3
+	PromptDSLParserT__3             = 4
+	PromptDSLParserT__4             = 5
+	PromptDSLParserT__5             = 6
+	PromptDSLParserT__6             = 7
+	PromptDSLParserT__7             = 8
+	PromptDSLParserT__8             = 9
+	PromptDSLParserT__9             = 10
+	PromptDSLParserT__10            = 11
+	PromptDSLParserT__11            = 12
+	PromptDSLParserT__12            = 13
+	PromptDSLParserT__13            = 14
+	PromptDSLParserT__14            = 15
+	PromptDSLParserT__15            = 16
+	PromptDSLParserPLUS             = 17
+	PromptDSLParserJAVASCRIPT_BLOCK = 18
+	PromptDSLParserSTRING_TYPE      = 19
+	PromptDSLParserFLOAT_TYPE       = 20
+	PromptDSLParserINT_TYPE         = 21
+	PromptDSLParserPROMPT           = 22
+	PromptDSLParserPARAMS           = 23
+	PromptDSLParserSYSTEM           = 24
+	PromptDSLParserUSER             = 25
+	PromptDSLParserNOTE             = 26
+	PromptDSLParserIN               = 27
+	PromptDSLParserOUTPUT           = 28
+	PromptDSLParserFORMAT           = 29
+	PromptDSLParserTYPE             = 30
+	PromptDSLParserSTRUCT           = 31
+	PromptDSLParserSCHEMA           = 32
+	PromptDSLParserAFTER            = 33
+	PromptDSLParserID               = 34
+	PromptDSLParserSTRING           = 35
+	PromptDSLParserNUMBER           = 36
+	PromptDSLParserBOOL             = 37
+	PromptDSLParserPIPE             = 38
+	PromptDSLParserSEMI             = 39
+	PromptDSLParserWS               = 40
+	PromptDSLParserLINE_COMMENT     = 41
+	PromptDSLParserBLOCK_COMMENT    = 42
 )
 
 // PromptDSLParser rules.
 const (
-	PromptDSLParserRULE_promptFile          = 0
-	PromptDSLParserRULE_promptDef           = 1
-	PromptDSLParserRULE_promptBlock         = 2
-	PromptDSLParserRULE_paramBody           = 3
-	PromptDSLParserRULE_paramSection        = 4
-	PromptDSLParserRULE_outputBody          = 5
-	PromptDSLParserRULE_fieldDef            = 6
-	PromptDSLParserRULE_structDef           = 7
-	PromptDSLParserRULE_annotation          = 8
-	PromptDSLParserRULE_annotationArgs      = 9
-	PromptDSLParserRULE_annotationValue     = 10
-	PromptDSLParserRULE_arrayLiteral        = 11
-	PromptDSLParserRULE_userBlock           = 12
-	PromptDSLParserRULE_classificationBlock = 13
-	PromptDSLParserRULE_summarizationBlock  = 14
-	PromptDSLParserRULE_compilationBlock    = 15
-	PromptDSLParserRULE_kvPair              = 16
-	PromptDSLParserRULE_textBlock           = 17
-	PromptDSLParserRULE_type                = 18
-	PromptDSLParserRULE_value               = 19
-	PromptDSLParserRULE_formatType          = 20
+	PromptDSLParserRULE_promptFile      = 0
+	PromptDSLParserRULE_promptDef       = 1
+	PromptDSLParserRULE_promptBlock     = 2
+	PromptDSLParserRULE_inputSection    = 3
+	PromptDSLParserRULE_outputSection   = 4
+	PromptDSLParserRULE_outputEntry     = 5
+	PromptDSLParserRULE_systemSection   = 6
+	PromptDSLParserRULE_userSection     = 7
+	PromptDSLParserRULE_noteSection     = 8
+	PromptDSLParserRULE_afterSection    = 9
+	PromptDSLParserRULE_afterContent    = 10
+	PromptDSLParserRULE_afterEntry      = 11
+	PromptDSLParserRULE_fieldDef        = 12
+	PromptDSLParserRULE_textLine        = 13
+	PromptDSLParserRULE_paramPath       = 14
+	PromptDSLParserRULE_structDef       = 15
+	PromptDSLParserRULE_annotation      = 16
+	PromptDSLParserRULE_annotationArgs  = 17
+	PromptDSLParserRULE_annotationValue = 18
+	PromptDSLParserRULE_arrayLiteral    = 19
+	PromptDSLParserRULE_textBlock       = 20
+	PromptDSLParserRULE_type            = 21
+	PromptDSLParserRULE_value           = 22
+	PromptDSLParserRULE_formatType      = 23
 )
 
 // IPromptFileContext is an interface to support dynamic dispatch.
@@ -392,7 +403,7 @@ func (p *PromptDSLParser) PromptFile() (localctx IPromptFileContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(43)
+	p.SetState(49)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -401,11 +412,11 @@ func (p *PromptDSLParser) PromptFile() (localctx IPromptFileContext) {
 
 	for ok := true; ok; ok = _la == PromptDSLParserPROMPT {
 		{
-			p.SetState(42)
+			p.SetState(48)
 			p.PromptDef()
 		}
 
-		p.SetState(45)
+		p.SetState(51)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -413,7 +424,7 @@ func (p *PromptDSLParser) PromptFile() (localctx IPromptFileContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(47)
+		p.SetState(53)
 		p.Match(PromptDSLParserEOF)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -569,7 +580,7 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(49)
+		p.SetState(55)
 		p.Match(PromptDSLParserPROMPT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -577,7 +588,7 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 		}
 	}
 	{
-		p.SetState(50)
+		p.SetState(56)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -585,27 +596,27 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 		}
 	}
 	{
-		p.SetState(51)
+		p.SetState(57)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(53)
+	p.SetState(59)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&62914560) != 0) {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8975810568) != 0) {
 		{
-			p.SetState(52)
+			p.SetState(58)
 			p.PromptBlock()
 		}
 
-		p.SetState(55)
+		p.SetState(61)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -613,7 +624,7 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(57)
+		p.SetState(63)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -642,13 +653,12 @@ type IPromptBlockContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	PARAMS() antlr.TerminalNode
-	ParamBody() IParamBodyContext
-	SYSTEM() antlr.TerminalNode
-	TextBlock() ITextBlockContext
-	USER() antlr.TerminalNode
-	UserBlock() IUserBlockContext
-	NOTE() antlr.TerminalNode
+	InputSection() IInputSectionContext
+	OutputSection() IOutputSectionContext
+	SystemSection() ISystemSectionContext
+	UserSection() IUserSectionContext
+	NoteSection() INoteSectionContext
+	AfterSection() IAfterSectionContext
 
 	// IsPromptBlockContext differentiates from other interfaces.
 	IsPromptBlockContext()
@@ -686,14 +696,10 @@ func NewPromptBlockContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 
 func (s *PromptBlockContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *PromptBlockContext) PARAMS() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserPARAMS, 0)
-}
-
-func (s *PromptBlockContext) ParamBody() IParamBodyContext {
+func (s *PromptBlockContext) InputSection() IInputSectionContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IParamBodyContext); ok {
+		if _, ok := ctx.(IInputSectionContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -703,17 +709,13 @@ func (s *PromptBlockContext) ParamBody() IParamBodyContext {
 		return nil
 	}
 
-	return t.(IParamBodyContext)
+	return t.(IInputSectionContext)
 }
 
-func (s *PromptBlockContext) SYSTEM() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserSYSTEM, 0)
-}
-
-func (s *PromptBlockContext) TextBlock() ITextBlockContext {
+func (s *PromptBlockContext) OutputSection() IOutputSectionContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ITextBlockContext); ok {
+		if _, ok := ctx.(IOutputSectionContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -723,17 +725,13 @@ func (s *PromptBlockContext) TextBlock() ITextBlockContext {
 		return nil
 	}
 
-	return t.(ITextBlockContext)
+	return t.(IOutputSectionContext)
 }
 
-func (s *PromptBlockContext) USER() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserUSER, 0)
-}
-
-func (s *PromptBlockContext) UserBlock() IUserBlockContext {
+func (s *PromptBlockContext) SystemSection() ISystemSectionContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IUserBlockContext); ok {
+		if _, ok := ctx.(ISystemSectionContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -743,11 +741,55 @@ func (s *PromptBlockContext) UserBlock() IUserBlockContext {
 		return nil
 	}
 
-	return t.(IUserBlockContext)
+	return t.(ISystemSectionContext)
 }
 
-func (s *PromptBlockContext) NOTE() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserNOTE, 0)
+func (s *PromptBlockContext) UserSection() IUserSectionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IUserSectionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IUserSectionContext)
+}
+
+func (s *PromptBlockContext) NoteSection() INoteSectionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(INoteSectionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(INoteSectionContext)
+}
+
+func (s *PromptBlockContext) AfterSection() IAfterSectionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IAfterSectionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IAfterSectionContext)
 }
 
 func (s *PromptBlockContext) GetRuleContext() antlr.RuleContext {
@@ -783,135 +825,53 @@ func (s *PromptBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 func (p *PromptDSLParser) PromptBlock() (localctx IPromptBlockContext) {
 	localctx = NewPromptBlockContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 4, PromptDSLParserRULE_promptBlock)
-	p.SetState(79)
+	p.SetState(71)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
 	switch p.GetTokenStream().LA(1) {
-	case PromptDSLParserPARAMS:
+	case PromptDSLParserT__2:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(59)
-			p.Match(PromptDSLParserPARAMS)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+			p.SetState(65)
+			p.InputSection()
 		}
+
+	case PromptDSLParserOUTPUT:
+		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(60)
-			p.Match(PromptDSLParserT__0)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(61)
-			p.ParamBody()
-		}
-		{
-			p.SetState(62)
-			p.Match(PromptDSLParserT__1)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+			p.SetState(66)
+			p.OutputSection()
 		}
 
 	case PromptDSLParserSYSTEM:
-		p.EnterOuterAlt(localctx, 2)
-		{
-			p.SetState(64)
-			p.Match(PromptDSLParserSYSTEM)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(65)
-			p.Match(PromptDSLParserT__0)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(66)
-			p.TextBlock()
-		}
+		p.EnterOuterAlt(localctx, 3)
 		{
 			p.SetState(67)
-			p.Match(PromptDSLParserT__1)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+			p.SystemSection()
 		}
 
 	case PromptDSLParserUSER:
-		p.EnterOuterAlt(localctx, 3)
+		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(69)
-			p.Match(PromptDSLParserUSER)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(70)
-			p.Match(PromptDSLParserT__0)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(71)
-			p.UserBlock()
-		}
-		{
-			p.SetState(72)
-			p.Match(PromptDSLParserT__1)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+			p.SetState(68)
+			p.UserSection()
 		}
 
 	case PromptDSLParserNOTE:
-		p.EnterOuterAlt(localctx, 4)
+		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(74)
-			p.Match(PromptDSLParserNOTE)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+			p.SetState(69)
+			p.NoteSection()
 		}
+
+	case PromptDSLParserAFTER:
+		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(75)
-			p.Match(PromptDSLParserT__0)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(76)
-			p.TextBlock()
-		}
-		{
-			p.SetState(77)
-			p.Match(PromptDSLParserT__1)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+			p.SetState(70)
+			p.AfterSection()
 		}
 
 	default:
@@ -932,295 +892,52 @@ errorExit:
 	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
-// IParamBodyContext is an interface to support dynamic dispatch.
-type IParamBodyContext interface {
+// IInputSectionContext is an interface to support dynamic dispatch.
+type IInputSectionContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllParamSection() []IParamSectionContext
-	ParamSection(i int) IParamSectionContext
+	AllFieldDef() []IFieldDefContext
+	FieldDef(i int) IFieldDefContext
 
-	// IsParamBodyContext differentiates from other interfaces.
-	IsParamBodyContext()
-}
-
-type ParamBodyContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyParamBodyContext() *ParamBodyContext {
-	var p = new(ParamBodyContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_paramBody
-	return p
-}
-
-func InitEmptyParamBodyContext(p *ParamBodyContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_paramBody
-}
-
-func (*ParamBodyContext) IsParamBodyContext() {}
-
-func NewParamBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ParamBodyContext {
-	var p = new(ParamBodyContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromptDSLParserRULE_paramBody
-
-	return p
-}
-
-func (s *ParamBodyContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *ParamBodyContext) AllParamSection() []IParamSectionContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IParamSectionContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IParamSectionContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IParamSectionContext); ok {
-			tst[i] = t.(IParamSectionContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *ParamBodyContext) ParamSection(i int) IParamSectionContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IParamSectionContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IParamSectionContext)
-}
-
-func (s *ParamBodyContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *ParamBodyContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *ParamBodyContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.EnterParamBody(s)
-	}
-}
-
-func (s *ParamBodyContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.ExitParamBody(s)
-	}
-}
-
-func (s *ParamBodyContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromptDSLVisitor:
-		return t.VisitParamBody(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromptDSLParser) ParamBody() (localctx IParamBodyContext) {
-	localctx = NewParamBodyContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 6, PromptDSLParserRULE_paramBody)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	p.SetState(82)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&4496293888) != 0) {
-		{
-			p.SetState(81)
-			p.ParamSection()
-		}
-
-		p.SetState(84)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IParamSectionContext is an interface to support dynamic dispatch.
-type IParamSectionContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-	// IsParamSectionContext differentiates from other interfaces.
-	IsParamSectionContext()
-}
-
-type ParamSectionContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyParamSectionContext() *ParamSectionContext {
-	var p = new(ParamSectionContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_paramSection
-	return p
-}
-
-func InitEmptyParamSectionContext(p *ParamSectionContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_paramSection
-}
-
-func (*ParamSectionContext) IsParamSectionContext() {}
-
-func NewParamSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ParamSectionContext {
-	var p = new(ParamSectionContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromptDSLParserRULE_paramSection
-
-	return p
-}
-
-func (s *ParamSectionContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *ParamSectionContext) CopyAll(ctx *ParamSectionContext) {
-	s.CopyFrom(&ctx.BaseParserRuleContext)
-}
-
-func (s *ParamSectionContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *ParamSectionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-type SingleFieldContext struct {
-	ParamSectionContext
-}
-
-func NewSingleFieldContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *SingleFieldContext {
-	var p = new(SingleFieldContext)
-
-	InitEmptyParamSectionContext(&p.ParamSectionContext)
-	p.parser = parser
-	p.CopyAll(ctx.(*ParamSectionContext))
-
-	return p
-}
-
-func (s *SingleFieldContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *SingleFieldContext) FieldDef() IFieldDefContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IFieldDefContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IFieldDefContext)
-}
-
-func (s *SingleFieldContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.EnterSingleField(s)
-	}
-}
-
-func (s *SingleFieldContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.ExitSingleField(s)
-	}
-}
-
-func (s *SingleFieldContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromptDSLVisitor:
-		return t.VisitSingleField(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
+	// IsInputSectionContext differentiates from other interfaces.
+	IsInputSectionContext()
 }
 
 type InputSectionContext struct {
-	ParamSectionContext
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
 }
 
-func NewInputSectionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *InputSectionContext {
+func NewEmptyInputSectionContext() *InputSectionContext {
+	var p = new(InputSectionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_inputSection
+	return p
+}
+
+func InitEmptyInputSectionContext(p *InputSectionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_inputSection
+}
+
+func (*InputSectionContext) IsInputSectionContext() {}
+
+func NewInputSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *InputSectionContext {
 	var p = new(InputSectionContext)
 
-	InitEmptyParamSectionContext(&p.ParamSectionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
 	p.parser = parser
-	p.CopyAll(ctx.(*ParamSectionContext))
+	p.RuleIndex = PromptDSLParserRULE_inputSection
 
 	return p
 }
 
-func (s *InputSectionContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *InputSectionContext) IN() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserIN, 0)
-}
+func (s *InputSectionContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *InputSectionContext) AllFieldDef() []IFieldDefContext {
 	children := s.GetChildren()
@@ -1263,6 +980,14 @@ func (s *InputSectionContext) FieldDef(i int) IFieldDefContext {
 	return t.(IFieldDefContext)
 }
 
+func (s *InputSectionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *InputSectionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
 func (s *InputSectionContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(PromptDSLListener); ok {
 		listenerT.EnterInputSection(s)
@@ -1285,34 +1010,153 @@ func (s *InputSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 	}
 }
 
-type OutputSectionContext struct {
-	ParamSectionContext
+func (p *PromptDSLParser) InputSection() (localctx IInputSectionContext) {
+	localctx = NewInputSectionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 6, PromptDSLParserRULE_inputSection)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(73)
+		p.Match(PromptDSLParserT__2)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(74)
+		p.Match(PromptDSLParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(76)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for ok := true; ok; ok = _la == PromptDSLParserID {
+		{
+			p.SetState(75)
+			p.FieldDef()
+		}
+
+		p.SetState(78)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+	{
+		p.SetState(80)
+		p.Match(PromptDSLParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
-func NewOutputSectionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *OutputSectionContext {
+// IOutputSectionContext is an interface to support dynamic dispatch.
+type IOutputSectionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	OUTPUT() antlr.TerminalNode
+	AllOutputEntry() []IOutputEntryContext
+	OutputEntry(i int) IOutputEntryContext
+
+	// IsOutputSectionContext differentiates from other interfaces.
+	IsOutputSectionContext()
+}
+
+type OutputSectionContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyOutputSectionContext() *OutputSectionContext {
+	var p = new(OutputSectionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_outputSection
+	return p
+}
+
+func InitEmptyOutputSectionContext(p *OutputSectionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_outputSection
+}
+
+func (*OutputSectionContext) IsOutputSectionContext() {}
+
+func NewOutputSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *OutputSectionContext {
 	var p = new(OutputSectionContext)
 
-	InitEmptyParamSectionContext(&p.ParamSectionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
 	p.parser = parser
-	p.CopyAll(ctx.(*ParamSectionContext))
+	p.RuleIndex = PromptDSLParserRULE_outputSection
 
 	return p
 }
 
-func (s *OutputSectionContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
+func (s *OutputSectionContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *OutputSectionContext) OUTPUT() antlr.TerminalNode {
 	return s.GetToken(PromptDSLParserOUTPUT, 0)
 }
 
-func (s *OutputSectionContext) OutputBody() IOutputBodyContext {
+func (s *OutputSectionContext) AllOutputEntry() []IOutputEntryContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IOutputEntryContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IOutputEntryContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IOutputEntryContext); ok {
+			tst[i] = t.(IOutputEntryContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *OutputSectionContext) OutputEntry(i int) IOutputEntryContext {
 	var t antlr.RuleContext
+	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IOutputBodyContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
+		if _, ok := ctx.(IOutputEntryContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
 		}
 	}
 
@@ -1320,7 +1164,15 @@ func (s *OutputSectionContext) OutputBody() IOutputBodyContext {
 		return nil
 	}
 
-	return t.(IOutputBodyContext)
+	return t.(IOutputEntryContext)
+}
+
+func (s *OutputSectionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *OutputSectionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
 func (s *OutputSectionContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -1345,46 +1197,340 @@ func (s *OutputSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 	}
 }
 
-func (p *PromptDSLParser) ParamSection() (localctx IParamSectionContext) {
-	localctx = NewParamSectionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 8, PromptDSLParserRULE_paramSection)
+func (p *PromptDSLParser) OutputSection() (localctx IOutputSectionContext) {
+	localctx = NewOutputSectionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 8, PromptDSLParserRULE_outputSection)
 	var _la int
 
-	p.SetState(103)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(82)
+		p.Match(PromptDSLParserOUTPUT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(83)
+		p.Match(PromptDSLParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(85)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5905580032) != 0) {
+		{
+			p.SetState(84)
+			p.OutputEntry()
+		}
+
+		p.SetState(87)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+	{
+		p.SetState(89)
+		p.Match(PromptDSLParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IOutputEntryContext is an interface to support dynamic dispatch.
+type IOutputEntryContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	FORMAT() antlr.TerminalNode
+	FormatType() IFormatTypeContext
+	SEMI() antlr.TerminalNode
+	TYPE() antlr.TerminalNode
+	ID() antlr.TerminalNode
+	STRUCT() antlr.TerminalNode
+	AllFieldDef() []IFieldDefContext
+	FieldDef(i int) IFieldDefContext
+	SCHEMA() antlr.TerminalNode
+	Type_() ITypeContext
+
+	// IsOutputEntryContext differentiates from other interfaces.
+	IsOutputEntryContext()
+}
+
+type OutputEntryContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyOutputEntryContext() *OutputEntryContext {
+	var p = new(OutputEntryContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_outputEntry
+	return p
+}
+
+func InitEmptyOutputEntryContext(p *OutputEntryContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_outputEntry
+}
+
+func (*OutputEntryContext) IsOutputEntryContext() {}
+
+func NewOutputEntryContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *OutputEntryContext {
+	var p = new(OutputEntryContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_outputEntry
+
+	return p
+}
+
+func (s *OutputEntryContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *OutputEntryContext) FORMAT() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserFORMAT, 0)
+}
+
+func (s *OutputEntryContext) FormatType() IFormatTypeContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IFormatTypeContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFormatTypeContext)
+}
+
+func (s *OutputEntryContext) SEMI() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserSEMI, 0)
+}
+
+func (s *OutputEntryContext) TYPE() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserTYPE, 0)
+}
+
+func (s *OutputEntryContext) ID() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserID, 0)
+}
+
+func (s *OutputEntryContext) STRUCT() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserSTRUCT, 0)
+}
+
+func (s *OutputEntryContext) AllFieldDef() []IFieldDefContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IFieldDefContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IFieldDefContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IFieldDefContext); ok {
+			tst[i] = t.(IFieldDefContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *OutputEntryContext) FieldDef(i int) IFieldDefContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IFieldDefContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFieldDefContext)
+}
+
+func (s *OutputEntryContext) SCHEMA() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserSCHEMA, 0)
+}
+
+func (s *OutputEntryContext) Type_() ITypeContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITypeContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeContext)
+}
+
+func (s *OutputEntryContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *OutputEntryContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *OutputEntryContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterOutputEntry(s)
+	}
+}
+
+func (s *OutputEntryContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitOutputEntry(s)
+	}
+}
+
+func (s *OutputEntryContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitOutputEntry(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) OutputEntry() (localctx IOutputEntryContext) {
+	localctx = NewOutputEntryContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 10, PromptDSLParserRULE_outputEntry)
+	var _la int
+
+	p.SetState(114)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
 	switch p.GetTokenStream().LA(1) {
-	case PromptDSLParserIN:
-		localctx = NewInputSectionContext(p, localctx)
+	case PromptDSLParserFORMAT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(86)
-			p.Match(PromptDSLParserIN)
+			p.SetState(91)
+			p.Match(PromptDSLParserFORMAT)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(87)
-			p.Match(PromptDSLParserT__2)
+			p.SetState(92)
+			p.Match(PromptDSLParserT__3)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(88)
+			p.SetState(93)
+			p.FormatType()
+		}
+		p.SetState(95)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		if _la == PromptDSLParserSEMI {
+			{
+				p.SetState(94)
+				p.Match(PromptDSLParserSEMI)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
+		}
+
+	case PromptDSLParserTYPE:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(97)
+			p.Match(PromptDSLParserTYPE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(98)
+			p.Match(PromptDSLParserID)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(99)
+			p.Match(PromptDSLParserSTRUCT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(100)
 			p.Match(PromptDSLParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(90)
+		p.SetState(102)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1393,11 +1539,11 @@ func (p *PromptDSLParser) ParamSection() (localctx IParamSectionContext) {
 
 		for ok := true; ok; ok = _la == PromptDSLParserID {
 			{
-				p.SetState(89)
+				p.SetState(101)
 				p.FieldDef()
 			}
 
-			p.SetState(92)
+			p.SetState(104)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -1405,7 +1551,7 @@ func (p *PromptDSLParser) ParamSection() (localctx IParamSectionContext) {
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(94)
+			p.SetState(106)
 			p.Match(PromptDSLParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1413,52 +1559,45 @@ func (p *PromptDSLParser) ParamSection() (localctx IParamSectionContext) {
 			}
 		}
 
-	case PromptDSLParserOUTPUT:
-		localctx = NewOutputSectionContext(p, localctx)
-		p.EnterOuterAlt(localctx, 2)
-		{
-			p.SetState(96)
-			p.Match(PromptDSLParserOUTPUT)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(97)
-			p.Match(PromptDSLParserT__2)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(98)
-			p.Match(PromptDSLParserT__0)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(99)
-			p.OutputBody()
-		}
-		{
-			p.SetState(100)
-			p.Match(PromptDSLParserT__1)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-
-	case PromptDSLParserID:
-		localctx = NewSingleFieldContext(p, localctx)
+	case PromptDSLParserSCHEMA:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(102)
-			p.FieldDef()
+			p.SetState(108)
+			p.Match(PromptDSLParserSCHEMA)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(109)
+			p.Match(PromptDSLParserT__3)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(110)
+			p.Type_()
+		}
+		p.SetState(112)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		if _la == PromptDSLParserSEMI {
+			{
+				p.SetState(111)
+				p.Match(PromptDSLParserSEMI)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
 		}
 
 	default:
@@ -1479,67 +1618,89 @@ errorExit:
 	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
-// IOutputBodyContext is an interface to support dynamic dispatch.
-type IOutputBodyContext interface {
+// ISystemSectionContext is an interface to support dynamic dispatch.
+type ISystemSectionContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	FORMAT() antlr.TerminalNode
-	FormatType() IFormatTypeContext
-	TYPE() antlr.TerminalNode
-	StructDef() IStructDefContext
-	SCHEMA() antlr.TerminalNode
-	ID() antlr.TerminalNode
+	SYSTEM() antlr.TerminalNode
+	AllTextLine() []ITextLineContext
+	TextLine(i int) ITextLineContext
 
-	// IsOutputBodyContext differentiates from other interfaces.
-	IsOutputBodyContext()
+	// IsSystemSectionContext differentiates from other interfaces.
+	IsSystemSectionContext()
 }
 
-type OutputBodyContext struct {
+type SystemSectionContext struct {
 	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyOutputBodyContext() *OutputBodyContext {
-	var p = new(OutputBodyContext)
+func NewEmptySystemSectionContext() *SystemSectionContext {
+	var p = new(SystemSectionContext)
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_outputBody
+	p.RuleIndex = PromptDSLParserRULE_systemSection
 	return p
 }
 
-func InitEmptyOutputBodyContext(p *OutputBodyContext) {
+func InitEmptySystemSectionContext(p *SystemSectionContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_outputBody
+	p.RuleIndex = PromptDSLParserRULE_systemSection
 }
 
-func (*OutputBodyContext) IsOutputBodyContext() {}
+func (*SystemSectionContext) IsSystemSectionContext() {}
 
-func NewOutputBodyContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *OutputBodyContext {
-	var p = new(OutputBodyContext)
+func NewSystemSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SystemSectionContext {
+	var p = new(SystemSectionContext)
 
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = PromptDSLParserRULE_outputBody
+	p.RuleIndex = PromptDSLParserRULE_systemSection
 
 	return p
 }
 
-func (s *OutputBodyContext) GetParser() antlr.Parser { return s.parser }
+func (s *SystemSectionContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *OutputBodyContext) FORMAT() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserFORMAT, 0)
+func (s *SystemSectionContext) SYSTEM() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserSYSTEM, 0)
 }
 
-func (s *OutputBodyContext) FormatType() IFormatTypeContext {
+func (s *SystemSectionContext) AllTextLine() []ITextLineContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(ITextLineContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]ITextLineContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(ITextLineContext); ok {
+			tst[i] = t.(ITextLineContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *SystemSectionContext) TextLine(i int) ITextLineContext {
 	var t antlr.RuleContext
+	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IFormatTypeContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
+		if _, ok := ctx.(ITextLineContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
 		}
 	}
 
@@ -1547,124 +1708,60 @@ func (s *OutputBodyContext) FormatType() IFormatTypeContext {
 		return nil
 	}
 
-	return t.(IFormatTypeContext)
+	return t.(ITextLineContext)
 }
 
-func (s *OutputBodyContext) TYPE() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserTYPE, 0)
-}
-
-func (s *OutputBodyContext) StructDef() IStructDefContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IStructDefContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IStructDefContext)
-}
-
-func (s *OutputBodyContext) SCHEMA() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserSCHEMA, 0)
-}
-
-func (s *OutputBodyContext) ID() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserID, 0)
-}
-
-func (s *OutputBodyContext) GetRuleContext() antlr.RuleContext {
+func (s *SystemSectionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *OutputBodyContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *SystemSectionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *OutputBodyContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *SystemSectionContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.EnterOutputBody(s)
+		listenerT.EnterSystemSection(s)
 	}
 }
 
-func (s *OutputBodyContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *SystemSectionContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.ExitOutputBody(s)
+		listenerT.ExitSystemSection(s)
 	}
 }
 
-func (s *OutputBodyContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+func (s *SystemSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
 	case PromptDSLVisitor:
-		return t.VisitOutputBody(s)
+		return t.VisitSystemSection(s)
 
 	default:
 		return t.VisitChildren(s)
 	}
 }
 
-func (p *PromptDSLParser) OutputBody() (localctx IOutputBodyContext) {
-	localctx = NewOutputBodyContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, PromptDSLParserRULE_outputBody)
+func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
+	localctx = NewSystemSectionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 12, PromptDSLParserRULE_systemSection)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(108)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
+	{
+		p.SetState(116)
+		p.Match(PromptDSLParserSYSTEM)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
-	_la = p.GetTokenStream().LA(1)
-
-	if _la == PromptDSLParserFORMAT {
-		{
-			p.SetState(105)
-			p.Match(PromptDSLParserFORMAT)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+	{
+		p.SetState(117)
+		p.Match(PromptDSLParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
 		}
-		{
-			p.SetState(106)
-			p.Match(PromptDSLParserT__2)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(107)
-			p.FormatType()
-		}
-
-	}
-	p.SetState(112)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	if _la == PromptDSLParserTYPE {
-		{
-			p.SetState(110)
-			p.Match(PromptDSLParserTYPE)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(111)
-			p.StructDef()
-		}
-
 	}
 	p.SetState(119)
 	p.GetErrorHandler().Sync(p)
@@ -1673,48 +1770,867 @@ func (p *PromptDSLParser) OutputBody() (localctx IOutputBodyContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == PromptDSLParserSCHEMA {
-		{
-			p.SetState(114)
-			p.Match(PromptDSLParserSCHEMA)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(115)
-			p.Match(PromptDSLParserT__2)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(116)
-			p.Match(PromptDSLParserT__3)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(117)
-			p.Match(PromptDSLParserID)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2250965516288) != 0) {
 		{
 			p.SetState(118)
-			p.Match(PromptDSLParserT__4)
+			p.TextLine()
+		}
+
+		p.SetState(121)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+	{
+		p.SetState(123)
+		p.Match(PromptDSLParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IUserSectionContext is an interface to support dynamic dispatch.
+type IUserSectionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	USER() antlr.TerminalNode
+	AllTextLine() []ITextLineContext
+	TextLine(i int) ITextLineContext
+
+	// IsUserSectionContext differentiates from other interfaces.
+	IsUserSectionContext()
+}
+
+type UserSectionContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyUserSectionContext() *UserSectionContext {
+	var p = new(UserSectionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_userSection
+	return p
+}
+
+func InitEmptyUserSectionContext(p *UserSectionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_userSection
+}
+
+func (*UserSectionContext) IsUserSectionContext() {}
+
+func NewUserSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *UserSectionContext {
+	var p = new(UserSectionContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_userSection
+
+	return p
+}
+
+func (s *UserSectionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *UserSectionContext) USER() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserUSER, 0)
+}
+
+func (s *UserSectionContext) AllTextLine() []ITextLineContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(ITextLineContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]ITextLineContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(ITextLineContext); ok {
+			tst[i] = t.(ITextLineContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *UserSectionContext) TextLine(i int) ITextLineContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITextLineContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITextLineContext)
+}
+
+func (s *UserSectionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *UserSectionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *UserSectionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterUserSection(s)
+	}
+}
+
+func (s *UserSectionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitUserSection(s)
+	}
+}
+
+func (s *UserSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitUserSection(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) UserSection() (localctx IUserSectionContext) {
+	localctx = NewUserSectionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 14, PromptDSLParserRULE_userSection)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(125)
+		p.Match(PromptDSLParserUSER)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(126)
+		p.Match(PromptDSLParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(128)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2250965516288) != 0) {
+		{
+			p.SetState(127)
+			p.TextLine()
+		}
+
+		p.SetState(130)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+	{
+		p.SetState(132)
+		p.Match(PromptDSLParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// INoteSectionContext is an interface to support dynamic dispatch.
+type INoteSectionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	NOTE() antlr.TerminalNode
+	AllTextLine() []ITextLineContext
+	TextLine(i int) ITextLineContext
+
+	// IsNoteSectionContext differentiates from other interfaces.
+	IsNoteSectionContext()
+}
+
+type NoteSectionContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyNoteSectionContext() *NoteSectionContext {
+	var p = new(NoteSectionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_noteSection
+	return p
+}
+
+func InitEmptyNoteSectionContext(p *NoteSectionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_noteSection
+}
+
+func (*NoteSectionContext) IsNoteSectionContext() {}
+
+func NewNoteSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *NoteSectionContext {
+	var p = new(NoteSectionContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_noteSection
+
+	return p
+}
+
+func (s *NoteSectionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *NoteSectionContext) NOTE() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserNOTE, 0)
+}
+
+func (s *NoteSectionContext) AllTextLine() []ITextLineContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(ITextLineContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]ITextLineContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(ITextLineContext); ok {
+			tst[i] = t.(ITextLineContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *NoteSectionContext) TextLine(i int) ITextLineContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITextLineContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITextLineContext)
+}
+
+func (s *NoteSectionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *NoteSectionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *NoteSectionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterNoteSection(s)
+	}
+}
+
+func (s *NoteSectionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitNoteSection(s)
+	}
+}
+
+func (s *NoteSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitNoteSection(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) NoteSection() (localctx INoteSectionContext) {
+	localctx = NewNoteSectionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 16, PromptDSLParserRULE_noteSection)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(134)
+		p.Match(PromptDSLParserNOTE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(135)
+		p.Match(PromptDSLParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(137)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2250965516288) != 0) {
+		{
+			p.SetState(136)
+			p.TextLine()
+		}
+
+		p.SetState(139)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+	{
+		p.SetState(141)
+		p.Match(PromptDSLParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IAfterSectionContext is an interface to support dynamic dispatch.
+type IAfterSectionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AFTER() antlr.TerminalNode
+	AfterContent() IAfterContentContext
+
+	// IsAfterSectionContext differentiates from other interfaces.
+	IsAfterSectionContext()
+}
+
+type AfterSectionContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyAfterSectionContext() *AfterSectionContext {
+	var p = new(AfterSectionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_afterSection
+	return p
+}
+
+func InitEmptyAfterSectionContext(p *AfterSectionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_afterSection
+}
+
+func (*AfterSectionContext) IsAfterSectionContext() {}
+
+func NewAfterSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AfterSectionContext {
+	var p = new(AfterSectionContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_afterSection
+
+	return p
+}
+
+func (s *AfterSectionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *AfterSectionContext) AFTER() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserAFTER, 0)
+}
+
+func (s *AfterSectionContext) AfterContent() IAfterContentContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IAfterContentContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IAfterContentContext)
+}
+
+func (s *AfterSectionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *AfterSectionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *AfterSectionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterAfterSection(s)
+	}
+}
+
+func (s *AfterSectionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitAfterSection(s)
+	}
+}
+
+func (s *AfterSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitAfterSection(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) AfterSection() (localctx IAfterSectionContext) {
+	localctx = NewAfterSectionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 18, PromptDSLParserRULE_afterSection)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(143)
+		p.Match(PromptDSLParserAFTER)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(144)
+		p.Match(PromptDSLParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(145)
+		p.AfterContent()
+	}
+	{
+		p.SetState(146)
+		p.Match(PromptDSLParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IAfterContentContext is an interface to support dynamic dispatch.
+type IAfterContentContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllAfterEntry() []IAfterEntryContext
+	AfterEntry(i int) IAfterEntryContext
+	AllPLUS() []antlr.TerminalNode
+	PLUS(i int) antlr.TerminalNode
+	JAVASCRIPT_BLOCK() antlr.TerminalNode
+
+	// IsAfterContentContext differentiates from other interfaces.
+	IsAfterContentContext()
+}
+
+type AfterContentContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyAfterContentContext() *AfterContentContext {
+	var p = new(AfterContentContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_afterContent
+	return p
+}
+
+func InitEmptyAfterContentContext(p *AfterContentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_afterContent
+}
+
+func (*AfterContentContext) IsAfterContentContext() {}
+
+func NewAfterContentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AfterContentContext {
+	var p = new(AfterContentContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_afterContent
+
+	return p
+}
+
+func (s *AfterContentContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *AfterContentContext) AllAfterEntry() []IAfterEntryContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IAfterEntryContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IAfterEntryContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IAfterEntryContext); ok {
+			tst[i] = t.(IAfterEntryContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *AfterContentContext) AfterEntry(i int) IAfterEntryContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IAfterEntryContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IAfterEntryContext)
+}
+
+func (s *AfterContentContext) AllPLUS() []antlr.TerminalNode {
+	return s.GetTokens(PromptDSLParserPLUS)
+}
+
+func (s *AfterContentContext) PLUS(i int) antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserPLUS, i)
+}
+
+func (s *AfterContentContext) JAVASCRIPT_BLOCK() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserJAVASCRIPT_BLOCK, 0)
+}
+
+func (s *AfterContentContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *AfterContentContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *AfterContentContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterAfterContent(s)
+	}
+}
+
+func (s *AfterContentContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitAfterContent(s)
+	}
+}
+
+func (s *AfterContentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitAfterContent(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) AfterContent() (localctx IAfterContentContext) {
+	localctx = NewAfterContentContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 20, PromptDSLParserRULE_afterContent)
+	var _la int
+
+	p.SetState(157)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 13, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(148)
+			p.AfterEntry()
+		}
+		p.SetState(153)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		for _la == PromptDSLParserPLUS {
+			{
+				p.SetState(149)
+				p.Match(PromptDSLParserPLUS)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(150)
+				p.AfterEntry()
+			}
+
+			p.SetState(155)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_la = p.GetTokenStream().LA(1)
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(156)
+			p.Match(PromptDSLParserJAVASCRIPT_BLOCK)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IAfterEntryContext is an interface to support dynamic dispatch.
+type IAfterEntryContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	STRING() antlr.TerminalNode
+	JAVASCRIPT_BLOCK() antlr.TerminalNode
+
+	// IsAfterEntryContext differentiates from other interfaces.
+	IsAfterEntryContext()
+}
+
+type AfterEntryContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyAfterEntryContext() *AfterEntryContext {
+	var p = new(AfterEntryContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_afterEntry
+	return p
+}
+
+func InitEmptyAfterEntryContext(p *AfterEntryContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_afterEntry
+}
+
+func (*AfterEntryContext) IsAfterEntryContext() {}
+
+func NewAfterEntryContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AfterEntryContext {
+	var p = new(AfterEntryContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_afterEntry
+
+	return p
+}
+
+func (s *AfterEntryContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *AfterEntryContext) STRING() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserSTRING, 0)
+}
+
+func (s *AfterEntryContext) JAVASCRIPT_BLOCK() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserJAVASCRIPT_BLOCK, 0)
+}
+
+func (s *AfterEntryContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *AfterEntryContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *AfterEntryContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterAfterEntry(s)
+	}
+}
+
+func (s *AfterEntryContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitAfterEntry(s)
+	}
+}
+
+func (s *AfterEntryContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitAfterEntry(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) AfterEntry() (localctx IAfterEntryContext) {
+	localctx = NewAfterEntryContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 22, PromptDSLParserRULE_afterEntry)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(159)
+		_la = p.GetTokenStream().LA(1)
+
+		if !(_la == PromptDSLParserJAVASCRIPT_BLOCK || _la == PromptDSLParserSTRING) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 
 errorExit:
@@ -1894,12 +2810,12 @@ func (s *FieldDefContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 	localctx = NewFieldDefContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, PromptDSLParserRULE_fieldDef)
+	p.EnterRule(localctx, 24, PromptDSLParserRULE_fieldDef)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(121)
+		p.SetState(161)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1907,40 +2823,40 @@ func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 		}
 	}
 	{
-		p.SetState(122)
-		p.Match(PromptDSLParserT__2)
+		p.SetState(162)
+		p.Match(PromptDSLParserT__3)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
 	{
-		p.SetState(123)
+		p.SetState(163)
 		p.Type_()
 	}
-	p.SetState(126)
+	p.SetState(166)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == PromptDSLParserT__5 {
+	if _la == PromptDSLParserT__4 {
 		{
-			p.SetState(124)
-			p.Match(PromptDSLParserT__5)
+			p.SetState(164)
+			p.Match(PromptDSLParserT__4)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(125)
+			p.SetState(165)
 			p.Value()
 		}
 
 	}
-	p.SetState(131)
+	p.SetState(171)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1949,18 +2865,18 @@ func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 
 	for _la == PromptDSLParserT__6 {
 		{
-			p.SetState(128)
+			p.SetState(168)
 			p.Annotation()
 		}
 
-		p.SetState(133)
+		p.SetState(173)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 	}
-	p.SetState(135)
+	p.SetState(175)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1969,7 +2885,7 @@ func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 
 	if _la == PromptDSLParserSEMI {
 		{
-			p.SetState(134)
+			p.SetState(174)
 			p.Match(PromptDSLParserSEMI)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1977,6 +2893,336 @@ func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 			}
 		}
 
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// ITextLineContext is an interface to support dynamic dispatch.
+type ITextLineContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	STRING() antlr.TerminalNode
+	LINE_COMMENT() antlr.TerminalNode
+	ParamPath() IParamPathContext
+
+	// IsTextLineContext differentiates from other interfaces.
+	IsTextLineContext()
+}
+
+type TextLineContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyTextLineContext() *TextLineContext {
+	var p = new(TextLineContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_textLine
+	return p
+}
+
+func InitEmptyTextLineContext(p *TextLineContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_textLine
+}
+
+func (*TextLineContext) IsTextLineContext() {}
+
+func NewTextLineContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *TextLineContext {
+	var p = new(TextLineContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_textLine
+
+	return p
+}
+
+func (s *TextLineContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TextLineContext) STRING() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserSTRING, 0)
+}
+
+func (s *TextLineContext) LINE_COMMENT() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserLINE_COMMENT, 0)
+}
+
+func (s *TextLineContext) ParamPath() IParamPathContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IParamPathContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IParamPathContext)
+}
+
+func (s *TextLineContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *TextLineContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *TextLineContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterTextLine(s)
+	}
+}
+
+func (s *TextLineContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitTextLine(s)
+	}
+}
+
+func (s *TextLineContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitTextLine(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) TextLine() (localctx ITextLineContext) {
+	localctx = NewTextLineContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 26, PromptDSLParserRULE_textLine)
+	p.SetState(180)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetTokenStream().LA(1) {
+	case PromptDSLParserSTRING:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(177)
+			p.Match(PromptDSLParserSTRING)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	case PromptDSLParserLINE_COMMENT:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(178)
+			p.Match(PromptDSLParserLINE_COMMENT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	case PromptDSLParserIN, PromptDSLParserOUTPUT, PromptDSLParserID:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(179)
+			p.ParamPath()
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IParamPathContext is an interface to support dynamic dispatch.
+type IParamPathContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllID() []antlr.TerminalNode
+	ID(i int) antlr.TerminalNode
+	IN() antlr.TerminalNode
+	OUTPUT() antlr.TerminalNode
+	AllSCHEMA() []antlr.TerminalNode
+	SCHEMA(i int) antlr.TerminalNode
+
+	// IsParamPathContext differentiates from other interfaces.
+	IsParamPathContext()
+}
+
+type ParamPathContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyParamPathContext() *ParamPathContext {
+	var p = new(ParamPathContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_paramPath
+	return p
+}
+
+func InitEmptyParamPathContext(p *ParamPathContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_paramPath
+}
+
+func (*ParamPathContext) IsParamPathContext() {}
+
+func NewParamPathContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ParamPathContext {
+	var p = new(ParamPathContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_paramPath
+
+	return p
+}
+
+func (s *ParamPathContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *ParamPathContext) AllID() []antlr.TerminalNode {
+	return s.GetTokens(PromptDSLParserID)
+}
+
+func (s *ParamPathContext) ID(i int) antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserID, i)
+}
+
+func (s *ParamPathContext) IN() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserIN, 0)
+}
+
+func (s *ParamPathContext) OUTPUT() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserOUTPUT, 0)
+}
+
+func (s *ParamPathContext) AllSCHEMA() []antlr.TerminalNode {
+	return s.GetTokens(PromptDSLParserSCHEMA)
+}
+
+func (s *ParamPathContext) SCHEMA(i int) antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserSCHEMA, i)
+}
+
+func (s *ParamPathContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *ParamPathContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *ParamPathContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterParamPath(s)
+	}
+}
+
+func (s *ParamPathContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitParamPath(s)
+	}
+}
+
+func (s *ParamPathContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitParamPath(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) ParamPath() (localctx IParamPathContext) {
+	localctx = NewParamPathContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 28, PromptDSLParserRULE_paramPath)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(182)
+		_la = p.GetTokenStream().LA(1)
+
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&17582522368) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
+	}
+	p.SetState(187)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == PromptDSLParserT__5 {
+		{
+			p.SetState(183)
+			p.Match(PromptDSLParserT__5)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(184)
+			_la = p.GetTokenStream().LA(1)
+
+			if !(_la == PromptDSLParserSCHEMA || _la == PromptDSLParserID) {
+				p.GetErrorHandler().RecoverInline(p)
+			} else {
+				p.GetErrorHandler().ReportMatch(p)
+				p.Consume()
+			}
+		}
+
+		p.SetState(189)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
 	}
 
 errorExit:
@@ -2122,12 +3368,12 @@ func (s *StructDefContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 	localctx = NewStructDefContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, PromptDSLParserRULE_structDef)
+	p.EnterRule(localctx, 30, PromptDSLParserRULE_structDef)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(137)
+		p.SetState(190)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2135,7 +3381,7 @@ func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 		}
 	}
 	{
-		p.SetState(138)
+		p.SetState(191)
 		p.Match(PromptDSLParserSTRUCT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2143,14 +3389,14 @@ func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 		}
 	}
 	{
-		p.SetState(139)
+		p.SetState(192)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(141)
+	p.SetState(194)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2159,11 +3405,11 @@ func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 
 	for ok := true; ok; ok = _la == PromptDSLParserID {
 		{
-			p.SetState(140)
+			p.SetState(193)
 			p.FieldDef()
 		}
 
-		p.SetState(143)
+		p.SetState(196)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2171,7 +3417,7 @@ func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(145)
+		p.SetState(198)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2291,12 +3537,12 @@ func (s *AnnotationContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) Annotation() (localctx IAnnotationContext) {
 	localctx = NewAnnotationContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, PromptDSLParserRULE_annotation)
+	p.EnterRule(localctx, 32, PromptDSLParserRULE_annotation)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(147)
+		p.SetState(200)
 		p.Match(PromptDSLParserT__6)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2304,7 +3550,7 @@ func (p *PromptDSLParser) Annotation() (localctx IAnnotationContext) {
 		}
 	}
 	{
-		p.SetState(148)
+		p.SetState(201)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2312,29 +3558,29 @@ func (p *PromptDSLParser) Annotation() (localctx IAnnotationContext) {
 		}
 	}
 	{
-		p.SetState(149)
+		p.SetState(202)
 		p.Match(PromptDSLParserT__7)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(151)
+	p.SetState(204)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == PromptDSLParserT__3 || _la == PromptDSLParserSTRING {
+	if _la == PromptDSLParserT__10 || _la == PromptDSLParserSTRING {
 		{
-			p.SetState(150)
+			p.SetState(203)
 			p.AnnotationArgs()
 		}
 
 	}
 	{
-		p.SetState(153)
+		p.SetState(206)
 		p.Match(PromptDSLParserT__8)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2475,15 +3721,15 @@ func (s *AnnotationArgsContext) Accept(visitor antlr.ParseTreeVisitor) interface
 
 func (p *PromptDSLParser) AnnotationArgs() (localctx IAnnotationArgsContext) {
 	localctx = NewAnnotationArgsContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, PromptDSLParserRULE_annotationArgs)
+	p.EnterRule(localctx, 34, PromptDSLParserRULE_annotationArgs)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(155)
+		p.SetState(208)
 		p.AnnotationValue()
 	}
-	p.SetState(160)
+	p.SetState(213)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2492,7 +3738,7 @@ func (p *PromptDSLParser) AnnotationArgs() (localctx IAnnotationArgsContext) {
 
 	for _la == PromptDSLParserT__9 {
 		{
-			p.SetState(156)
+			p.SetState(209)
 			p.Match(PromptDSLParserT__9)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2500,11 +3746,11 @@ func (p *PromptDSLParser) AnnotationArgs() (localctx IAnnotationArgsContext) {
 			}
 		}
 		{
-			p.SetState(157)
+			p.SetState(210)
 			p.AnnotationValue()
 		}
 
-		p.SetState(162)
+		p.SetState(215)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2624,8 +3870,8 @@ func (s *AnnotationValueContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 
 func (p *PromptDSLParser) AnnotationValue() (localctx IAnnotationValueContext) {
 	localctx = NewAnnotationValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, PromptDSLParserRULE_annotationValue)
-	p.SetState(165)
+	p.EnterRule(localctx, 36, PromptDSLParserRULE_annotationValue)
+	p.SetState(218)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2635,7 +3881,7 @@ func (p *PromptDSLParser) AnnotationValue() (localctx IAnnotationValueContext) {
 	case PromptDSLParserSTRING:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(163)
+			p.SetState(216)
 			p.Match(PromptDSLParserSTRING)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2643,10 +3889,10 @@ func (p *PromptDSLParser) AnnotationValue() (localctx IAnnotationValueContext) {
 			}
 		}
 
-	case PromptDSLParserT__3:
+	case PromptDSLParserT__10:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(164)
+			p.SetState(217)
 			p.ArrayLiteral()
 		}
 
@@ -2755,19 +4001,19 @@ func (s *ArrayLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 
 func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 	localctx = NewArrayLiteralContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 22, PromptDSLParserRULE_arrayLiteral)
+	p.EnterRule(localctx, 38, PromptDSLParserRULE_arrayLiteral)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(167)
-		p.Match(PromptDSLParserT__3)
+		p.SetState(220)
+		p.Match(PromptDSLParserT__10)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(176)
+	p.SetState(229)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2776,14 +4022,14 @@ func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 
 	if _la == PromptDSLParserSTRING {
 		{
-			p.SetState(168)
+			p.SetState(221)
 			p.Match(PromptDSLParserSTRING)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(173)
+		p.SetState(226)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2792,7 +4038,7 @@ func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 
 		for _la == PromptDSLParserT__9 {
 			{
-				p.SetState(169)
+				p.SetState(222)
 				p.Match(PromptDSLParserT__9)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -2800,7 +4046,7 @@ func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 				}
 			}
 			{
-				p.SetState(170)
+				p.SetState(223)
 				p.Match(PromptDSLParserSTRING)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -2808,7 +4054,7 @@ func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 				}
 			}
 
-			p.SetState(175)
+			p.SetState(228)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -2818,1012 +4064,11 @@ func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 
 	}
 	{
-		p.SetState(178)
-		p.Match(PromptDSLParserT__4)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IUserBlockContext is an interface to support dynamic dispatch.
-type IUserBlockContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	AllTextBlock() []ITextBlockContext
-	TextBlock(i int) ITextBlockContext
-	AllClassificationBlock() []IClassificationBlockContext
-	ClassificationBlock(i int) IClassificationBlockContext
-	AllSummarizationBlock() []ISummarizationBlockContext
-	SummarizationBlock(i int) ISummarizationBlockContext
-	AllCompilationBlock() []ICompilationBlockContext
-	CompilationBlock(i int) ICompilationBlockContext
-
-	// IsUserBlockContext differentiates from other interfaces.
-	IsUserBlockContext()
-}
-
-type UserBlockContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyUserBlockContext() *UserBlockContext {
-	var p = new(UserBlockContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_userBlock
-	return p
-}
-
-func InitEmptyUserBlockContext(p *UserBlockContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_userBlock
-}
-
-func (*UserBlockContext) IsUserBlockContext() {}
-
-func NewUserBlockContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *UserBlockContext {
-	var p = new(UserBlockContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromptDSLParserRULE_userBlock
-
-	return p
-}
-
-func (s *UserBlockContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *UserBlockContext) AllTextBlock() []ITextBlockContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(ITextBlockContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]ITextBlockContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(ITextBlockContext); ok {
-			tst[i] = t.(ITextBlockContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *UserBlockContext) TextBlock(i int) ITextBlockContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ITextBlockContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ITextBlockContext)
-}
-
-func (s *UserBlockContext) AllClassificationBlock() []IClassificationBlockContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IClassificationBlockContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IClassificationBlockContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IClassificationBlockContext); ok {
-			tst[i] = t.(IClassificationBlockContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *UserBlockContext) ClassificationBlock(i int) IClassificationBlockContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IClassificationBlockContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IClassificationBlockContext)
-}
-
-func (s *UserBlockContext) AllSummarizationBlock() []ISummarizationBlockContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(ISummarizationBlockContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]ISummarizationBlockContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(ISummarizationBlockContext); ok {
-			tst[i] = t.(ISummarizationBlockContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *UserBlockContext) SummarizationBlock(i int) ISummarizationBlockContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ISummarizationBlockContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ISummarizationBlockContext)
-}
-
-func (s *UserBlockContext) AllCompilationBlock() []ICompilationBlockContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(ICompilationBlockContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]ICompilationBlockContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(ICompilationBlockContext); ok {
-			tst[i] = t.(ICompilationBlockContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *UserBlockContext) CompilationBlock(i int) ICompilationBlockContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ICompilationBlockContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ICompilationBlockContext)
-}
-
-func (s *UserBlockContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *UserBlockContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *UserBlockContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.EnterUserBlock(s)
-	}
-}
-
-func (s *UserBlockContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.ExitUserBlock(s)
-	}
-}
-
-func (s *UserBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromptDSLVisitor:
-		return t.VisitUserBlock(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromptDSLParser) UserBlock() (localctx IUserBlockContext) {
-	localctx = NewUserBlockContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, PromptDSLParserRULE_userBlock)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	p.SetState(184)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&304942725128) != 0) {
-		p.SetState(184)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-
-		switch p.GetTokenStream().LA(1) {
-		case PromptDSLParserT__2, PromptDSLParserT__14, PromptDSLParserID, PromptDSLParserSTRING, PromptDSLParserNUMBER, PromptDSLParserWS:
-			{
-				p.SetState(180)
-				p.TextBlock()
-			}
-
-		case PromptDSLParserT__10:
-			{
-				p.SetState(181)
-				p.ClassificationBlock()
-			}
-
-		case PromptDSLParserT__11:
-			{
-				p.SetState(182)
-				p.SummarizationBlock()
-			}
-
-		case PromptDSLParserT__12:
-			{
-				p.SetState(183)
-				p.CompilationBlock()
-			}
-
-		default:
-			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
-			goto errorExit
-		}
-
-		p.SetState(186)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IClassificationBlockContext is an interface to support dynamic dispatch.
-type IClassificationBlockContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	AllKvPair() []IKvPairContext
-	KvPair(i int) IKvPairContext
-
-	// IsClassificationBlockContext differentiates from other interfaces.
-	IsClassificationBlockContext()
-}
-
-type ClassificationBlockContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyClassificationBlockContext() *ClassificationBlockContext {
-	var p = new(ClassificationBlockContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_classificationBlock
-	return p
-}
-
-func InitEmptyClassificationBlockContext(p *ClassificationBlockContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_classificationBlock
-}
-
-func (*ClassificationBlockContext) IsClassificationBlockContext() {}
-
-func NewClassificationBlockContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ClassificationBlockContext {
-	var p = new(ClassificationBlockContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromptDSLParserRULE_classificationBlock
-
-	return p
-}
-
-func (s *ClassificationBlockContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *ClassificationBlockContext) AllKvPair() []IKvPairContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IKvPairContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IKvPairContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IKvPairContext); ok {
-			tst[i] = t.(IKvPairContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *ClassificationBlockContext) KvPair(i int) IKvPairContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IKvPairContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IKvPairContext)
-}
-
-func (s *ClassificationBlockContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *ClassificationBlockContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *ClassificationBlockContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.EnterClassificationBlock(s)
-	}
-}
-
-func (s *ClassificationBlockContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.ExitClassificationBlock(s)
-	}
-}
-
-func (s *ClassificationBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromptDSLVisitor:
-		return t.VisitClassificationBlock(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromptDSLParser) ClassificationBlock() (localctx IClassificationBlockContext) {
-	localctx = NewClassificationBlockContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 26, PromptDSLParserRULE_classificationBlock)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(188)
-		p.Match(PromptDSLParserT__10)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(189)
-		p.Match(PromptDSLParserT__0)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(193)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	for _la == PromptDSLParserID {
-		{
-			p.SetState(190)
-			p.KvPair()
-		}
-
-		p.SetState(195)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-	}
-	{
-		p.SetState(196)
-		p.Match(PromptDSLParserT__1)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// ISummarizationBlockContext is an interface to support dynamic dispatch.
-type ISummarizationBlockContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	AllKvPair() []IKvPairContext
-	KvPair(i int) IKvPairContext
-
-	// IsSummarizationBlockContext differentiates from other interfaces.
-	IsSummarizationBlockContext()
-}
-
-type SummarizationBlockContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptySummarizationBlockContext() *SummarizationBlockContext {
-	var p = new(SummarizationBlockContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_summarizationBlock
-	return p
-}
-
-func InitEmptySummarizationBlockContext(p *SummarizationBlockContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_summarizationBlock
-}
-
-func (*SummarizationBlockContext) IsSummarizationBlockContext() {}
-
-func NewSummarizationBlockContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *SummarizationBlockContext {
-	var p = new(SummarizationBlockContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromptDSLParserRULE_summarizationBlock
-
-	return p
-}
-
-func (s *SummarizationBlockContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *SummarizationBlockContext) AllKvPair() []IKvPairContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IKvPairContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IKvPairContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IKvPairContext); ok {
-			tst[i] = t.(IKvPairContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *SummarizationBlockContext) KvPair(i int) IKvPairContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IKvPairContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IKvPairContext)
-}
-
-func (s *SummarizationBlockContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *SummarizationBlockContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *SummarizationBlockContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.EnterSummarizationBlock(s)
-	}
-}
-
-func (s *SummarizationBlockContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.ExitSummarizationBlock(s)
-	}
-}
-
-func (s *SummarizationBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromptDSLVisitor:
-		return t.VisitSummarizationBlock(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromptDSLParser) SummarizationBlock() (localctx ISummarizationBlockContext) {
-	localctx = NewSummarizationBlockContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 28, PromptDSLParserRULE_summarizationBlock)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(198)
+		p.SetState(231)
 		p.Match(PromptDSLParserT__11)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
-		}
-	}
-	{
-		p.SetState(199)
-		p.Match(PromptDSLParserT__0)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(203)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	for _la == PromptDSLParserID {
-		{
-			p.SetState(200)
-			p.KvPair()
-		}
-
-		p.SetState(205)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-	}
-	{
-		p.SetState(206)
-		p.Match(PromptDSLParserT__1)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// ICompilationBlockContext is an interface to support dynamic dispatch.
-type ICompilationBlockContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	AllKvPair() []IKvPairContext
-	KvPair(i int) IKvPairContext
-
-	// IsCompilationBlockContext differentiates from other interfaces.
-	IsCompilationBlockContext()
-}
-
-type CompilationBlockContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyCompilationBlockContext() *CompilationBlockContext {
-	var p = new(CompilationBlockContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_compilationBlock
-	return p
-}
-
-func InitEmptyCompilationBlockContext(p *CompilationBlockContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_compilationBlock
-}
-
-func (*CompilationBlockContext) IsCompilationBlockContext() {}
-
-func NewCompilationBlockContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *CompilationBlockContext {
-	var p = new(CompilationBlockContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromptDSLParserRULE_compilationBlock
-
-	return p
-}
-
-func (s *CompilationBlockContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *CompilationBlockContext) AllKvPair() []IKvPairContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IKvPairContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IKvPairContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IKvPairContext); ok {
-			tst[i] = t.(IKvPairContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *CompilationBlockContext) KvPair(i int) IKvPairContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IKvPairContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IKvPairContext)
-}
-
-func (s *CompilationBlockContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *CompilationBlockContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *CompilationBlockContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.EnterCompilationBlock(s)
-	}
-}
-
-func (s *CompilationBlockContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.ExitCompilationBlock(s)
-	}
-}
-
-func (s *CompilationBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromptDSLVisitor:
-		return t.VisitCompilationBlock(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromptDSLParser) CompilationBlock() (localctx ICompilationBlockContext) {
-	localctx = NewCompilationBlockContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 30, PromptDSLParserRULE_compilationBlock)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(208)
-		p.Match(PromptDSLParserT__12)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(209)
-		p.Match(PromptDSLParserT__0)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(213)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	for _la == PromptDSLParserID {
-		{
-			p.SetState(210)
-			p.KvPair()
-		}
-
-		p.SetState(215)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-	}
-	{
-		p.SetState(216)
-		p.Match(PromptDSLParserT__1)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IKvPairContext is an interface to support dynamic dispatch.
-type IKvPairContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	AllID() []antlr.TerminalNode
-	ID(i int) antlr.TerminalNode
-	STRING() antlr.TerminalNode
-
-	// IsKvPairContext differentiates from other interfaces.
-	IsKvPairContext()
-}
-
-type KvPairContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyKvPairContext() *KvPairContext {
-	var p = new(KvPairContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_kvPair
-	return p
-}
-
-func InitEmptyKvPairContext(p *KvPairContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromptDSLParserRULE_kvPair
-}
-
-func (*KvPairContext) IsKvPairContext() {}
-
-func NewKvPairContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *KvPairContext {
-	var p = new(KvPairContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromptDSLParserRULE_kvPair
-
-	return p
-}
-
-func (s *KvPairContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *KvPairContext) AllID() []antlr.TerminalNode {
-	return s.GetTokens(PromptDSLParserID)
-}
-
-func (s *KvPairContext) ID(i int) antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserID, i)
-}
-
-func (s *KvPairContext) STRING() antlr.TerminalNode {
-	return s.GetToken(PromptDSLParserSTRING, 0)
-}
-
-func (s *KvPairContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *KvPairContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *KvPairContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.EnterKvPair(s)
-	}
-}
-
-func (s *KvPairContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromptDSLListener); ok {
-		listenerT.ExitKvPair(s)
-	}
-}
-
-func (s *KvPairContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromptDSLVisitor:
-		return t.VisitKvPair(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromptDSLParser) KvPair() (localctx IKvPairContext) {
-	localctx = NewKvPairContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 32, PromptDSLParserRULE_kvPair)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(218)
-		p.Match(PromptDSLParserID)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(219)
-		p.Match(PromptDSLParserT__2)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(220)
-		_la = p.GetTokenStream().LA(1)
-
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&12884918272) != 0) {
-			p.GetErrorHandler().RecoverInline(p)
-		} else {
-			p.GetErrorHandler().ReportMatch(p)
-			p.Consume()
 		}
 	}
 
@@ -3957,44 +4202,36 @@ func (s *TextBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) TextBlock() (localctx ITextBlockContext) {
 	localctx = NewTextBlockContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 34, PromptDSLParserRULE_textBlock)
+	p.EnterRule(localctx, 40, PromptDSLParserRULE_textBlock)
 	var _la int
 
-	var _alt int
-
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(223)
+	p.SetState(234)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
-	_alt = 1
-	for ok := true; ok; ok = _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
-		switch _alt {
-		case 1:
-			{
-				p.SetState(222)
-				_la = p.GetTokenStream().LA(1)
+	_la = p.GetTokenStream().LA(1)
 
-				if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&304942710792) != 0) {
-					p.GetErrorHandler().RecoverInline(p)
-				} else {
-					p.GetErrorHandler().ReportMatch(p)
-					p.Consume()
-				}
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1219770720272) != 0) {
+		{
+			p.SetState(233)
+			_la = p.GetTokenStream().LA(1)
+
+			if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1219770720272) != 0) {
+				p.GetErrorHandler().RecoverInline(p)
+			} else {
+				p.GetErrorHandler().ReportMatch(p)
+				p.Consume()
 			}
-
-		default:
-			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
-			goto errorExit
 		}
 
-		p.SetState(225)
+		p.SetState(236)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 23, p.GetParserRuleContext())
 		if p.HasError() {
 			goto errorExit
 		}
+		_la = p.GetTokenStream().LA(1)
 	}
 
 errorExit:
@@ -4018,6 +4255,9 @@ type ITypeContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
+	STRING_TYPE() antlr.TerminalNode
+	FLOAT_TYPE() antlr.TerminalNode
+	INT_TYPE() antlr.TerminalNode
 	Type_() ITypeContext
 	ID() antlr.TerminalNode
 
@@ -4056,6 +4296,18 @@ func NewTypeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokin
 }
 
 func (s *TypeContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *TypeContext) STRING_TYPE() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserSTRING_TYPE, 0)
+}
+
+func (s *TypeContext) FLOAT_TYPE() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserFLOAT_TYPE, 0)
+}
+
+func (s *TypeContext) INT_TYPE() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserINT_TYPE, 0)
+}
 
 func (s *TypeContext) Type_() ITypeContext {
 	var t antlr.RuleContext
@@ -4109,74 +4361,66 @@ func (s *TypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	localctx = NewTypeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 36, PromptDSLParserRULE_type)
-	p.SetState(235)
+	p.EnterRule(localctx, 42, PromptDSLParserRULE_type)
+	p.SetState(244)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
 	switch p.GetTokenStream().LA(1) {
-	case PromptDSLParserT__15:
+	case PromptDSLParserSTRING_TYPE:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(227)
-			p.Match(PromptDSLParserT__15)
+			p.SetState(238)
+			p.Match(PromptDSLParserSTRING_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 
-	case PromptDSLParserT__16:
+	case PromptDSLParserFLOAT_TYPE:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(228)
-			p.Match(PromptDSLParserT__16)
+			p.SetState(239)
+			p.Match(PromptDSLParserFLOAT_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 
-	case PromptDSLParserT__17:
+	case PromptDSLParserINT_TYPE:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(229)
-			p.Match(PromptDSLParserT__17)
+			p.SetState(240)
+			p.Match(PromptDSLParserINT_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 
-	case PromptDSLParserT__3:
+	case PromptDSLParserT__13:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(230)
-			p.Match(PromptDSLParserT__3)
+			p.SetState(241)
+			p.Match(PromptDSLParserT__13)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(231)
+			p.SetState(242)
 			p.Type_()
-		}
-		{
-			p.SetState(232)
-			p.Match(PromptDSLParserT__4)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
 		}
 
 	case PromptDSLParserID:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(234)
+			p.SetState(243)
 			p.Match(PromptDSLParserID)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4294,15 +4538,15 @@ func (s *ValueContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) Value() (localctx IValueContext) {
 	localctx = NewValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 38, PromptDSLParserRULE_value)
+	p.EnterRule(localctx, 44, PromptDSLParserRULE_value)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(237)
+		p.SetState(246)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&60129542144) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&240518168576) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -4396,15 +4640,15 @@ func (s *FormatTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) FormatType() (localctx IFormatTypeContext) {
 	localctx = NewFormatTypeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 40, PromptDSLParserRULE_formatType)
+	p.EnterRule(localctx, 46, PromptDSLParserRULE_formatType)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(239)
+		p.SetState(248)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(_la == PromptDSLParserT__18 || _la == PromptDSLParserT__19) {
+		if !(_la == PromptDSLParserT__14 || _la == PromptDSLParserT__15) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)

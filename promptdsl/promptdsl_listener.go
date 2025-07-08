@@ -16,23 +16,41 @@ type PromptDSLListener interface {
 	// EnterPromptBlock is called when entering the promptBlock production.
 	EnterPromptBlock(c *PromptBlockContext)
 
-	// EnterParamBody is called when entering the paramBody production.
-	EnterParamBody(c *ParamBodyContext)
-
 	// EnterInputSection is called when entering the inputSection production.
 	EnterInputSection(c *InputSectionContext)
 
 	// EnterOutputSection is called when entering the outputSection production.
 	EnterOutputSection(c *OutputSectionContext)
 
-	// EnterSingleField is called when entering the singleField production.
-	EnterSingleField(c *SingleFieldContext)
+	// EnterOutputEntry is called when entering the outputEntry production.
+	EnterOutputEntry(c *OutputEntryContext)
 
-	// EnterOutputBody is called when entering the outputBody production.
-	EnterOutputBody(c *OutputBodyContext)
+	// EnterSystemSection is called when entering the systemSection production.
+	EnterSystemSection(c *SystemSectionContext)
+
+	// EnterUserSection is called when entering the userSection production.
+	EnterUserSection(c *UserSectionContext)
+
+	// EnterNoteSection is called when entering the noteSection production.
+	EnterNoteSection(c *NoteSectionContext)
+
+	// EnterAfterSection is called when entering the afterSection production.
+	EnterAfterSection(c *AfterSectionContext)
+
+	// EnterAfterContent is called when entering the afterContent production.
+	EnterAfterContent(c *AfterContentContext)
+
+	// EnterAfterEntry is called when entering the afterEntry production.
+	EnterAfterEntry(c *AfterEntryContext)
 
 	// EnterFieldDef is called when entering the fieldDef production.
 	EnterFieldDef(c *FieldDefContext)
+
+	// EnterTextLine is called when entering the textLine production.
+	EnterTextLine(c *TextLineContext)
+
+	// EnterParamPath is called when entering the paramPath production.
+	EnterParamPath(c *ParamPathContext)
 
 	// EnterStructDef is called when entering the structDef production.
 	EnterStructDef(c *StructDefContext)
@@ -48,21 +66,6 @@ type PromptDSLListener interface {
 
 	// EnterArrayLiteral is called when entering the arrayLiteral production.
 	EnterArrayLiteral(c *ArrayLiteralContext)
-
-	// EnterUserBlock is called when entering the userBlock production.
-	EnterUserBlock(c *UserBlockContext)
-
-	// EnterClassificationBlock is called when entering the classificationBlock production.
-	EnterClassificationBlock(c *ClassificationBlockContext)
-
-	// EnterSummarizationBlock is called when entering the summarizationBlock production.
-	EnterSummarizationBlock(c *SummarizationBlockContext)
-
-	// EnterCompilationBlock is called when entering the compilationBlock production.
-	EnterCompilationBlock(c *CompilationBlockContext)
-
-	// EnterKvPair is called when entering the kvPair production.
-	EnterKvPair(c *KvPairContext)
 
 	// EnterTextBlock is called when entering the textBlock production.
 	EnterTextBlock(c *TextBlockContext)
@@ -85,23 +88,41 @@ type PromptDSLListener interface {
 	// ExitPromptBlock is called when exiting the promptBlock production.
 	ExitPromptBlock(c *PromptBlockContext)
 
-	// ExitParamBody is called when exiting the paramBody production.
-	ExitParamBody(c *ParamBodyContext)
-
 	// ExitInputSection is called when exiting the inputSection production.
 	ExitInputSection(c *InputSectionContext)
 
 	// ExitOutputSection is called when exiting the outputSection production.
 	ExitOutputSection(c *OutputSectionContext)
 
-	// ExitSingleField is called when exiting the singleField production.
-	ExitSingleField(c *SingleFieldContext)
+	// ExitOutputEntry is called when exiting the outputEntry production.
+	ExitOutputEntry(c *OutputEntryContext)
 
-	// ExitOutputBody is called when exiting the outputBody production.
-	ExitOutputBody(c *OutputBodyContext)
+	// ExitSystemSection is called when exiting the systemSection production.
+	ExitSystemSection(c *SystemSectionContext)
+
+	// ExitUserSection is called when exiting the userSection production.
+	ExitUserSection(c *UserSectionContext)
+
+	// ExitNoteSection is called when exiting the noteSection production.
+	ExitNoteSection(c *NoteSectionContext)
+
+	// ExitAfterSection is called when exiting the afterSection production.
+	ExitAfterSection(c *AfterSectionContext)
+
+	// ExitAfterContent is called when exiting the afterContent production.
+	ExitAfterContent(c *AfterContentContext)
+
+	// ExitAfterEntry is called when exiting the afterEntry production.
+	ExitAfterEntry(c *AfterEntryContext)
 
 	// ExitFieldDef is called when exiting the fieldDef production.
 	ExitFieldDef(c *FieldDefContext)
+
+	// ExitTextLine is called when exiting the textLine production.
+	ExitTextLine(c *TextLineContext)
+
+	// ExitParamPath is called when exiting the paramPath production.
+	ExitParamPath(c *ParamPathContext)
 
 	// ExitStructDef is called when exiting the structDef production.
 	ExitStructDef(c *StructDefContext)
@@ -117,21 +138,6 @@ type PromptDSLListener interface {
 
 	// ExitArrayLiteral is called when exiting the arrayLiteral production.
 	ExitArrayLiteral(c *ArrayLiteralContext)
-
-	// ExitUserBlock is called when exiting the userBlock production.
-	ExitUserBlock(c *UserBlockContext)
-
-	// ExitClassificationBlock is called when exiting the classificationBlock production.
-	ExitClassificationBlock(c *ClassificationBlockContext)
-
-	// ExitSummarizationBlock is called when exiting the summarizationBlock production.
-	ExitSummarizationBlock(c *SummarizationBlockContext)
-
-	// ExitCompilationBlock is called when exiting the compilationBlock production.
-	ExitCompilationBlock(c *CompilationBlockContext)
-
-	// ExitKvPair is called when exiting the kvPair production.
-	ExitKvPair(c *KvPairContext)
 
 	// ExitTextBlock is called when exiting the textBlock production.
 	ExitTextBlock(c *TextBlockContext)

@@ -38,12 +38,6 @@ func (s *BasePromptDSLListener) EnterPromptBlock(ctx *PromptBlockContext) {}
 // ExitPromptBlock is called when production promptBlock is exited.
 func (s *BasePromptDSLListener) ExitPromptBlock(ctx *PromptBlockContext) {}
 
-// EnterParamBody is called when production paramBody is entered.
-func (s *BasePromptDSLListener) EnterParamBody(ctx *ParamBodyContext) {}
-
-// ExitParamBody is called when production paramBody is exited.
-func (s *BasePromptDSLListener) ExitParamBody(ctx *ParamBodyContext) {}
-
 // EnterInputSection is called when production inputSection is entered.
 func (s *BasePromptDSLListener) EnterInputSection(ctx *InputSectionContext) {}
 
@@ -56,23 +50,65 @@ func (s *BasePromptDSLListener) EnterOutputSection(ctx *OutputSectionContext) {}
 // ExitOutputSection is called when production outputSection is exited.
 func (s *BasePromptDSLListener) ExitOutputSection(ctx *OutputSectionContext) {}
 
-// EnterSingleField is called when production singleField is entered.
-func (s *BasePromptDSLListener) EnterSingleField(ctx *SingleFieldContext) {}
+// EnterOutputEntry is called when production outputEntry is entered.
+func (s *BasePromptDSLListener) EnterOutputEntry(ctx *OutputEntryContext) {}
 
-// ExitSingleField is called when production singleField is exited.
-func (s *BasePromptDSLListener) ExitSingleField(ctx *SingleFieldContext) {}
+// ExitOutputEntry is called when production outputEntry is exited.
+func (s *BasePromptDSLListener) ExitOutputEntry(ctx *OutputEntryContext) {}
 
-// EnterOutputBody is called when production outputBody is entered.
-func (s *BasePromptDSLListener) EnterOutputBody(ctx *OutputBodyContext) {}
+// EnterSystemSection is called when production systemSection is entered.
+func (s *BasePromptDSLListener) EnterSystemSection(ctx *SystemSectionContext) {}
 
-// ExitOutputBody is called when production outputBody is exited.
-func (s *BasePromptDSLListener) ExitOutputBody(ctx *OutputBodyContext) {}
+// ExitSystemSection is called when production systemSection is exited.
+func (s *BasePromptDSLListener) ExitSystemSection(ctx *SystemSectionContext) {}
+
+// EnterUserSection is called when production userSection is entered.
+func (s *BasePromptDSLListener) EnterUserSection(ctx *UserSectionContext) {}
+
+// ExitUserSection is called when production userSection is exited.
+func (s *BasePromptDSLListener) ExitUserSection(ctx *UserSectionContext) {}
+
+// EnterNoteSection is called when production noteSection is entered.
+func (s *BasePromptDSLListener) EnterNoteSection(ctx *NoteSectionContext) {}
+
+// ExitNoteSection is called when production noteSection is exited.
+func (s *BasePromptDSLListener) ExitNoteSection(ctx *NoteSectionContext) {}
+
+// EnterAfterSection is called when production afterSection is entered.
+func (s *BasePromptDSLListener) EnterAfterSection(ctx *AfterSectionContext) {}
+
+// ExitAfterSection is called when production afterSection is exited.
+func (s *BasePromptDSLListener) ExitAfterSection(ctx *AfterSectionContext) {}
+
+// EnterAfterContent is called when production afterContent is entered.
+func (s *BasePromptDSLListener) EnterAfterContent(ctx *AfterContentContext) {}
+
+// ExitAfterContent is called when production afterContent is exited.
+func (s *BasePromptDSLListener) ExitAfterContent(ctx *AfterContentContext) {}
+
+// EnterAfterEntry is called when production afterEntry is entered.
+func (s *BasePromptDSLListener) EnterAfterEntry(ctx *AfterEntryContext) {}
+
+// ExitAfterEntry is called when production afterEntry is exited.
+func (s *BasePromptDSLListener) ExitAfterEntry(ctx *AfterEntryContext) {}
 
 // EnterFieldDef is called when production fieldDef is entered.
 func (s *BasePromptDSLListener) EnterFieldDef(ctx *FieldDefContext) {}
 
 // ExitFieldDef is called when production fieldDef is exited.
 func (s *BasePromptDSLListener) ExitFieldDef(ctx *FieldDefContext) {}
+
+// EnterTextLine is called when production textLine is entered.
+func (s *BasePromptDSLListener) EnterTextLine(ctx *TextLineContext) {}
+
+// ExitTextLine is called when production textLine is exited.
+func (s *BasePromptDSLListener) ExitTextLine(ctx *TextLineContext) {}
+
+// EnterParamPath is called when production paramPath is entered.
+func (s *BasePromptDSLListener) EnterParamPath(ctx *ParamPathContext) {}
+
+// ExitParamPath is called when production paramPath is exited.
+func (s *BasePromptDSLListener) ExitParamPath(ctx *ParamPathContext) {}
 
 // EnterStructDef is called when production structDef is entered.
 func (s *BasePromptDSLListener) EnterStructDef(ctx *StructDefContext) {}
@@ -103,36 +139,6 @@ func (s *BasePromptDSLListener) EnterArrayLiteral(ctx *ArrayLiteralContext) {}
 
 // ExitArrayLiteral is called when production arrayLiteral is exited.
 func (s *BasePromptDSLListener) ExitArrayLiteral(ctx *ArrayLiteralContext) {}
-
-// EnterUserBlock is called when production userBlock is entered.
-func (s *BasePromptDSLListener) EnterUserBlock(ctx *UserBlockContext) {}
-
-// ExitUserBlock is called when production userBlock is exited.
-func (s *BasePromptDSLListener) ExitUserBlock(ctx *UserBlockContext) {}
-
-// EnterClassificationBlock is called when production classificationBlock is entered.
-func (s *BasePromptDSLListener) EnterClassificationBlock(ctx *ClassificationBlockContext) {}
-
-// ExitClassificationBlock is called when production classificationBlock is exited.
-func (s *BasePromptDSLListener) ExitClassificationBlock(ctx *ClassificationBlockContext) {}
-
-// EnterSummarizationBlock is called when production summarizationBlock is entered.
-func (s *BasePromptDSLListener) EnterSummarizationBlock(ctx *SummarizationBlockContext) {}
-
-// ExitSummarizationBlock is called when production summarizationBlock is exited.
-func (s *BasePromptDSLListener) ExitSummarizationBlock(ctx *SummarizationBlockContext) {}
-
-// EnterCompilationBlock is called when production compilationBlock is entered.
-func (s *BasePromptDSLListener) EnterCompilationBlock(ctx *CompilationBlockContext) {}
-
-// ExitCompilationBlock is called when production compilationBlock is exited.
-func (s *BasePromptDSLListener) ExitCompilationBlock(ctx *CompilationBlockContext) {}
-
-// EnterKvPair is called when production kvPair is entered.
-func (s *BasePromptDSLListener) EnterKvPair(ctx *KvPairContext) {}
-
-// ExitKvPair is called when production kvPair is exited.
-func (s *BasePromptDSLListener) ExitKvPair(ctx *KvPairContext) {}
 
 // EnterTextBlock is called when production textBlock is entered.
 func (s *BasePromptDSLListener) EnterTextBlock(ctx *TextBlockContext) {}
