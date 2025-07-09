@@ -390,9 +390,11 @@ func (s *PromptFileContext) ExitRule(listener antlr.ParseTreeListener) {
 func (s *PromptFileContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
 	case PromptDSLVisitor:
+		
 		return t.VisitPromptFile(s)
 
 	default:
+		
 		return t.VisitChildren(s)
 	}
 }
@@ -564,13 +566,19 @@ func (s *PromptDefContext) ExitRule(listener antlr.ParseTreeListener) {
 }
 
 func (s *PromptDefContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	fmt.Println("PromptDefContext.Accept called")
+	
 	switch t := visitor.(type) {
 	case PromptDSLVisitor:
+		
+
 		return t.VisitPromptDef(s)
 
 	default:
+		// fmt.Println("🌳 Syntax Tree:default")
 		return t.VisitChildren(s)
 	}
+	
 }
 
 func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {

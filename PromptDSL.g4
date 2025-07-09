@@ -73,28 +73,11 @@ afterEntry
     | JAVASCRIPT_BLOCK               // 支持反引号包裹的 JavaScript 代码块
     ;
 
-// 反引号包裹的多行JS代码，支持任意字符（非贪婪）
-// 保证以反引号开始和结束，中间可换行
+// 支持多行 JS，包裹在反引号中
 JAVASCRIPT_BLOCK
     : '`' (~'`' | '\r' | '\n')* '`'
     ;
-//
-// afterSection
-//     : 'after' '{' afterEntry+ '}'
-//     ;
 
-// afterEntry
-//     : 'js' ':' JAVASCRIPT_BLOCK
-//     ;
-
-// // --- lexer ---
-// JAVASCRIPT_START : '`' -> pushMode(JS_MODE);  // 可选（不一定需要）
-  
-// mode JS_MODE;
-
-// JAVASCRIPT_BLOCK
-//     : ( ~'`' )* '`' -> popMode
-//     ;
 // 字段定义
 fieldDef
     : ID ':' type ( '=' value )? annotation* SEMI? 

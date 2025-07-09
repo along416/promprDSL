@@ -1,17 +1,22 @@
 // Code generated from PromptDSL.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package promptdsl // PromptDSL
-import "github.com/antlr4-go/antlr/v4"
+import (
+	"github.com/antlr4-go/antlr/v4" 
+	"fmt"
+	)
 
 type BasePromptDSLVisitor struct {
 	*antlr.BaseParseTreeVisitor
 }
 
 func (v *BasePromptDSLVisitor) VisitPromptFile(ctx *PromptFileContext) interface{} {
+	fmt.Println("🌳 Syntax Tree:VisitPromptFile")
 	return v.VisitChildren(ctx)
 }
 
 func (v *BasePromptDSLVisitor) VisitPromptDef(ctx *PromptDefContext) interface{} {
+	fmt.Println("🌳 Syntax Tree base:")
 	return v.VisitChildren(ctx)
 }
 
@@ -44,6 +49,7 @@ func (v *BasePromptDSLVisitor) VisitNoteSection(ctx *NoteSectionContext) interfa
 }
 
 func (v *BasePromptDSLVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
+	// fmt.Println("🌳 Syntax Tree:")
 	return v.VisitChildren(ctx)
 }
 
