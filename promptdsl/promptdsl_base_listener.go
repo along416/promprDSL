@@ -74,6 +74,24 @@ func (s *BasePromptDSLListener) EnterNoteSection(ctx *NoteSectionContext) {}
 // ExitNoteSection is called when production noteSection is exited.
 func (s *BasePromptDSLListener) ExitNoteSection(ctx *NoteSectionContext) {}
 
+// EnterBeforeSection is called when production beforeSection is entered.
+func (s *BasePromptDSLListener) EnterBeforeSection(ctx *BeforeSectionContext) {}
+
+// ExitBeforeSection is called when production beforeSection is exited.
+func (s *BasePromptDSLListener) ExitBeforeSection(ctx *BeforeSectionContext) {}
+
+// EnterBeforeContent is called when production beforeContent is entered.
+func (s *BasePromptDSLListener) EnterBeforeContent(ctx *BeforeContentContext) {}
+
+// ExitBeforeContent is called when production beforeContent is exited.
+func (s *BasePromptDSLListener) ExitBeforeContent(ctx *BeforeContentContext) {}
+
+// EnterBeforeEntry is called when production beforeEntry is entered.
+func (s *BasePromptDSLListener) EnterBeforeEntry(ctx *BeforeEntryContext) {}
+
+// ExitBeforeEntry is called when production beforeEntry is exited.
+func (s *BasePromptDSLListener) ExitBeforeEntry(ctx *BeforeEntryContext) {}
+
 // EnterAfterSection is called when production afterSection is entered.
 func (s *BasePromptDSLListener) EnterAfterSection(ctx *AfterSectionContext) {}
 
@@ -91,6 +109,18 @@ func (s *BasePromptDSLListener) EnterAfterEntry(ctx *AfterEntryContext) {}
 
 // ExitAfterEntry is called when production afterEntry is exited.
 func (s *BasePromptDSLListener) ExitAfterEntry(ctx *AfterEntryContext) {}
+
+// EnterDslCallExpr is called when production dslCallExpr is entered.
+func (s *BasePromptDSLListener) EnterDslCallExpr(ctx *DslCallExprContext) {}
+
+// ExitDslCallExpr is called when production dslCallExpr is exited.
+func (s *BasePromptDSLListener) ExitDslCallExpr(ctx *DslCallExprContext) {}
+
+// EnterExpr is called when production expr is entered.
+func (s *BasePromptDSLListener) EnterExpr(ctx *ExprContext) {}
+
+// ExitExpr is called when production expr is exited.
+func (s *BasePromptDSLListener) ExitExpr(ctx *ExprContext) {}
 
 // EnterFieldDef is called when production fieldDef is entered.
 func (s *BasePromptDSLListener) EnterFieldDef(ctx *FieldDefContext) {}

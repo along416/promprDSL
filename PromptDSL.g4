@@ -28,6 +28,7 @@ promptBlock
     | systemSection
     | userSection
     | noteSection 
+    | beforeSection
     | afterSection
     ;
 //input
@@ -44,19 +45,33 @@ outputEntry
     | 'type' ID 'struct' '{' fieldDef+ '}'        // type step struct { ... }
     | 'schema' ':' type SEMI?
     ;
-
+//sys
 systemSection
     : 'system' '{' textLine+ '}'
     ;
-
+//user
 userSection
     : 'user' '{' textLine+ '}'
     ;
-
+//note
 noteSection
     : 'note' '{' textLine+ '}'
     ;
+// Before Section
+beforeSection
+    : 'before' '{' beforeContent '}'
+    ;
 
+beforeContent
+    : beforeEntry (PLUS beforeEntry)*
+    | JAVASCRIPT_BLOCK
+    ;
+
+beforeEntry
+    : dslCallExpr
+    | STRING
+    | JAVASCRIPT_BLOCK
+    ;
 // after
 PLUS : '+';
 afterSection
@@ -69,8 +84,21 @@ afterContent
     ;
 
 afterEntry
-    : STRING                         // 普通字符串
+    : dslCallExpr
+    | STRING                         // 普通字符串
     | JAVASCRIPT_BLOCK               // 支持反引号包裹的 JavaScript 代码块
+    ;
+// dslCallExpr
+//     : paramPath '(' (paramPath | STRING | NUMBER | BOOL)? ')' // 支持函数调用
+//     ;
+dslCallExpr
+    : paramPath '(' (expr (',' expr)*)? ')'
+    ;
+expr
+    : STRING
+    | NUMBER
+    | BOOL
+    | paramPath
     ;
 
 // 支持多行 JS，包裹在反引号中
@@ -89,7 +117,7 @@ textLine
     | paramPath
     ;
 paramPath
-    : (ID | IN | OUTPUT) ('.' (ID | SCHEMA) )*
+    : (ID | INPUT | OUTPUT | AFTER | BEFORE) ('.' (ID | SCHEMA|PARSE|JSONFIX) )*
     ;
 // 结构体定义
 structDef
@@ -170,13 +198,16 @@ PARAMS  : 'params';
 SYSTEM  : 'system';
 USER    : 'user';
 NOTE    : 'note';
-IN      : 'in';
+INPUT   : 'input';
 OUTPUT  : 'output';
 FORMAT  : 'format';
 TYPE    : 'type';
 STRUCT  : 'struct';
+BEFORE  : 'before';
 SCHEMA  : 'schema';
 AFTER   : 'after';
+PARSE   : 'parse';
+JSONFIX : 'jsonfix';
 
 // 基础 Tokens
 ID      : [a-zA-Z_][a-zA-Z_0-9]* ;

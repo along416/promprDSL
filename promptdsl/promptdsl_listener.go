@@ -34,6 +34,15 @@ type PromptDSLListener interface {
 	// EnterNoteSection is called when entering the noteSection production.
 	EnterNoteSection(c *NoteSectionContext)
 
+	// EnterBeforeSection is called when entering the beforeSection production.
+	EnterBeforeSection(c *BeforeSectionContext)
+
+	// EnterBeforeContent is called when entering the beforeContent production.
+	EnterBeforeContent(c *BeforeContentContext)
+
+	// EnterBeforeEntry is called when entering the beforeEntry production.
+	EnterBeforeEntry(c *BeforeEntryContext)
+
 	// EnterAfterSection is called when entering the afterSection production.
 	EnterAfterSection(c *AfterSectionContext)
 
@@ -42,6 +51,12 @@ type PromptDSLListener interface {
 
 	// EnterAfterEntry is called when entering the afterEntry production.
 	EnterAfterEntry(c *AfterEntryContext)
+
+	// EnterDslCallExpr is called when entering the dslCallExpr production.
+	EnterDslCallExpr(c *DslCallExprContext)
+
+	// EnterExpr is called when entering the expr production.
+	EnterExpr(c *ExprContext)
 
 	// EnterFieldDef is called when entering the fieldDef production.
 	EnterFieldDef(c *FieldDefContext)
@@ -106,6 +121,15 @@ type PromptDSLListener interface {
 	// ExitNoteSection is called when exiting the noteSection production.
 	ExitNoteSection(c *NoteSectionContext)
 
+	// ExitBeforeSection is called when exiting the beforeSection production.
+	ExitBeforeSection(c *BeforeSectionContext)
+
+	// ExitBeforeContent is called when exiting the beforeContent production.
+	ExitBeforeContent(c *BeforeContentContext)
+
+	// ExitBeforeEntry is called when exiting the beforeEntry production.
+	ExitBeforeEntry(c *BeforeEntryContext)
+
 	// ExitAfterSection is called when exiting the afterSection production.
 	ExitAfterSection(c *AfterSectionContext)
 
@@ -114,6 +138,12 @@ type PromptDSLListener interface {
 
 	// ExitAfterEntry is called when exiting the afterEntry production.
 	ExitAfterEntry(c *AfterEntryContext)
+
+	// ExitDslCallExpr is called when exiting the dslCallExpr production.
+	ExitDslCallExpr(c *DslCallExprContext)
+
+	// ExitExpr is called when exiting the expr production.
+	ExitExpr(c *ExprContext)
 
 	// ExitFieldDef is called when exiting the fieldDef production.
 	ExitFieldDef(c *FieldDefContext)

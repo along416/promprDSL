@@ -48,5 +48,10 @@ func main() {
 
 	visitor.Visit(tree)
 	fmt.Println("🌳 ...end")
+	// 生成最终的 Prompt 字符串
+	finalPrompt := visitor.GeneratePrompt()
+
+	// 输出生成的 Prompt
+	fmt.Println(finalPrompt)
 	// fmt.Println(tree.ToStringTree(nil, parser))
 }

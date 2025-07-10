@@ -1,22 +1,17 @@
 // Code generated from PromptDSL.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package promptdsl // PromptDSL
-import (
-	"github.com/antlr4-go/antlr/v4" 
-	"fmt"
-	)
+import "github.com/antlr4-go/antlr/v4"
 
 type BasePromptDSLVisitor struct {
 	*antlr.BaseParseTreeVisitor
 }
 
 func (v *BasePromptDSLVisitor) VisitPromptFile(ctx *PromptFileContext) interface{} {
-	fmt.Println("🌳 Syntax Tree:VisitPromptFile")
 	return v.VisitChildren(ctx)
 }
 
 func (v *BasePromptDSLVisitor) VisitPromptDef(ctx *PromptDefContext) interface{} {
-	fmt.Println("🌳 Syntax Tree base:")
 	return v.VisitChildren(ctx)
 }
 
@@ -48,8 +43,19 @@ func (v *BasePromptDSLVisitor) VisitNoteSection(ctx *NoteSectionContext) interfa
 	return v.VisitChildren(ctx)
 }
 
+func (v *BasePromptDSLVisitor) VisitBeforeSection(ctx *BeforeSectionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitBeforeContent(ctx *BeforeContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitBeforeEntry(ctx *BeforeEntryContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BasePromptDSLVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
-	// fmt.Println("🌳 Syntax Tree:")
 	return v.VisitChildren(ctx)
 }
 
@@ -58,6 +64,14 @@ func (v *BasePromptDSLVisitor) VisitAfterContent(ctx *AfterContentContext) inter
 }
 
 func (v *BasePromptDSLVisitor) VisitAfterEntry(ctx *AfterEntryContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitDslCallExpr(ctx *DslCallExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitExpr(ctx *ExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

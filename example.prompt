@@ -34,8 +34,37 @@ prompt SplitSolutionSteps {
         "上一步结果可作为下一步条件。"
     }
 
+    before{
+        before.instead("![](xxx.jpg)", "![](t-{i})",true,input.question) //固定替换输入内容，true为是否保留映射关系
+        before....
+
+        `updated = updated.toLowerCase();`
+    }
+
 	after {
-		`let processed = response.trim().toUpperCase();
-        processed;`
-	}
+        after.jsonfix(output)
+        after.parse(output)
+        after....
+        `
+        let finalResult = data.map((sub, index) => {
+            let media = [];
+            let regex = /!\[\]\((.*?)\)/g;
+            let match;
+            while ((match = regex.exec(sub.Content)) !== null) {
+                media.push({
+                    Type: "image",
+                    Urls: match[1],
+                    OCRText: ""
+                });
+            }
+
+            return {
+                Content: sub.Content,
+                Options: sub.Options,
+                SubID: sub.SubID,
+                Media: media
+            };
+        });
+     `
+     }
 }

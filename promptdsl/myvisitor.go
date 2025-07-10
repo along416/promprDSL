@@ -14,6 +14,16 @@ import (
 
 type MyVisitor struct {
 	*BasePromptDSLVisitor
+	SystemText string
+	UserText   string
+	InputVars  map[string]string
+	AfterJS    string
+}
+
+func NewMyVisitor() *MyVisitor {
+	return &MyVisitor{
+		InputVars: make(map[string]string),
+	}
 }
 
 // 转义单斜杠
@@ -61,15 +71,77 @@ func ExtractJSON(text string, ret any) error {
 	return nil
 }
 
-var _ PromptDSLVisitor = (*MyVisitor)(nil)
+// 辅助函数：合并 textLine 列表为字符串
+func extractTextLines(lines []ITextLineContext) string {
+	var sb strings.Builder
+	for _, line := range lines {
+		sb.WriteString(line.GetText())
+		sb.WriteString("\n")
+	}
+	return sb.String()
+}
 
+// 提取 After 中 JS 代码
+func extractAfterCode(section IAfterSectionContext) string {
+	var sb strings.Builder
+	entries := section.AfterContent().AllAfterEntry()
+	for _, entry := range entries {
+		code := entry.GetText()
+		sb.WriteString(strings.Trim(code, "`"))
+		sb.WriteString("\n") // 你可以根据需要加入换行
+	}
+	return sb.String()
+}
+
+// var _ PromptDSLVisitor = (*MyVisitor)(nil)
+// 拼接最终的 Prompt
+func (v *MyVisitor) GeneratePromptf(inputContent string) string {
+	// 拼接 system、user、input 等部分
+	finalPrompt := fmt.Sprintf(`system:
+%s
+
+user:
+%s
+
+input:
+%s
+`, v.SystemText, v.UserText, inputContent)
+
+	// 你还可以在最后加上 AfterJS 的后处理部分
+	if v.AfterJS != "" {
+		finalPrompt += fmt.Sprintf("\nafter:\n%s\n", v.AfterJS)
+	}
+
+	return finalPrompt
+}
+func (v *MyVisitor) GeneratePrompt() string {
+	return v.GeneratePromptf("")
+}
 func (v *MyVisitor) Visit(tree antlr.ParseTree) interface{} {
 	// fmt.Println("🔍 Visiting Syntax Tree...")
 	return tree.Accept(v)
 }
-func (v *MyVisitor) VisitPromptBlock(ctx *PromptBlockContext) interface{} {
-	// fmt.Println("📦 Entering PromptBlock")
-	return v.VisitChildren(ctx)
+
+//	func (v *MyVisitor) VisitPromptBlock(ctx *PromptBlockContext) interface{} {
+//		// fmt.Println("📦 Entering PromptBlock")
+//		return v.VisitChildren(ctx)
+//	}
+func (v *MyVisitor) VisitPromptBlock(ctx PromptBlockContext) interface{} {
+	switch {
+	case ctx.InputSection() != nil:
+		v.Visit(ctx.InputSection())
+	case ctx.OutputSection() != nil:
+		// 可忽略或保留结构定义
+	case ctx.SystemSection() != nil:
+		v.SystemText = extractTextLines(ctx.SystemSection().AllTextLine())
+	case ctx.UserSection() != nil:
+		v.UserText = extractTextLines(ctx.UserSection().AllTextLine())
+	case ctx.NoteSection() != nil:
+		// 可以拼到 user prompt 结尾作为注意事项
+	case ctx.AfterSection() != nil:
+		v.AfterJS = extractAfterCode(ctx.AfterSection())
+	}
+	return nil
 }
 
 func (v *MyVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
@@ -119,6 +191,7 @@ func (v *MyVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
 	fmt.Println("结果:", value.String())
 	return v.VisitChildren(ctx)
 }
+
 func (v *MyVisitor) VisitAfterContent(ctx *AfterContentContext) interface{} {
 	// fmt.Println("📂 VisitAfterContent")
 	return v.VisitChildren(ctx)
@@ -139,11 +212,19 @@ func (v *MyVisitor) VisitChildren(node antlr.RuleNode) interface{} {
 	return nil
 }
 
+// func (v *MyVisitor) VisitPromptDef(ctx *PromptDefContext) interface{} {
+// 	// fmt.Println("🌳 Syntax Tree:myvisitor")
+// 	// log.Println("解释执行 PromptDef:", ctx.GetText())
+// 	return v.VisitChildren(ctx)
+// }
+
 func (v *MyVisitor) VisitPromptDef(ctx *PromptDefContext) interface{} {
-	// fmt.Println("🌳 Syntax Tree:myvisitor")
-	// log.Println("解释执行 PromptDef:", ctx.GetText())
-	return v.VisitChildren(ctx)
+	for _, block := range ctx.AllPromptBlock() {
+		v.Visit(block)
+	}
+	return nil
 }
+
 func (v *MyVisitor) VisitPromptFile(ctx *PromptFileContext) interface{} {
 	// fmt.Println("🌳 Syntax Tree:VisitPromptFile")
 	return v.VisitChildren(ctx)
