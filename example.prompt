@@ -1,30 +1,36 @@
 prompt SplitSolutionSteps {
     input {
-            question: string;
-        }
+            question: string
+    }
 
     output {
-        format: json;
-        type step struct {
-            Conditions: []string;
-            KnowledgePoint: string;
-            ProcessResult: string;
-        }
-        schema: []step;
+            List: []struct {
+            Conditions: []string @latex @hint("qingxxx")
+            KnowledgePoint: string
+            ProcessResult: string
+	}
     }
-        
+
+    output: markdown
+
+    sys {
+       sys_role
+       sys_expertise       
+    }
+
     system {
         "你是一个擅长拆分解题步骤的数学老师，当前任务是将解题步骤进行合理拆分"
     }
 
     user {
+        if/else for/while
         "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
         "条件，知识点，结果"
         "请将输出内容严格按照以下格式返回："
         output.schema
         "特别提醒：本题可能涉及 extra_hint，请根据步骤合理提取对应知识点。"
         "以下是输入内容，请据此拆解："
-        in.question
+        input.question
     }
 
     note {
@@ -34,19 +40,15 @@ prompt SplitSolutionSteps {
         "上一步结果可作为下一步条件。"
     }
 
-    before{
-        before.instead("![](xxx.jpg)", "![](t-{i})",true,input.question) //固定替换输入内容，true为是否保留映射关系
-        before....
+    fix {
+        response
+        return {
+        }
+     }
 
-        `updated = updated.toLowerCase();`
-    }
+    after {
 
-	after {
-        after.jsonfix(output)
-        after.parse(output)
-        after....
-        `
-        let finalResult = data.map((sub, index) => {
+        return response.map((sub, index) => {
             let media = [];
             let regex = /!\[\]\((.*?)\)/g;
             let match;
@@ -65,6 +67,5 @@ prompt SplitSolutionSteps {
                 Media: media
             };
         });
-     `
      }
 }
