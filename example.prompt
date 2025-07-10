@@ -23,7 +23,10 @@ prompt SplitSolutionSteps {
     }
 
     user {
-        if/else for/while
+        if (in.question == ''){
+            "fdfdsfdsafdaf"
+        }
+        if/else
         "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
         "条件，知识点，结果"
         "请将输出内容严格按照以下格式返回："
