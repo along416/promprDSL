@@ -19,6 +19,18 @@ func (v *BasePromptDSLVisitor) VisitPromptBlock(ctx *PromptBlockContext) interfa
 	return v.VisitChildren(ctx)
 }
 
+func (v *BasePromptDSLVisitor) VisitSysSection(ctx *SysSectionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitModuleDef(ctx *ModuleDefContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitModuleContent(ctx *ModuleContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BasePromptDSLVisitor) VisitInputSection(ctx *InputSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -27,7 +39,11 @@ func (v *BasePromptDSLVisitor) VisitOutputSection(ctx *OutputSectionContext) int
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePromptDSLVisitor) VisitOutputEntry(ctx *OutputEntryContext) interface{} {
+func (v *BasePromptDSLVisitor) VisitOutputStruct(ctx *OutputStructContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitOutputMarkdown(ctx *OutputMarkdownContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -39,31 +55,19 @@ func (v *BasePromptDSLVisitor) VisitUserSection(ctx *UserSectionContext) interfa
 	return v.VisitChildren(ctx)
 }
 
+func (v *BasePromptDSLVisitor) VisitUserContent(ctx *UserContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitIfStatement(ctx *IfStatementContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitCondition(ctx *ConditionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BasePromptDSLVisitor) VisitNoteSection(ctx *NoteSectionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePromptDSLVisitor) VisitBeforeSection(ctx *BeforeSectionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePromptDSLVisitor) VisitBeforeContent(ctx *BeforeContentContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePromptDSLVisitor) VisitBeforeEntry(ctx *BeforeEntryContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePromptDSLVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePromptDSLVisitor) VisitAfterContent(ctx *AfterContentContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePromptDSLVisitor) VisitAfterEntry(ctx *AfterEntryContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -104,6 +108,14 @@ func (v *BasePromptDSLVisitor) VisitAnnotationValue(ctx *AnnotationValueContext)
 }
 
 func (v *BasePromptDSLVisitor) VisitArrayLiteral(ctx *ArrayLiteralContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitFixSection(ctx *FixSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

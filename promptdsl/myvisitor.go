@@ -3,7 +3,7 @@ package promptdsl
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	// "log"
 	"regexp"
 	"strings"
 
@@ -83,14 +83,14 @@ func extractTextLines(lines []ITextLineContext) string {
 
 // 提取 After 中 JS 代码
 func extractAfterCode(section IAfterSectionContext) string {
-	var sb strings.Builder
-	entries := section.AfterContent().AllAfterEntry()
-	for _, entry := range entries {
-		code := entry.GetText()
-		sb.WriteString(strings.Trim(code, "`"))
-		sb.WriteString("\n") // 你可以根据需要加入换行
-	}
-	return sb.String()
+	// var sb strings.Builder
+	// entries := section.AfterContent().AllAfterEntry()
+	// for _, entry := range entries {
+	// 	code := entry.GetText()
+	// 	sb.WriteString(strings.Trim(code, "`"))
+	// 	sb.WriteString("\n") // 你可以根据需要加入换行
+	// }
+	return ""
 }
 
 // var _ PromptDSLVisitor = (*MyVisitor)(nil)
@@ -135,7 +135,7 @@ func (v *MyVisitor) VisitPromptBlock(ctx PromptBlockContext) interface{} {
 	case ctx.SystemSection() != nil:
 		v.SystemText = extractTextLines(ctx.SystemSection().AllTextLine())
 	case ctx.UserSection() != nil:
-		v.UserText = extractTextLines(ctx.UserSection().AllTextLine())
+		// v.UserText = extractTextLines(ctx.UserSection().AllTextLine())
 	case ctx.NoteSection() != nil:
 		// 可以拼到 user prompt 结尾作为注意事项
 	case ctx.AfterSection() != nil:
@@ -164,42 +164,35 @@ func (v *MyVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
 	//else
 
 	//jscode
-	var jsCode string
-	afterContent := ctx.AfterContent()
-	fmt.Printf("📦 AfterContent text: %s\n", afterContent.GetText())
-	if jsBlock := afterContent.JAVASCRIPT_BLOCK(); jsBlock != nil {
-		// 去掉反引号（`）包裹
-		raw := jsBlock.GetText()
-		jsCode = strings.Trim(raw, "`")
-	} else {
-		// 多个 entry 拼接
-		for _, entry := range afterContent.AllAfterEntry() {
-			text := entry.GetText()
-			if strings.HasPrefix(text, "`") {
-				text = strings.Trim(text, "`")
-			} else {
-				text = strings.Trim(text, "\"") // 也可能是字符串
-			}
-			jsCode += text + "\n"
-		}
-	}
+	// var jsCode string
+	// afterContent := ""
+	// fmt.Printf("📦 AfterContent text: %s\n", afterContent.GetText())
+	// if jsBlock := afterContent.JAVASCRIPT_BLOCK(); jsBlock != nil {
+	// 	// 去掉反引号（`）包裹
+	// 	raw := jsBlock.GetText()
+	// 	jsCode = strings.Trim(raw, "`")
+	// } else {
+	// 	// 多个 entry 拼接
+	// 	for _, entry := range afterContent.AllAfterEntry() {
+	// 		text := entry.GetText()
+	// 		if strings.HasPrefix(text, "`") {
+	// 			text = strings.Trim(text, "`")
+	// 		} else {
+	// 			text = strings.Trim(text, "\"") // 也可能是字符串
+	// 		}
+	// 		jsCode += text + "\n"
+	// 	}
+	// }
 
-	value, err := vm.RunString(jsCode)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("结果:", value.String())
+	// value, err := vm.RunString(jsCode)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("结果:", value.String())
 	return v.VisitChildren(ctx)
 }
 
-func (v *MyVisitor) VisitAfterContent(ctx *AfterContentContext) interface{} {
-	// fmt.Println("📂 VisitAfterContent")
-	return v.VisitChildren(ctx)
-}
-func (v *MyVisitor) VisitAfterEntry(ctx *AfterEntryContext) interface{} {
-	// fmt.Println("📄 VisitAfterEntry:", ctx.GetText())
-	return nil
-}
+
 func (v *MyVisitor) VisitChildren(node antlr.RuleNode) interface{} {
 	fmt.Println("📦 VisitChildren")
 	n := node.GetChildCount()
@@ -237,9 +230,9 @@ func (v *MyVisitor) VisitOutputSection(ctx *OutputSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *MyVisitor) VisitOutputEntry(ctx *OutputEntryContext) interface{} {
-	return v.VisitChildren(ctx)
-}
+// func (v *MyVisitor) VisitOutputEntry(ctx *OutputEntryContext) interface{} {
+// 	return v.VisitChildren(ctx)
+// }
 
 func (v *MyVisitor) VisitSystemSection(ctx *SystemSectionContext) interface{} {
 	return v.VisitChildren(ctx)

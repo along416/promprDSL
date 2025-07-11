@@ -25,12 +25,23 @@ promptDef   : PROMPT ID '{' promptBlock+ '}' ;
 promptBlock 
     : inputSection
     | outputSection
+    | sysSection
     | systemSection
     | userSection
     | noteSection 
-    | beforeSection
     | afterSection
+    | fixSection
+    | moduleDef //自定义模块
     ;
+//sys    
+sysSection: 'sys' '{' ID+ '}';
+
+moduleDef: ID '{' moduleContent* '}';
+moduleContent
+    : textLine
+    | paramPath
+    ;
+
 //input
 inputSection
     : 'input'  '{' fieldDef+ '}'
@@ -38,56 +49,44 @@ inputSection
 
 //output
 outputSection
-    : 'output' '{' outputEntry+ '}'
+    : 'output' (outputStruct | outputMarkdown)
     ;
-outputEntry
-    : 'format' ':' formatType SEMI?
-    | 'type' ID 'struct' '{' fieldDef+ '}'        // type step struct { ... }
-    | 'schema' ':' type SEMI?
-    ;
+outputStruct:'{' fieldDef+ '}';
+outputMarkdown: ':' MARKDOWN;
+
+
 //sys
 systemSection
     : 'system' '{' textLine+ '}'
     ;
 //user
 userSection
-    : 'user' '{' textLine+ '}'
+    : 'user' '{' userContent+ '}'
+    ;
+
+userContent
+    : ifStatement
+    | textLine
+    | OUTPUTSPEC
+    | expr
+    ;
+
+ifStatement
+    : 'if' '(' condition ')' '{' userContent* '}' ('else' '{' userContent* '}')?
+    ;
+condition
+    : expr ('==' | '!=') expr
+    | expr
     ;
 //note
 noteSection
     : 'note' '{' textLine+ '}'
     ;
-// Before Section
-beforeSection
-    : 'before' '{' beforeContent '}'
-    ;
 
-beforeContent
-    : beforeEntry (PLUS beforeEntry)*
-    | JAVASCRIPT_BLOCK
-    ;
 
-beforeEntry
-    : dslCallExpr
-    | STRING
-    | JAVASCRIPT_BLOCK
-    ;
 // after
 PLUS : '+';
-afterSection
-    : 'after' '{' afterContent '}'
-    ;
 
-afterContent
-    : afterEntry (PLUS afterEntry)*  // 支持多个 afterEntry 拼接
-    | JAVASCRIPT_BLOCK               // 直接支持 JavaScript 代码块
-    ;
-
-afterEntry
-    : dslCallExpr
-    | STRING                         // 普通字符串
-    | JAVASCRIPT_BLOCK               // 支持反引号包裹的 JavaScript 代码块
-    ;
 // dslCallExpr
 //     : paramPath '(' (paramPath | STRING | NUMBER | BOOL)? ')' // 支持函数调用
 //     ;
@@ -101,10 +100,6 @@ expr
     | paramPath
     ;
 
-// 支持多行 JS，包裹在反引号中
-JAVASCRIPT_BLOCK
-    : '`' (~'`' | '\r' | '\n')* '`'
-    ;
 
 // 字段定义
 fieldDef
@@ -117,7 +112,7 @@ textLine
     | paramPath
     ;
 paramPath
-    : (ID | INPUT | OUTPUT | AFTER | BEFORE) ('.' (ID | SCHEMA|PARSE|JSONFIX) )*
+    : (ID | INPUT | OUTPUT | AFTER | BEFORE) ('.' ID )*
     ;
 // 结构体定义
 structDef
@@ -140,6 +135,14 @@ annotationValue
 
 arrayLiteral
     : '[' (STRING (',' STRING)*)? ']' 
+    ;
+
+afterSection
+    : '<after>' .*? '</after>'
+    ;
+
+fixSection
+    : '<fix>' .*? '</fix>'
     ;
 
 // // 用户内容块
@@ -176,7 +179,8 @@ type
     : STRING_TYPE
     | FLOAT_TYPE
     | INT_TYPE
-    | '[]' type   
+    | '[]' type
+    | 'struct' '{' fieldDef* '}'    
     | ID 
     ;
 
@@ -208,6 +212,10 @@ SCHEMA  : 'schema';
 AFTER   : 'after';
 PARSE   : 'parse';
 JSONFIX : 'jsonfix';
+MARKDOWN : 'markdown';
+IF : 'if';
+ELSE : 'else';
+OUTPUTSPEC : 'outputspec';
 
 // 基础 Tokens
 ID      : [a-zA-Z_][a-zA-Z_0-9]* ;
@@ -232,6 +240,18 @@ SEMI    : ';';
 //         l.SetType(PromptDSLLexerNOTE)
 //     }
 // };
+// 支持多行 JS，包裹在反引号中
+// JAVASCRIPT_BLOCK
+//     :  (~'<' | '\r' | '\n')+
+//     ;
+// afterSection
+//     : '<' 'after>' JAVASCRIPT_BLOCK '</after>'
+//     ;
+
+
+// fixSection
+//     : '<' 'fix>' JAVASCRIPT_BLOCK '</fix>'
+//     ;
 
 // 空白和注释
 WS      : [ \t\r\n]+ -> skip ;

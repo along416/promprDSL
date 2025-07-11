@@ -16,14 +16,26 @@ type PromptDSLListener interface {
 	// EnterPromptBlock is called when entering the promptBlock production.
 	EnterPromptBlock(c *PromptBlockContext)
 
+	// EnterSysSection is called when entering the sysSection production.
+	EnterSysSection(c *SysSectionContext)
+
+	// EnterModuleDef is called when entering the moduleDef production.
+	EnterModuleDef(c *ModuleDefContext)
+
+	// EnterModuleContent is called when entering the moduleContent production.
+	EnterModuleContent(c *ModuleContentContext)
+
 	// EnterInputSection is called when entering the inputSection production.
 	EnterInputSection(c *InputSectionContext)
 
 	// EnterOutputSection is called when entering the outputSection production.
 	EnterOutputSection(c *OutputSectionContext)
 
-	// EnterOutputEntry is called when entering the outputEntry production.
-	EnterOutputEntry(c *OutputEntryContext)
+	// EnterOutputStruct is called when entering the outputStruct production.
+	EnterOutputStruct(c *OutputStructContext)
+
+	// EnterOutputMarkdown is called when entering the outputMarkdown production.
+	EnterOutputMarkdown(c *OutputMarkdownContext)
 
 	// EnterSystemSection is called when entering the systemSection production.
 	EnterSystemSection(c *SystemSectionContext)
@@ -31,26 +43,17 @@ type PromptDSLListener interface {
 	// EnterUserSection is called when entering the userSection production.
 	EnterUserSection(c *UserSectionContext)
 
+	// EnterUserContent is called when entering the userContent production.
+	EnterUserContent(c *UserContentContext)
+
+	// EnterIfStatement is called when entering the ifStatement production.
+	EnterIfStatement(c *IfStatementContext)
+
+	// EnterCondition is called when entering the condition production.
+	EnterCondition(c *ConditionContext)
+
 	// EnterNoteSection is called when entering the noteSection production.
 	EnterNoteSection(c *NoteSectionContext)
-
-	// EnterBeforeSection is called when entering the beforeSection production.
-	EnterBeforeSection(c *BeforeSectionContext)
-
-	// EnterBeforeContent is called when entering the beforeContent production.
-	EnterBeforeContent(c *BeforeContentContext)
-
-	// EnterBeforeEntry is called when entering the beforeEntry production.
-	EnterBeforeEntry(c *BeforeEntryContext)
-
-	// EnterAfterSection is called when entering the afterSection production.
-	EnterAfterSection(c *AfterSectionContext)
-
-	// EnterAfterContent is called when entering the afterContent production.
-	EnterAfterContent(c *AfterContentContext)
-
-	// EnterAfterEntry is called when entering the afterEntry production.
-	EnterAfterEntry(c *AfterEntryContext)
 
 	// EnterDslCallExpr is called when entering the dslCallExpr production.
 	EnterDslCallExpr(c *DslCallExprContext)
@@ -82,6 +85,12 @@ type PromptDSLListener interface {
 	// EnterArrayLiteral is called when entering the arrayLiteral production.
 	EnterArrayLiteral(c *ArrayLiteralContext)
 
+	// EnterAfterSection is called when entering the afterSection production.
+	EnterAfterSection(c *AfterSectionContext)
+
+	// EnterFixSection is called when entering the fixSection production.
+	EnterFixSection(c *FixSectionContext)
+
 	// EnterTextBlock is called when entering the textBlock production.
 	EnterTextBlock(c *TextBlockContext)
 
@@ -103,14 +112,26 @@ type PromptDSLListener interface {
 	// ExitPromptBlock is called when exiting the promptBlock production.
 	ExitPromptBlock(c *PromptBlockContext)
 
+	// ExitSysSection is called when exiting the sysSection production.
+	ExitSysSection(c *SysSectionContext)
+
+	// ExitModuleDef is called when exiting the moduleDef production.
+	ExitModuleDef(c *ModuleDefContext)
+
+	// ExitModuleContent is called when exiting the moduleContent production.
+	ExitModuleContent(c *ModuleContentContext)
+
 	// ExitInputSection is called when exiting the inputSection production.
 	ExitInputSection(c *InputSectionContext)
 
 	// ExitOutputSection is called when exiting the outputSection production.
 	ExitOutputSection(c *OutputSectionContext)
 
-	// ExitOutputEntry is called when exiting the outputEntry production.
-	ExitOutputEntry(c *OutputEntryContext)
+	// ExitOutputStruct is called when exiting the outputStruct production.
+	ExitOutputStruct(c *OutputStructContext)
+
+	// ExitOutputMarkdown is called when exiting the outputMarkdown production.
+	ExitOutputMarkdown(c *OutputMarkdownContext)
 
 	// ExitSystemSection is called when exiting the systemSection production.
 	ExitSystemSection(c *SystemSectionContext)
@@ -118,26 +139,17 @@ type PromptDSLListener interface {
 	// ExitUserSection is called when exiting the userSection production.
 	ExitUserSection(c *UserSectionContext)
 
+	// ExitUserContent is called when exiting the userContent production.
+	ExitUserContent(c *UserContentContext)
+
+	// ExitIfStatement is called when exiting the ifStatement production.
+	ExitIfStatement(c *IfStatementContext)
+
+	// ExitCondition is called when exiting the condition production.
+	ExitCondition(c *ConditionContext)
+
 	// ExitNoteSection is called when exiting the noteSection production.
 	ExitNoteSection(c *NoteSectionContext)
-
-	// ExitBeforeSection is called when exiting the beforeSection production.
-	ExitBeforeSection(c *BeforeSectionContext)
-
-	// ExitBeforeContent is called when exiting the beforeContent production.
-	ExitBeforeContent(c *BeforeContentContext)
-
-	// ExitBeforeEntry is called when exiting the beforeEntry production.
-	ExitBeforeEntry(c *BeforeEntryContext)
-
-	// ExitAfterSection is called when exiting the afterSection production.
-	ExitAfterSection(c *AfterSectionContext)
-
-	// ExitAfterContent is called when exiting the afterContent production.
-	ExitAfterContent(c *AfterContentContext)
-
-	// ExitAfterEntry is called when exiting the afterEntry production.
-	ExitAfterEntry(c *AfterEntryContext)
 
 	// ExitDslCallExpr is called when exiting the dslCallExpr production.
 	ExitDslCallExpr(c *DslCallExprContext)
@@ -168,6 +180,12 @@ type PromptDSLListener interface {
 
 	// ExitArrayLiteral is called when exiting the arrayLiteral production.
 	ExitArrayLiteral(c *ArrayLiteralContext)
+
+	// ExitAfterSection is called when exiting the afterSection production.
+	ExitAfterSection(c *AfterSectionContext)
+
+	// ExitFixSection is called when exiting the fixSection production.
+	ExitFixSection(c *FixSectionContext)
 
 	// ExitTextBlock is called when exiting the textBlock production.
 	ExitTextBlock(c *TextBlockContext)
