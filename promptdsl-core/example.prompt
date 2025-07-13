@@ -1,0 +1,68 @@
+prompt SplitSolutionSteps {
+    input {
+            question: string
+    }
+
+    output {
+            List: []struct {}
+            Conditions: []string 
+            KnowledgePoint: string
+            ProcessResult: string
+	}
+
+
+    sys {
+       sys_role
+       sys_expertise       
+    }
+
+    system {
+        "你是一个擅长拆分解题步骤的数学老师，当前任务是将解题步骤进行合理拆分"
+    }
+
+    user {
+        if (in.question == ""){
+            "fdfdsfdsafdaf"
+        }
+        else{
+        }
+        "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
+        "条件，知识点，结果"
+        "请将输出内容严格按照以下格式返回："
+        outputsepc
+        "特别提醒：本题可能涉及 extra_hint，请根据步骤合理提取对应知识点。"
+        "以下是输入内容，请据此拆解："
+        input.question
+    }
+
+    <fix>
+        // javascript code block
+
+        return {
+        };
+    </fix>
+
+    <after>
+        // javascript code block
+
+        return response.map((sub, index) => {
+            let media = [];
+            let regex = /!\[\]\((.*?)\)/g;
+            let match;
+            while ((match = regex.exec(sub.Content)) !== null) {
+                media.push({
+                    Type: "image",
+                    Urls: match[1],
+                    OCRText: ""
+                });
+            }
+
+            return {
+                Content: sub.Content,
+                Options: sub.Options,
+                SubID: sub.SubID,
+                Media: media
+            };
+        });
+    </after>
+}

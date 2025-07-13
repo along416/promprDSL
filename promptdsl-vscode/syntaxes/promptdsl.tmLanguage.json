@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "PromptDSL",
+  "scopeName": "source.promptdsl",
+  "patterns": [
+    {
+      "name": "keyword.control.promptdsl",
+      "match": "\\b(input|output|sys|system|user|fix|after|outputsepc|if|else|for|while|return)\\b"
+    },
+    {
+      "name": "entity.name.type.promptdsl",
+      "match": "\\b(SplitSolutionSteps|List|Conditions|KnowledgePoint|ProcessResult|Type|Urls|OCRText)\\b"
+    },
+    {
+      "name": "variable.other.promptdsl",
+      "match": "\\b(question|sys_role|sys_expertise|in|media|regex|match|response|sub|index)\\b"
+    },
+    {
+      "name": "keyword.operator.promptdsl",
+      "match": "==|=|\\{|\\}|\\(|\\)|\\[|\\]|;|,|\\.|!|\\+|-|\\*|\\/|%"
+    },
+    {
+      "name": "string.quoted.double.promptdsl",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.promptdsl",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "comment.line.double-slash.promptdsl",
+      "match": "//.*$"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "promptdsl",
+  "displayName": "promptdsl",
+  "description": "PromptDSL syntax highlighting and support",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.102.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "promptdsl",
+        "aliases": ["PromptDSL"],
+        "extensions": [".prompt"],
+        "configuration": "./language-configuration.jsonc"
+      }
+    ],
+  "grammars": [
+    {
+      "language": "promptdsl",
+      "scopeName": "source.promptdsl",
+      "path": "./syntaxes/promptdsl.tmLanguage.json"
+    }
+  ],
+  "activationEvents": [
+    "onLanguage:promptdsl"
+  ]
+  }
+}
