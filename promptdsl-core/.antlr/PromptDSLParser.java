@@ -1,4 +1,4 @@
-// Generated from d:/work/promptDSL/PromptDSL.g4 by ANTLR 4.13.1
+// Generated from d:/work/promptDSL/promptdsl-core/PromptDSL.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -968,6 +968,10 @@ public class PromptDSLParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ConditionContext extends ParserRuleContext {
+		public ExprContext lhs;
+		public Token op;
+		public ExprContext rhs;
+		public ExprContext single;
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -992,11 +996,12 @@ public class PromptDSLParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(187);
-				expr();
+				((ConditionContext)_localctx).lhs = expr();
 				setState(188);
+				((ConditionContext)_localctx).op = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==T__6 || _la==T__7) ) {
-				_errHandler.recoverInline(this);
+					((ConditionContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -1004,14 +1009,14 @@ public class PromptDSLParser extends Parser {
 					consume();
 				}
 				setState(189);
-				expr();
+				((ConditionContext)_localctx).rhs = expr();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(191);
-				expr();
+				((ConditionContext)_localctx).single = expr();
 				}
 				break;
 			}

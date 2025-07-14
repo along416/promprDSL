@@ -25,7 +25,10 @@ func NewMyVisitor() *MyVisitor {
 		InputVars: make(map[string]string),
 	}
 }
-
+func (v *MyVisitor) VisitTerminal(node antlr.TerminalNode) interface{} {
+	// 默认啥都不做，直接返回
+	return nil
+}
 // 转义单斜杠
 func escapeInvalidJSONBackslashes(s string) string {
 	var buf strings.Builder
@@ -83,20 +86,13 @@ func extractTextLines(lines []ITextLineContext) string {
 
 // 提取 After 中 JS 代码
 func extractAfterCode(section IAfterSectionContext) string {
-	// var sb strings.Builder
-	// entries := section.AfterContent().AllAfterEntry()
-	// for _, entry := range entries {
-	// 	code := entry.GetText()
-	// 	sb.WriteString(strings.Trim(code, "`"))
-	// 	sb.WriteString("\n") // 你可以根据需要加入换行
-	// }
-	return ""
+	raw := section.GetText()
+	return strings.TrimSpace(
+		strings.TrimSuffix(strings.TrimPrefix(raw, "<after>"), "</after>"),
+	)
 }
 
-// var _ PromptDSLVisitor = (*MyVisitor)(nil)
-// 拼接最终的 Prompt
 func (v *MyVisitor) GeneratePromptf(inputContent string) string {
-	// 拼接 system、user、input 等部分
 	finalPrompt := fmt.Sprintf(`system:
 %s
 
@@ -106,19 +102,21 @@ user:
 input:
 %s
 `, v.SystemText, v.UserText, inputContent)
-
-	// 你还可以在最后加上 AfterJS 的后处理部分
 	if v.AfterJS != "" {
 		finalPrompt += fmt.Sprintf("\nafter:\n%s\n", v.AfterJS)
 	}
-
 	return finalPrompt
 }
+
+// var _ PromptDSLVisitor = (*MyVisitor)(nil)
+// 拼接最终的 Prompt
+
 func (v *MyVisitor) GeneratePrompt() string {
 	return v.GeneratePromptf("")
 }
+
 func (v *MyVisitor) Visit(tree antlr.ParseTree) interface{} {
-	// fmt.Println("🔍 Visiting Syntax Tree...")
+	fmt.Println("🔍 Visiting Syntax Tree...")
 	return tree.Accept(v)
 }
 
@@ -127,9 +125,12 @@ func (v *MyVisitor) Visit(tree antlr.ParseTree) interface{} {
 //		return v.VisitChildren(ctx)
 //	}
 func (v *MyVisitor) VisitPromptBlock(ctx PromptBlockContext) interface{} {
+
+	fmt.Println("📦 Entering PromptBlock")
 	switch {
 	case ctx.InputSection() != nil:
 		v.Visit(ctx.InputSection())
+		fmt.Printf("\n📦 Entering InputSection：\n%v\n",ctx.InputSection())
 	case ctx.OutputSection() != nil:
 		// 可忽略或保留结构定义
 	case ctx.SystemSection() != nil:
@@ -144,84 +145,37 @@ func (v *MyVisitor) VisitPromptBlock(ctx PromptBlockContext) interface{} {
 	return nil
 }
 
-func (v *MyVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
-	fmt.Println("🚪 Entering VisitAfterSection")
-	// vm := goja.New()
-	//模型回复
-	// response := `[{"Conditions": ["已知a+b=5"], "KnowledgePoint": "代数加法性质", "ProcessResult": "a=5-b"}]`
-	// vm.Set("response", response)
-	//如果是json，则调用转义
-	// format:="json"
-	// if format=="json" {
-	// 	var content Checkcontent
-	// 	err:=ExtractJSON(response, &content)
-	// 	if err != nil {
-	// 		// log.Printf("task1: %s\nerror:解析失败❌%v\n", t.id, err)
-	// 		// return lp.TaskResultFailedRetry
-	// 	}
-	// }
-	//md
-	//else
-
-	//jscode
-	// var jsCode string
-	// afterContent := ""
-	// fmt.Printf("📦 AfterContent text: %s\n", afterContent.GetText())
-	// if jsBlock := afterContent.JAVASCRIPT_BLOCK(); jsBlock != nil {
-	// 	// 去掉反引号（`）包裹
-	// 	raw := jsBlock.GetText()
-	// 	jsCode = strings.Trim(raw, "`")
-	// } else {
-	// 	// 多个 entry 拼接
-	// 	for _, entry := range afterContent.AllAfterEntry() {
-	// 		text := entry.GetText()
-	// 		if strings.HasPrefix(text, "`") {
-	// 			text = strings.Trim(text, "`")
-	// 		} else {
-	// 			text = strings.Trim(text, "\"") // 也可能是字符串
-	// 		}
-	// 		jsCode += text + "\n"
-	// 	}
-	// }
-
-	// value, err := vm.RunString(jsCode)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Println("结果:", value.String())
-	return v.VisitChildren(ctx)
-}
-
-
-func (v *MyVisitor) VisitChildren(node antlr.RuleNode) interface{} {
-	fmt.Println("📦 VisitChildren")
-	n := node.GetChildCount()
-	for i := 0; i < n; i++ {
-		child := node.GetChild(i)
-		if ptree, ok := child.(antlr.ParseTree); ok {
-			ptree.Accept(v)
-		}
-	}
-	return nil
-}
-
-// func (v *MyVisitor) VisitPromptDef(ctx *PromptDefContext) interface{} {
-// 	// fmt.Println("🌳 Syntax Tree:myvisitor")
-// 	// log.Println("解释执行 PromptDef:", ctx.GetText())
-// 	return v.VisitChildren(ctx)
+// func (v *MyVisitor) VisitPromptFile(ctx *PromptFileContext) interface{} {
+// 	var children []Node
+// 	for _, block := range ctx.AllPromptBlock() {
+// 		node := v.Visit(block)
+// 		if node != nil {
+// 			children = append(children, node.(Node))
+// 		}
+// 	}
+// 	return &RootNode{Children: children}
 // }
 
 func (v *MyVisitor) VisitPromptDef(ctx *PromptDefContext) interface{} {
-	for _, block := range ctx.AllPromptBlock() {
-		v.Visit(block)
-	}
-	return nil
-}
-
-func (v *MyVisitor) VisitPromptFile(ctx *PromptFileContext) interface{} {
-	// fmt.Println("🌳 Syntax Tree:VisitPromptFile")
 	return v.VisitChildren(ctx)
 }
+
+// func (v *MyVisitor) VisitPromptBlock(ctx *PromptBlockContext) interface{} {
+// 	return v.VisitChildren(ctx)
+// }
+
+func (v *MyVisitor) VisitSysSection(ctx *SysSectionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *MyVisitor) VisitModuleDef(ctx *ModuleDefContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *MyVisitor) VisitModuleContent(ctx *ModuleContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *MyVisitor) VisitInputSection(ctx *InputSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -230,9 +184,13 @@ func (v *MyVisitor) VisitOutputSection(ctx *OutputSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-// func (v *MyVisitor) VisitOutputEntry(ctx *OutputEntryContext) interface{} {
-// 	return v.VisitChildren(ctx)
-// }
+func (v *MyVisitor) VisitOutputStruct(ctx *OutputStructContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *MyVisitor) VisitOutputMarkdown(ctx *OutputMarkdownContext) interface{} {
+	return v.VisitChildren(ctx)
+}
 
 func (v *MyVisitor) VisitSystemSection(ctx *SystemSectionContext) interface{} {
 	return v.VisitChildren(ctx)
@@ -242,14 +200,30 @@ func (v *MyVisitor) VisitUserSection(ctx *UserSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *MyVisitor) VisitUserContent(ctx *UserContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *MyVisitor) VisitIfStatement(ctx *IfStatementContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *MyVisitor) VisitCondition(ctx *ConditionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *MyVisitor) VisitNoteSection(ctx *NoteSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-//	func (v *MyVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
-//		// fmt.Println("🌳 Syntax Tree:")
-//		return v.VisitChildren(ctx)
-//	}
+func (v *MyVisitor) VisitDslCallExpr(ctx *DslCallExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *MyVisitor) VisitExpr(ctx *ExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *MyVisitor) VisitFieldDef(ctx *FieldDefContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -282,6 +256,14 @@ func (v *MyVisitor) VisitArrayLiteral(ctx *ArrayLiteralContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *MyVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *MyVisitor) VisitFixSection(ctx *FixSectionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *MyVisitor) VisitTextBlock(ctx *TextBlockContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -297,3 +279,4 @@ func (v *MyVisitor) VisitValue(ctx *ValueContext) interface{} {
 func (v *MyVisitor) VisitFormatType(ctx *FormatTypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
+

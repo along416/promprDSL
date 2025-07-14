@@ -3011,6 +3011,30 @@ type IConditionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// GetOp returns the op token.
+	GetOp() antlr.Token
+
+	// SetOp sets the op token.
+	SetOp(antlr.Token)
+
+	// GetLhs returns the lhs rule contexts.
+	GetLhs() IExprContext
+
+	// GetRhs returns the rhs rule contexts.
+	GetRhs() IExprContext
+
+	// GetSingle returns the single rule contexts.
+	GetSingle() IExprContext
+
+	// SetLhs sets the lhs rule contexts.
+	SetLhs(IExprContext)
+
+	// SetRhs sets the rhs rule contexts.
+	SetRhs(IExprContext)
+
+	// SetSingle sets the single rule contexts.
+	SetSingle(IExprContext)
+
 	// Getter signatures
 	AllExpr() []IExprContext
 	Expr(i int) IExprContext
@@ -3022,6 +3046,10 @@ type IConditionContext interface {
 type ConditionContext struct {
 	antlr.BaseParserRuleContext
 	parser antlr.Parser
+	lhs    IExprContext
+	op     antlr.Token
+	rhs    IExprContext
+	single IExprContext
 }
 
 func NewEmptyConditionContext() *ConditionContext {
@@ -3050,6 +3078,22 @@ func NewConditionContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 }
 
 func (s *ConditionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *ConditionContext) GetOp() antlr.Token { return s.op }
+
+func (s *ConditionContext) SetOp(v antlr.Token) { s.op = v }
+
+func (s *ConditionContext) GetLhs() IExprContext { return s.lhs }
+
+func (s *ConditionContext) GetRhs() IExprContext { return s.rhs }
+
+func (s *ConditionContext) GetSingle() IExprContext { return s.single }
+
+func (s *ConditionContext) SetLhs(v IExprContext) { s.lhs = v }
+
+func (s *ConditionContext) SetRhs(v IExprContext) { s.rhs = v }
+
+func (s *ConditionContext) SetSingle(v IExprContext) { s.single = v }
 
 func (s *ConditionContext) AllExpr() []IExprContext {
 	children := s.GetChildren()
@@ -3138,14 +3182,24 @@ func (p *PromptDSLParser) Condition() (localctx IConditionContext) {
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(187)
-			p.Expr()
+
+			var _x = p.Expr()
+
+			localctx.(*ConditionContext).lhs = _x
 		}
 		{
 			p.SetState(188)
+
+			var _lt = p.GetTokenStream().LT(1)
+
+			localctx.(*ConditionContext).op = _lt
+
 			_la = p.GetTokenStream().LA(1)
 
 			if !(_la == PromptDSLParserT__6 || _la == PromptDSLParserT__7) {
-				p.GetErrorHandler().RecoverInline(p)
+				var _ri = p.GetErrorHandler().RecoverInline(p)
+
+				localctx.(*ConditionContext).op = _ri
 			} else {
 				p.GetErrorHandler().ReportMatch(p)
 				p.Consume()
@@ -3153,14 +3207,20 @@ func (p *PromptDSLParser) Condition() (localctx IConditionContext) {
 		}
 		{
 			p.SetState(189)
-			p.Expr()
+
+			var _x = p.Expr()
+
+			localctx.(*ConditionContext).rhs = _x
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(191)
-			p.Expr()
+
+			var _x = p.Expr()
+
+			localctx.(*ConditionContext).single = _x
 		}
 
 	case antlr.ATNInvalidAltNumber:

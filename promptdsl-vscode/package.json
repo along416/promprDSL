@@ -15,7 +15,7 @@
         "id": "promptdsl",
         "aliases": ["PromptDSL"],
         "extensions": [".prompt"],
-        "configuration": "./language-configuration.jsonc"
+        "configuration": "./language-configuration.json"
       }
     ],
   "grammars": [

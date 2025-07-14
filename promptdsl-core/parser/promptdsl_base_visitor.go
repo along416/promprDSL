@@ -1,3 +1,5 @@
+// Code generated from PromptDSL.g4 by ANTLR 4.13.2. DO NOT EDIT.
+
 package parser // PromptDSL
 import "github.com/antlr4-go/antlr/v4"
 

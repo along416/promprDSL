@@ -74,9 +74,10 @@ userContent
 ifStatement
     : 'if' '(' condition ')' '{' userContent* '}' ('else' '{' userContent* '}')?
     ;
+
 condition
-    : expr ('==' | '!=') expr
-    | expr
+    : lhs=expr op=('==' | '!=') rhs=expr
+    | single=expr
     ;
 //note
 noteSection
@@ -145,26 +146,7 @@ fixSection
     : '<fix>' .*? '</fix>'
     ;
 
-// // 用户内容块
-// userBlock
-//     : (textBlock | classificationBlock | summarizationBlock | compilationBlock)+ 
-//     ;
 
-// classificationBlock
-//     : 'classification' '{' kvPair* '}' 
-//     ;
-
-// summarizationBlock
-//     : 'summarization' '{' kvPair* '}' 
-//     ;
-
-// compilationBlock
-//     : 'compilation' '{' kvPair* '}' 
-//     ;
-
-// kvPair
-//     : ID ':' (STRING | ID | 'extra_hint') 
-//     ;
 
 // 纯文本段
 textBlock
@@ -225,33 +207,6 @@ BOOL    : 'true' | 'false' ;
 PIPE    : '|';
 SEMI    : ';';
 
-// 特殊文本规则
-// TEXT: ~[{}:";@[\]\r\n]+ {
-//     switch l.GetText() {
-//     case "prompt":
-//         l.SetType(PromptDSLLexerPROMPT)
-//     case "params":
-//         l.SetType(PromptDSLLexerPARAMS)
-//     case "system":
-//         l.SetType(PromptDSLLexerSYSTEM)
-//     case "user":
-//         l.SetType(PromptDSLLexerUSER)
-//     case "note":
-//         l.SetType(PromptDSLLexerNOTE)
-//     }
-// };
-// 支持多行 JS，包裹在反引号中
-// JAVASCRIPT_BLOCK
-//     :  (~'<' | '\r' | '\n')+
-//     ;
-// afterSection
-//     : '<' 'after>' JAVASCRIPT_BLOCK '</after>'
-//     ;
-
-
-// fixSection
-//     : '<' 'fix>' JAVASCRIPT_BLOCK '</fix>'
-//     ;
 
 // 空白和注释
 WS      : [ \t\r\n]+ -> skip ;

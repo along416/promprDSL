@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 	"promptdslcore" // 引用核心模块
+	"strings"
+	"service"
 )
 
 // 请求结构
@@ -15,8 +17,10 @@ type GenGuideRequest struct {
 // 响应结构
 type GenGuideResponse struct {
 	Prompt string `json:"prompt"`
+	ModelOutput string `json:"model_output"`
 }
-
+// 全局 LLM 客户端（也可以用 DI 方式传入）
+var llm *service.LLMClient
 // POST /api/genGuide
 func HandleGenGuide(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -44,7 +48,36 @@ func HandleGenGuide(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := GenGuideResponse{Prompt: prompt}
+	// 步骤 2：拆分为 system + user
+	systemPart := extractBlock(prompt, "system:")
+	userPart := extractBlock(prompt, "user:")
+
+	// 步骤 3：调用大模型
+	result, err := llm.GeneratePromptResponse(systemPart, userPart)
+	if err != nil {
+		http.Error(w, "调用大模型失败: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	resp := GenGuideResponse{
+		Prompt:      prompt,
+		ModelOutput: result,
+	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
+	resp = GenGuideResponse{Prompt: prompt}
+
+}
+
+// 提取 block 内容（例如提取 "system:" 后的内容）
+func extractBlock(fullPrompt, blockName string) string {
+	start := strings.Index(fullPrompt, blockName)
+	if start == -1 {
+		return ""
+	}
+	end := strings.Index(fullPrompt[start+len(blockName):], "\n\n")
+	if end == -1 {
+		return strings.TrimSpace(fullPrompt[start+len(blockName):])
+	}
+	return strings.TrimSpace(fullPrompt[start+len(blockName) : start+len(blockName)+end])
 }
