@@ -11,7 +11,7 @@ prompt SplitSolutionSteps {
 	}
 
 
-    sys {
+    system {
        sys_role
        sys_expertise      
     }
@@ -24,7 +24,7 @@ prompt SplitSolutionSteps {
     }
 
     user {
-        if (in.question == ""){
+        if (input.question != ""){
             "fdfdsfdsafdaf"
         }
         else{
@@ -33,7 +33,7 @@ prompt SplitSolutionSteps {
         "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
         "条件，知识点，结果"
         "请将输出内容严格按照以下格式返回："
-        outputsepc
+        output
         "特别提醒：本题可能涉及 extra_hint，请根据步骤合理提取对应知识点。"
         "以下是输入内容，请据此拆解："
         input.question

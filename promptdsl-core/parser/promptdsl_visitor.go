@@ -16,15 +16,6 @@ type PromptDSLVisitor interface {
 	// Visit a parse tree produced by PromptDSLParser#promptBlock.
 	VisitPromptBlock(ctx *PromptBlockContext) interface{}
 
-	// Visit a parse tree produced by PromptDSLParser#sysSection.
-	VisitSysSection(ctx *SysSectionContext) interface{}
-
-	// Visit a parse tree produced by PromptDSLParser#moduleDef.
-	VisitModuleDef(ctx *ModuleDefContext) interface{}
-
-	// Visit a parse tree produced by PromptDSLParser#moduleContent.
-	VisitModuleContent(ctx *ModuleContentContext) interface{}
-
 	// Visit a parse tree produced by PromptDSLParser#inputSection.
 	VisitInputSection(ctx *InputSectionContext) interface{}
 
@@ -40,11 +31,26 @@ type PromptDSLVisitor interface {
 	// Visit a parse tree produced by PromptDSLParser#systemSection.
 	VisitSystemSection(ctx *SystemSectionContext) interface{}
 
+	// Visit a parse tree produced by PromptDSLParser#sysContent.
+	VisitSysContent(ctx *SysContentContext) interface{}
+
+	// Visit a parse tree produced by PromptDSLParser#moduleDef.
+	VisitModuleDef(ctx *ModuleDefContext) interface{}
+
+	// Visit a parse tree produced by PromptDSLParser#moduleContent.
+	VisitModuleContent(ctx *ModuleContentContext) interface{}
+
 	// Visit a parse tree produced by PromptDSLParser#userSection.
 	VisitUserSection(ctx *UserSectionContext) interface{}
 
 	// Visit a parse tree produced by PromptDSLParser#userContent.
 	VisitUserContent(ctx *UserContentContext) interface{}
+
+	// Visit a parse tree produced by PromptDSLParser#thencontent.
+	VisitThencontent(ctx *ThencontentContext) interface{}
+
+	// Visit a parse tree produced by PromptDSLParser#elsecontent.
+	VisitElsecontent(ctx *ElsecontentContext) interface{}
 
 	// Visit a parse tree produced by PromptDSLParser#ifStatement.
 	VisitIfStatement(ctx *IfStatementContext) interface{}

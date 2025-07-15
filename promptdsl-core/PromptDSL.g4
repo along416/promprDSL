@@ -25,21 +25,12 @@ promptDef   : PROMPT ID '{' promptBlock+ '}' ;
 promptBlock 
     : inputSection
     | outputSection
-    | sysSection
     | systemSection
     | userSection
     | noteSection 
     | afterSection
     | fixSection
     | moduleDef //自定义模块
-    ;
-//sys    
-sysSection: 'sys' '{' ID+ '}';
-
-moduleDef: ID '{' moduleContent* '}';
-moduleContent
-    : textLine
-    | paramPath
     ;
 
 //input
@@ -54,10 +45,20 @@ outputSection
 outputStruct:'{' fieldDef+ '}';
 outputMarkdown: ':' MARKDOWN;
 
-
-//sys
+//sys    
 systemSection
-    : 'system' '{' textLine+ '}'
+    : 'system' '{' ID+ '}'
+    | 'system' '{' sysContent+ '}'
+    ;
+sysContent
+    : ifStatement
+    | expr
+    | textLine
+    ;
+moduleDef: ID '{' moduleContent* '}';
+moduleContent
+    : paramPath
+    | textLine
     ;
 //user
 userSection
@@ -66,13 +67,19 @@ userSection
 
 userContent
     : ifStatement
-    | textLine
+    | paramPath
     | OUTPUTSPEC
     | expr
+    | textLine
     ;
-
+thencontent
+    : userContent
+    ;
+elsecontent
+    : userContent
+    ;
 ifStatement
-    : 'if' '(' condition ')' '{' userContent* '}' ('else' '{' userContent* '}')?
+    : 'if' '(' condition ')' '{' thencontent* '}' ('else' '{' elsecontent* '}')?
     ;
 
 condition
@@ -95,10 +102,11 @@ dslCallExpr
     : paramPath '(' (expr (',' expr)*)? ')'
     ;
 expr
-    : STRING
+    : paramPath
+    | STRING
     | NUMBER
     | BOOL
-    | paramPath
+    
     ;
 
 

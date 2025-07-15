@@ -19,18 +19,6 @@ func (v *BasePromptDSLVisitor) VisitPromptBlock(ctx *PromptBlockContext) interfa
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePromptDSLVisitor) VisitSysSection(ctx *SysSectionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePromptDSLVisitor) VisitModuleDef(ctx *ModuleDefContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePromptDSLVisitor) VisitModuleContent(ctx *ModuleContentContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BasePromptDSLVisitor) VisitInputSection(ctx *InputSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -51,11 +39,31 @@ func (v *BasePromptDSLVisitor) VisitSystemSection(ctx *SystemSectionContext) int
 	return v.VisitChildren(ctx)
 }
 
+func (v *BasePromptDSLVisitor) VisitSysContent(ctx *SysContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitModuleDef(ctx *ModuleDefContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitModuleContent(ctx *ModuleContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BasePromptDSLVisitor) VisitUserSection(ctx *UserSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
 func (v *BasePromptDSLVisitor) VisitUserContent(ctx *UserContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitThencontent(ctx *ThencontentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitElsecontent(ctx *ElsecontentContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

@@ -16,15 +16,6 @@ type PromptDSLListener interface {
 	// EnterPromptBlock is called when entering the promptBlock production.
 	EnterPromptBlock(c *PromptBlockContext)
 
-	// EnterSysSection is called when entering the sysSection production.
-	EnterSysSection(c *SysSectionContext)
-
-	// EnterModuleDef is called when entering the moduleDef production.
-	EnterModuleDef(c *ModuleDefContext)
-
-	// EnterModuleContent is called when entering the moduleContent production.
-	EnterModuleContent(c *ModuleContentContext)
-
 	// EnterInputSection is called when entering the inputSection production.
 	EnterInputSection(c *InputSectionContext)
 
@@ -40,11 +31,26 @@ type PromptDSLListener interface {
 	// EnterSystemSection is called when entering the systemSection production.
 	EnterSystemSection(c *SystemSectionContext)
 
+	// EnterSysContent is called when entering the sysContent production.
+	EnterSysContent(c *SysContentContext)
+
+	// EnterModuleDef is called when entering the moduleDef production.
+	EnterModuleDef(c *ModuleDefContext)
+
+	// EnterModuleContent is called when entering the moduleContent production.
+	EnterModuleContent(c *ModuleContentContext)
+
 	// EnterUserSection is called when entering the userSection production.
 	EnterUserSection(c *UserSectionContext)
 
 	// EnterUserContent is called when entering the userContent production.
 	EnterUserContent(c *UserContentContext)
+
+	// EnterThencontent is called when entering the thencontent production.
+	EnterThencontent(c *ThencontentContext)
+
+	// EnterElsecontent is called when entering the elsecontent production.
+	EnterElsecontent(c *ElsecontentContext)
 
 	// EnterIfStatement is called when entering the ifStatement production.
 	EnterIfStatement(c *IfStatementContext)
@@ -112,15 +118,6 @@ type PromptDSLListener interface {
 	// ExitPromptBlock is called when exiting the promptBlock production.
 	ExitPromptBlock(c *PromptBlockContext)
 
-	// ExitSysSection is called when exiting the sysSection production.
-	ExitSysSection(c *SysSectionContext)
-
-	// ExitModuleDef is called when exiting the moduleDef production.
-	ExitModuleDef(c *ModuleDefContext)
-
-	// ExitModuleContent is called when exiting the moduleContent production.
-	ExitModuleContent(c *ModuleContentContext)
-
 	// ExitInputSection is called when exiting the inputSection production.
 	ExitInputSection(c *InputSectionContext)
 
@@ -136,11 +133,26 @@ type PromptDSLListener interface {
 	// ExitSystemSection is called when exiting the systemSection production.
 	ExitSystemSection(c *SystemSectionContext)
 
+	// ExitSysContent is called when exiting the sysContent production.
+	ExitSysContent(c *SysContentContext)
+
+	// ExitModuleDef is called when exiting the moduleDef production.
+	ExitModuleDef(c *ModuleDefContext)
+
+	// ExitModuleContent is called when exiting the moduleContent production.
+	ExitModuleContent(c *ModuleContentContext)
+
 	// ExitUserSection is called when exiting the userSection production.
 	ExitUserSection(c *UserSectionContext)
 
 	// ExitUserContent is called when exiting the userContent production.
 	ExitUserContent(c *UserContentContext)
+
+	// ExitThencontent is called when exiting the thencontent production.
+	ExitThencontent(c *ThencontentContext)
+
+	// ExitElsecontent is called when exiting the elsecontent production.
+	ExitElsecontent(c *ElsecontentContext)
 
 	// ExitIfStatement is called when exiting the ifStatement production.
 	ExitIfStatement(c *IfStatementContext)

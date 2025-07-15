@@ -11,64 +11,124 @@ import (
 
 func BuildAST(parseTree *parser.PromptFileContext) *RootNode {
 	result := &RootNode{
-		SysNodes:  []Node{},
-		UserNodes: []Node{},
+		SysNodes:   []Node{},
+		UserNodes:  []Node{},
+		ModuleDefs: map[string][]Node{}, // 初始化 map
+		InFields:   []FieldDef{},
+		OutFields:  []FieldDef{},
 	}
-
-	for _, def := range parseTree.AllPromptDef() {
-		for _, block := range def.AllPromptBlock() {
-			child := block.GetChild(0)
-			switch b := child.(type) {
-			case *parser.SysSectionContext:
-				// 收集 sys 使用的模块名
-				result.SysNodes = append(result.UserNodes, BuildSysNodes(b))
-			case *parser.ModuleDefContext:
-				// 收集模块内容
-
-			case *parser.UserSectionContext:
-				for _, uc := range b.AllUserContent() {
-					result.UserNodes = append(result.UserNodes, buildUserNode(uc))
+	def := parseTree.PromptDef(0)
+	for _, block := range def.AllPromptBlock() {
+		child := block.GetChild(0)
+		switch b := child.(type) {
+		case *parser.SystemSectionContext:
+			// fmt.Println("AllID:%v",b.AllID())
+			if len(b.AllID()) > 0 {
+				// ID 模式，生成 ModuleRefNode
+				for _, id := range b.AllID() {
+					modName := id.GetText()
+					result.SysNodes = append(result.SysNodes, &ModuleRefNode{Name: modName})
 				}
-			case *parser.SystemSectionContext:
-				// system 文字内容处理
-
-			case *parser.InputSectionContext:
-				// 解析输入字段，放到 result.InDef
-
-			case *parser.OutputSectionContext:
-				// 解析输出字段，放到 result.OutDef
-
-			case *parser.AfterSectionContext:
-				// result.AfterCode = extractRawText(b)
-
-			case *parser.FixSectionContext:
-				// result.FixCode = extractRawText(b)
+				fmt.Println("result.SysNodes:", result.SysNodes)
+			} else {
+				for _, content := range b.AllSysContent() {
+					result.SysNodes = append(result.SysNodes, BuildSysNodesC(content))
+				}
 			}
+		case *parser.ModuleDefContext:
+			// 收集模块内容
+			modName := b.ID().GetText()
+			var contentNodes []Node
+			for _, mc := range b.AllModuleContent() {
+				mcCtx := mc.(*parser.ModuleContentContext)
+				for i := 0; i < mcCtx.GetChildCount(); i++ {
+					child := mcCtx.GetChild(i)
+					switch sub := child.(type) {
+					case *parser.TextLineContext:
+						contentNodes = append(contentNodes, &StringNode{Val: cleanQuotes(sub.GetText())})
+					case *parser.ParamPathContext:
+						contentNodes = append(contentNodes, &ParamNode{Path: cleanQuotes(sub.GetText())})
+					case *parser.IfStatementContext:
+						contentNodes = append(contentNodes, buildIfNode(sub))
+					case *parser.ExprContext:
+						contentNodes = append(contentNodes, &StringNode{Val: cleanQuotes(sub.GetText())}) //表达式
+					default:
+						continue
+					}
+				}
+			}
+			result.ModuleDefs[modName] = contentNodes
+			// fmt.Println("contentNodes:",contentNodes)
+		case *parser.UserSectionContext:
+			for _, uc := range b.AllUserContent() {
+				result.UserNodes = append(result.UserNodes, buildUserNode(uc))
+			}
+		case *parser.InputSectionContext:
+			// 解析输入字段，放到 result.InDef
+			var fields []FieldDef
+			for _, param := range b.AllFieldDef() {
+				name := param.ID().GetText()
+				typ := param.Type_().GetText()
+
+				// 解析注解
+				var annotations []string
+				for _, ann := range param.AllAnnotation() {
+					annotations = append(annotations, ann.ID().GetText())
+				}
+
+				fields = append(fields, FieldDef{
+					Name:        name,
+					Type:        typ,
+					JsonName:    name,
+					Annotations: annotations,
+				})
+			}
+			inNode := &InputNode{Fields: fields}
+			result.InFields = inNode.Fields
+
+		case *parser.OutputSectionContext:
+			// 解析输出字段，放到 result.OutDef
+			// 检查是哪种 output 类型
+			if structCtx := b.OutputStruct(); structCtx != nil {
+				var fields []FieldDef
+				for _, field := range structCtx.AllFieldDef() {
+					name := field.ID().GetText()
+					typ := field.Type_().GetText()
+
+					var annotations []string
+					for _, ann := range field.AllAnnotation() {
+						annotations = append(annotations, ann.ID().GetText())
+					}
+
+					fields = append(fields, FieldDef{
+						Name:        name,
+						Type:        typ,
+						JsonName:    name,
+						Annotations: annotations,
+					})
+				}
+
+				outNode := &OutputNode{Fields: fields}
+				result.OutFields = outNode.Fields
+				result.SysNodes = append(result.SysNodes, outNode)
+
+			} else if mdCtx := b.OutputMarkdown(); mdCtx != nil {
+				text := mdCtx.MARKDOWN().GetText()
+				mdNode := &MarkdownNode{Content: cleanQuotes(text)}
+				result.SysNodes = append(result.SysNodes, mdNode)
+			}
+
+		case *parser.AfterSectionContext:
+			// result.AfterCode = extractRawText(b)
+
+		case *parser.FixSectionContext:
+			// result.FixCode = extractRawText(b)
 		}
 	}
 
 	return result
 }
 
-// sysnode
-//
-//	func buildUSysNode(ctx parser.ISysSectionContext) Node {
-//		sysCtx := ctx.(*parser.SysSectionContext)
-//		for i := 0; i < sysCtx.GetChildCount(); i++ {
-//			child := sysCtx.GetChild(i)
-//			switch sub := child.(type) {
-//			case *parser.TextLineContext:
-//				return &StringNode{Val: cleanQuotes(sub.GetText())}
-//			case *parser.IfStatementContext:
-//				return buildIfNode(sub)
-//			case *parser.ExprContext:
-//				return &StringNode{Val: cleanQuotes(sub.GetText())} // 临时
-//			default:
-//				continue
-//			}
-//		}
-//		return nil
-//	}
 func BuildSysNodes(root antlr.Tree) []Node {
 	moduleContentMap := make(map[string][]Node)
 
@@ -101,7 +161,7 @@ func BuildSysNodes(root antlr.Tree) []Node {
 	var expandSys func(antlr.Tree)
 	expandSys = func(node antlr.Tree) {
 		switch ctx := node.(type) {
-		case *parser.SysSectionContext:
+		case *parser.SystemSectionContext:
 			for _, id := range ctx.AllID() {
 				modName := id.GetText()
 				if nodes, ok := moduleContentMap[modName]; ok {
@@ -120,16 +180,39 @@ func BuildSysNodes(root antlr.Tree) []Node {
 
 	return result
 }
-
-// 构建一个 userContent 的 Node
-func buildUserNode(ctx parser.IUserContentContext) Node {
-	userCtx := ctx.(*parser.UserContentContext)
-	for i := 0; i < userCtx.GetChildCount(); i++ {
-		child := userCtx.GetChild(i)
+func BuildSysNodesC(ctx parser.ISysContentContext) Node {
+	sysCtx := ctx.(*parser.SysContentContext)
+	for i := 0; i < sysCtx.GetChildCount(); i++ {
+		child := sysCtx.GetChild(i)
 		switch sub := child.(type) {
 		case *parser.TextLineContext:
 			return &StringNode{Val: cleanQuotes(sub.GetText())}
 		case *parser.IfStatementContext:
+			return buildIfNode(sub)
+		case *parser.ExprContext:
+			return &StringNode{Val: cleanQuotes(sub.GetText())} // 临时
+		default:
+			continue
+		}
+	}
+	return nil
+}
+
+// 构建一个 userContent 的 Node
+func buildUserNode(ctx parser.IUserContentContext) Node {
+	// fmt.Println("😊buildUserNode:")
+	userCtx := ctx.(*parser.UserContentContext)
+	for i := 0; i < userCtx.GetChildCount(); i++ {
+		child := userCtx.GetChild(i)
+		switch sub := child.(type) {
+		case *parser.ParamPathContext:
+			// fmt.Println("😊param path:", sub.GetText())
+			return &ParamNode{Path: cleanQuotes(sub.GetText())}
+		case *parser.TextLineContext:
+			fmt.Println("😊stringtext:", sub.GetText())
+			return &StringNode{Val: cleanQuotes(sub.GetText())}
+		case *parser.IfStatementContext:
+			fmt.Println("😊IfStatementContext:", sub.GetText())
 			return buildIfNode(sub)
 		case *parser.ExprContext:
 			return &StringNode{Val: cleanQuotes(sub.GetText())} // 临时
@@ -147,18 +230,33 @@ func buildIfNode(ctx *parser.IfStatementContext) *IfNode {
 	condExpr := buildExprFromCondition(cctx)
 
 	var thenNodes []Node
-	for _, uc := range ctx.AllUserContent() {
-		thenNodes = append(thenNodes, buildUserNode(uc))
-	}
+	// for _, uc := range ctx.AllUserContent() {
+	// 	thenNodes = append(thenNodes, buildUserNode(uc))
+	// }
+	// usercontentls := ctx.AllUserContent()
 
+	Thencontent := ctx.AllThencontent()
+	for _, uc := range Thencontent {
+		thenNodes = append(thenNodes, buildUserNode(uc.UserContent()))
+	}
+	// thenNodes = append(thenNodes, buildUserNode(thenNode))
+	// fmt.Println("😐thenNodes", thenNodes)
+	// for i, n := range thenNodes {
+	// 	fmt.Printf("thenNode[%d]: %#v\n", i, n)
+	// }
 	var elseNodes []Node
 	// 遍历 else 分支
-	for i := 0; i < ctx.GetChildCount(); i++ {
-		child := ctx.GetChild(i)
-		if ruleCtx, ok := child.(parser.IUserContentContext); ok {
-			elseNodes = append(elseNodes, buildUserNode(ruleCtx))
-		}
+	elsecontent := ctx.AllThencontent()
+	for _, uc := range elsecontent {
+		thenNodes = append(elseNodes, buildUserNode(uc.UserContent()))
 	}
+	// for i := 0; i < ctx.GetChildCount(); i++ {
+	// 	child := ctx.GetChild(i)
+	// 	if ruleCtx, ok := child.(parser.IUserContentContext); ok {
+	// 		elseNodes = append(elseNodes, buildUserNode(ruleCtx))
+	// 	}
+
+	// }
 
 	return &IfNode{
 		Condition: *condExpr,
@@ -206,6 +304,10 @@ func buildExpr(exprCtx parser.IExprContext) *Expr {
 		if num := expr.NUMBER(); num != nil {
 			n := num.GetText()
 			return &Expr{Leaf: &n}
+		}
+		if b := expr.BOOL(); b != nil {
+			val := b.GetText()
+			return &Expr{Leaf: &val}
 		}
 	}
 	return &Expr{Op: ExprOp_None}

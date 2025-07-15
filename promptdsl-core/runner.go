@@ -10,43 +10,6 @@ import (
 )
 
 func RunPromptDSL(input string) (string, error) {
-	// 	inputStream := antlr.NewInputStream(input)
-	// 	lexer := parser.NewPromptDSLLexer(inputStream)
-	// 	tokenStream := antlr.NewCommonTokenStream(lexer, 0)
-	// 	p := parser.NewPromptDSLParser(tokenStream)
-	// 	tokens := tokenStream.GetTokens(0, tokenStream.Size()-1, nil)
-	// 	for _, t := range tokens {
-	// 		fmt.Printf("Token: %s, text: %q\n", lexer.SymbolicNames[t.GetTokenType()], t.GetText())
-	// 	}
-
-	// 	tree := p.PromptFile()
-	// //构造
-
-	// 	fmt.Println("🌳 start...")
-	// 	fmt.Println(tree.ToStringTree(nil, p))
-	// 	fmt.Println("🌳 ...end")
-
-	// 	systemTexts, userTexts, inputs := extractParts(tree)
-
-	// 	fmt.Println("== System Section ==")
-	// 	for _, s := range systemTexts {
-	// 		fmt.Println(s)
-	// 	}
-
-	// 	// 调用 extractSysCombined 拼接 sys 模块文本
-	// 	sysCombined := extractSysCombined(tree)
-	// 	fmt.Println("== Sys Combined ==")
-	// 	fmt.Println(sysCombined)
-	// 	fmt.Println("== User Section ==")
-	// 	for _, u := range userTexts {
-	// 		fmt.Println(u)
-	// 	}
-
-	// 	fmt.Println("== Input Fields ==")
-	// 	for k, v := range inputs {
-	// 		fmt.Printf("%s : %s\n", k, v)
-	// 	}
-	// 	return "", nil
 
 	// 1. 解析输入 DSL 文本，生成 Parse Tree
 	inputStream := antlr.NewInputStream(input)
@@ -54,26 +17,43 @@ func RunPromptDSL(input string) (string, error) {
 	tokenStream := antlr.NewCommonTokenStream(lexer, 0)
 	p := parser.NewPromptDSLParser(tokenStream)
 	tree := p.PromptFile()
+	fmt.Println("🌳 start...")
+	fmt.Println(tree.ToStringTree(nil, p))
+	fmt.Println("🌳 ...end")
 	// 2. 构建 AST Node
 	ctx := tree.(*parser.PromptFileContext)
 	rootNode := BuildAST(ctx)
-	fmt.Printf("%+v\n", rootNode)
+	fmt.Printf("%v\n", rootNode)
 
 	// 3. 构造 Eval 上下文
 	str := &PromptEvalContext{
-		Input: map[string]string{
-			"question": "这是输入的题目内容",
+		InFields:   rootNode.InFields,
+		OutFields:  rootNode.OutFields,
+		ModuleDefs: rootNode.ModuleDefs,
+		Input: map[string]any{
+			"question": "参数内容",
 			"level":    "easy",
 		},
 	}
 
-	// 4. 评估 AST，得到 prompt 字符串
+	// 4. 执行 AST，得到 prompt 字符串
 	outputParts, err := rootNode.Eval(str)
 	if err != nil {
 		return "", err
 	}
+
 	return strings.Join(outputParts, "\n"), nil
 }
+
+
+
+
+
+
+
+
+
+
 
 // func extractParts(node antlr.ParseTree) (systemTexts, userTexts []string, inputs map[string]string) {
 // 	inputs = make(map[string]string)

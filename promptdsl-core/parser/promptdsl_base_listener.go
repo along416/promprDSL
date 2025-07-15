@@ -38,24 +38,6 @@ func (s *BasePromptDSLListener) EnterPromptBlock(ctx *PromptBlockContext) {}
 // ExitPromptBlock is called when production promptBlock is exited.
 func (s *BasePromptDSLListener) ExitPromptBlock(ctx *PromptBlockContext) {}
 
-// EnterSysSection is called when production sysSection is entered.
-func (s *BasePromptDSLListener) EnterSysSection(ctx *SysSectionContext) {}
-
-// ExitSysSection is called when production sysSection is exited.
-func (s *BasePromptDSLListener) ExitSysSection(ctx *SysSectionContext) {}
-
-// EnterModuleDef is called when production moduleDef is entered.
-func (s *BasePromptDSLListener) EnterModuleDef(ctx *ModuleDefContext) {}
-
-// ExitModuleDef is called when production moduleDef is exited.
-func (s *BasePromptDSLListener) ExitModuleDef(ctx *ModuleDefContext) {}
-
-// EnterModuleContent is called when production moduleContent is entered.
-func (s *BasePromptDSLListener) EnterModuleContent(ctx *ModuleContentContext) {}
-
-// ExitModuleContent is called when production moduleContent is exited.
-func (s *BasePromptDSLListener) ExitModuleContent(ctx *ModuleContentContext) {}
-
 // EnterInputSection is called when production inputSection is entered.
 func (s *BasePromptDSLListener) EnterInputSection(ctx *InputSectionContext) {}
 
@@ -86,6 +68,24 @@ func (s *BasePromptDSLListener) EnterSystemSection(ctx *SystemSectionContext) {}
 // ExitSystemSection is called when production systemSection is exited.
 func (s *BasePromptDSLListener) ExitSystemSection(ctx *SystemSectionContext) {}
 
+// EnterSysContent is called when production sysContent is entered.
+func (s *BasePromptDSLListener) EnterSysContent(ctx *SysContentContext) {}
+
+// ExitSysContent is called when production sysContent is exited.
+func (s *BasePromptDSLListener) ExitSysContent(ctx *SysContentContext) {}
+
+// EnterModuleDef is called when production moduleDef is entered.
+func (s *BasePromptDSLListener) EnterModuleDef(ctx *ModuleDefContext) {}
+
+// ExitModuleDef is called when production moduleDef is exited.
+func (s *BasePromptDSLListener) ExitModuleDef(ctx *ModuleDefContext) {}
+
+// EnterModuleContent is called when production moduleContent is entered.
+func (s *BasePromptDSLListener) EnterModuleContent(ctx *ModuleContentContext) {}
+
+// ExitModuleContent is called when production moduleContent is exited.
+func (s *BasePromptDSLListener) ExitModuleContent(ctx *ModuleContentContext) {}
+
 // EnterUserSection is called when production userSection is entered.
 func (s *BasePromptDSLListener) EnterUserSection(ctx *UserSectionContext) {}
 
@@ -97,6 +97,18 @@ func (s *BasePromptDSLListener) EnterUserContent(ctx *UserContentContext) {}
 
 // ExitUserContent is called when production userContent is exited.
 func (s *BasePromptDSLListener) ExitUserContent(ctx *UserContentContext) {}
+
+// EnterThencontent is called when production thencontent is entered.
+func (s *BasePromptDSLListener) EnterThencontent(ctx *ThencontentContext) {}
+
+// ExitThencontent is called when production thencontent is exited.
+func (s *BasePromptDSLListener) ExitThencontent(ctx *ThencontentContext) {}
+
+// EnterElsecontent is called when production elsecontent is entered.
+func (s *BasePromptDSLListener) EnterElsecontent(ctx *ElsecontentContext) {}
+
+// ExitElsecontent is called when production elsecontent is exited.
+func (s *BasePromptDSLListener) ExitElsecontent(ctx *ElsecontentContext) {}
 
 // EnterIfStatement is called when production ifStatement is entered.
 func (s *BasePromptDSLListener) EnterIfStatement(ctx *IfStatementContext) {}

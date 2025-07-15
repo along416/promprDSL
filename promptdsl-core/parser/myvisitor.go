@@ -134,7 +134,7 @@ func (v *MyVisitor) VisitPromptBlock(ctx PromptBlockContext) interface{} {
 	case ctx.OutputSection() != nil:
 		// 可忽略或保留结构定义
 	case ctx.SystemSection() != nil:
-		v.SystemText = extractTextLines(ctx.SystemSection().AllTextLine())
+		// v.SystemText = extractTextLines(ctx.SystemSection().AllTextLine())
 	case ctx.UserSection() != nil:
 		// v.UserText = extractTextLines(ctx.UserSection().AllTextLine())
 	case ctx.NoteSection() != nil:
@@ -164,9 +164,6 @@ func (v *MyVisitor) VisitPromptDef(ctx *PromptDefContext) interface{} {
 // 	return v.VisitChildren(ctx)
 // }
 
-func (v *MyVisitor) VisitSysSection(ctx *SysSectionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
 
 func (v *MyVisitor) VisitModuleDef(ctx *ModuleDefContext) interface{} {
 	return v.VisitChildren(ctx)
