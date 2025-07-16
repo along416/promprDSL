@@ -1,9 +1,9 @@
 package promptdslcore
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
+	// "promptdslcore/util"
 )
 
 type FieldDef struct {
@@ -96,11 +96,12 @@ func (e *Expr) EvalToBool(ctx *PromptEvalContext) (bool, error) {
 }
 func (e *Expr) Eval(ctx *PromptEvalContext) ([]string, error) {
 	// 如果是叶子节点
+
 	if e.Leaf != nil {
 		leafVal := *e.Leaf
-
 		// 假设叶子是参数路径格式，比如 "input.question" 或 "output.answer"
 		parts := strings.SplitN(leafVal, ".", 2)
+
 		if len(parts) == 2 {
 			section, key := parts[0], parts[1]
 			var val any
@@ -112,7 +113,7 @@ func (e *Expr) Eval(ctx *PromptEvalContext) ([]string, error) {
 				if m, okCast := ctx.Input.(map[string]any); okCast {
 					val, ok = m[key]
 				}
-			case "output":
+			case "outputspec":
 				// 你也可以在 ctx 中保存输出数据结构，这里示例用 OutFields 不一样，按实际需求调整
 				// 这里仅示例直接返回 key
 				val, ok = key, true
@@ -165,6 +166,7 @@ type OutputSpecNode struct {
 
 func (node *OutputSpecNode) Eval(_ *PromptEvalContext) ([]string, error) {
 	// TODO
+
 	return []string{}, nil
 }
 
@@ -177,13 +179,15 @@ type ModuleRefNode struct {
 //		// 你可以根据需要添加其他字段，比如变量、环境等
 //	}
 //
-// LookupModule 从上下文中查找模块定义,平铺moudlenode列表方便遍历
-func (ctx *PromptEvalContext) LookupModule(name string) []Node {
-	return ctx.ModuleDefs[name]
-}
+
+// 从上下文中查找模块定义,平铺moudlenode列表方便遍历
+//
+//	func (ctx *PromptEvalContext) LookupModule(name string) []Node {
+//		return
+//	}
 func (m *ModuleRefNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 
-	nodes := ctx.LookupModule(m.Name)
+	nodes := ctx.ModuleDefs[m.Name]
 	if nodes == nil {
 		return []string{fmt.Sprintf("[Missing module: %s]", m.Name)}, nil
 		// return nil,nil
@@ -241,7 +245,7 @@ func (node *IfNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 
 	var result []string
 	if condResult {
-		// fmt.Println("IfNode: condition is true")
+		fmt.Println("IfNode: condition is true")
 		for _, n := range node.Then {
 			texts, err := n.Eval(ctx)
 			if err != nil {
@@ -251,14 +255,17 @@ func (node *IfNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 		}
 		// fmt.Println("IfNode: then done",node)
 	} else {
-		// fmt.Println("IfNode: condition is false")
+		fmt.Println("Else nodes count:", len(node.Else))
+
 		for _, n := range node.Else {
 			texts, err := n.Eval(ctx)
 			if err != nil {
 				return nil, err
 			}
 			result = append(result, texts...)
+			fmt.Printf("Else node eval result: %#v\n", texts)
 		}
+		// fmt.Println("IfNode: else done",node)
 	}
 
 	return result, nil
@@ -277,7 +284,7 @@ func (p *ParamNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 		section, key = parts[0], parts[1]
 	} else if len(parts) == 1 {
 		section = parts[0]
-		key = "" 
+		key = ""
 	} else {
 		return nil, fmt.Errorf("invalid param path: %s", p.Path)
 	}
@@ -296,20 +303,19 @@ func (p *ParamNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 		if val, ok := inputMap[key]; ok {
 			return []string{fmt.Sprintf("%v", val)}, nil
 		}
-	case "output":
+	case "outputspec":
 		if key == "" {
-			// 取全部 OutFields，组装 JSON 返回
-			b, err := json.Marshal(ctx.OutFields)
-			if err != nil {
-				return nil, err
-			}
-			return []string{string(b)}, nil
+			return []string{BuildOutputSpecText(ctx.OutFields)}, nil
 		}
 		for _, field := range ctx.OutFields {
 			if field.Name == key {
-				return []string{fmt.Sprintf("[Output: %s of type %s]", field.Name, field.Type)}, nil
+				ex := BuildOutputSpecText([]FieldDef{field})
+				return []string{ex}, nil
 			}
 		}
+	case "output":
+		//结构体引用
+		//TODO
 
 	default:
 		return nil, fmt.Errorf("unknown param section: %s", section)
@@ -352,10 +358,19 @@ type RootNode struct {
 	ModuleDefs map[string][]Node // 初始化 map
 	InFields   []FieldDef
 	OutFields  []FieldDef
+	BeforeCode string
+	FixCode    []string
+	AfterCode  []string
 	// 其它部分
 }
+type final struct {
+	Prompt []string 
+	After  string          
+	Fix    string          
+}
 
-func (r *RootNode) Eval(ctx *PromptEvalContext) ([]string, error) {
+func (r *RootNode) Eval(ctx *PromptEvalContext) (*final, error) {
+
 	var result []string
 	for _, node := range r.SysNodes {
 		out, err := node.Eval(ctx)
@@ -371,8 +386,12 @@ func (r *RootNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 		}
 		result = append(result, out...)
 	}
-	// 你可以加更多逻辑
-	return result, nil
+
+	return &final{
+		Prompt: result,
+		After:  "AfterProcess",
+		Fix:    "FixProcess",
+	}, nil
 }
 
 type ParsedPrompt struct {

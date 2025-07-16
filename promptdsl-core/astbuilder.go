@@ -4,25 +4,30 @@ package promptdslcore
 import (
 	"fmt"
 	"promptdslcore/parser"
+	"strconv"
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
 )
 
-func BuildAST(parseTree *parser.PromptFileContext) *RootNode {
+func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStream) *RootNode {
 	result := &RootNode{
 		SysNodes:   []Node{},
 		UserNodes:  []Node{},
 		ModuleDefs: map[string][]Node{}, // 初始化 map
 		InFields:   []FieldDef{},
 		OutFields:  []FieldDef{},
+		BeforeCode: "",
+		AfterCode:  []string{},
+		FixCode:    []string{},
 	}
+	fmt.Println("Building AST...")
 	def := parseTree.PromptDef(0)
 	for _, block := range def.AllPromptBlock() {
+		fmt.Println("  Processing block:")
 		child := block.GetChild(0)
 		switch b := child.(type) {
 		case *parser.SystemSectionContext:
-			// fmt.Println("AllID:%v",b.AllID())
 			if len(b.AllID()) > 0 {
 				// ID 模式，生成 ModuleRefNode
 				for _, id := range b.AllID() {
@@ -73,7 +78,17 @@ func BuildAST(parseTree *parser.PromptFileContext) *RootNode {
 				// 解析注解
 				var annotations []string
 				for _, ann := range param.AllAnnotation() {
-					annotations = append(annotations, ann.ID().GetText())
+					if ann.AnnotationArgs() != nil {
+						for _, v := range ann.AnnotationArgs().AllAnnotationValue() {
+							if s := v.STRING(); s != nil {
+								annotations = append(annotations, strings.Trim(s.GetText(), "\""))
+							} else if arr := v.ArrayLiteral(); arr != nil {
+								for _, s := range arr.AllSTRING() {
+									annotations = append(annotations, strings.Trim(s.GetText(), "\""))
+								}
+							}
+						}
+					}
 				}
 
 				fields = append(fields, FieldDef{
@@ -89,40 +104,77 @@ func BuildAST(parseTree *parser.PromptFileContext) *RootNode {
 		case *parser.OutputSectionContext:
 			// 解析输出字段，放到 result.OutDef
 			// 检查是哪种 output 类型
+			//所以这里其实是构造结构体，而不是处理outputspec，还是都处理？
+			fmt.Println("OutputSection")
+
 			if structCtx := b.OutputStruct(); structCtx != nil {
 				var fields []FieldDef
 				for _, field := range structCtx.AllFieldDef() {
 					name := field.ID().GetText()
 					typ := field.Type_().GetText()
 
+					// 解析注解
 					var annotations []string
+					jsonName := name // 默认就是字段名
 					for _, ann := range field.AllAnnotation() {
-						annotations = append(annotations, ann.ID().GetText())
-					}
+						annName := ann.ID().GetText()
 
+						if ann.AnnotationArgs() != nil {
+							for _, v := range ann.AnnotationArgs().AllAnnotationValue() {
+								var val string
+
+								if s := v.STRING(); s != nil {
+									raw := s.GetText()
+									unquoted, err := strconv.Unquote(raw)
+									if err != nil {
+										unquoted = raw
+									}
+									val = unquoted
+								} else if arr := v.ArrayLiteral(); arr != nil {
+									// 拼接数组内容
+									var parts []string
+									for _, s := range arr.AllSTRING() {
+										raw := s.GetText()
+										unquoted, err := strconv.Unquote(raw)
+										if err != nil {
+											unquoted = raw
+										}
+										parts = append(parts, unquoted)
+									}
+									val = strings.Join(parts, ",") // 或保留原结构
+								}
+
+								if annName == "jsonname" {
+									jsonName = val
+								} else {
+									annotations = append(annotations, val)
+								}
+							}
+						}
+					}
 					fields = append(fields, FieldDef{
 						Name:        name,
 						Type:        typ,
-						JsonName:    name,
+						JsonName:    jsonName,
 						Annotations: annotations,
 					})
 				}
 
 				outNode := &OutputNode{Fields: fields}
 				result.OutFields = outNode.Fields
-				result.SysNodes = append(result.SysNodes, outNode)
+				// result.SysNodes = append(result.SysNodes, outNode)
 
 			} else if mdCtx := b.OutputMarkdown(); mdCtx != nil {
 				text := mdCtx.MARKDOWN().GetText()
 				mdNode := &MarkdownNode{Content: cleanQuotes(text)}
 				result.SysNodes = append(result.SysNodes, mdNode)
 			}
-
+			
 		case *parser.AfterSectionContext:
-			// result.AfterCode = extractRawText(b)
+			result.AfterCode = extractRawText(b, tokens)
 
 		case *parser.FixSectionContext:
-			// result.FixCode = extractRawText(b)
+			result.FixCode = extractRawText(b, tokens)
 		}
 	}
 
@@ -246,9 +298,9 @@ func buildIfNode(ctx *parser.IfStatementContext) *IfNode {
 	// }
 	var elseNodes []Node
 	// 遍历 else 分支
-	elsecontent := ctx.AllThencontent()
+	elsecontent := ctx.AllElsecontent()
 	for _, uc := range elsecontent {
-		thenNodes = append(elseNodes, buildUserNode(uc.UserContent()))
+		elseNodes = append(elseNodes, buildUserNode(uc.UserContent()))
 	}
 	// for i := 0; i < ctx.GetChildCount(); i++ {
 	// 	child := ctx.GetChild(i)

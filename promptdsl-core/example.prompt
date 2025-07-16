@@ -4,10 +4,10 @@ prompt SplitSolutionSteps {
     }
 
     output {
-            List: []struct {}
-            Conditions: []string 
-            KnowledgePoint: string
-            ProcessResult: string
+ 
+            Conditions: []string @jsonname("条件")  @latex("所有公式使用latex")
+            KnowledgePoint: string @jsonname("知识点")  @latex("所有公式使用latex")
+            ProcessResult: bool @jsonname("过程")  @latex("所有公式使用latex")
 	}
 
 
@@ -24,49 +24,55 @@ prompt SplitSolutionSteps {
     }
 
     user {
-        if (input.question != ""){
+        if (in.question != ""){
             "fdfdsfdsafdaf"
+            "siuehfebn"
         }
         else{
-            "1111111111"
+            "siuehfebn"
+            "siuehfebn"
+            "siuehfebn"
         }
         "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
         "条件，知识点，结果"
         "请将输出内容严格按照以下格式返回："
-        output
+        outputspec
         "特别提醒：本题可能涉及 extra_hint，请根据步骤合理提取对应知识点。"
         "以下是输入内容，请据此拆解："
         input.question
     }
 
     <fix>
-        // javascript code block
+        for i := range output {
+            // 如果知识点为空，填入默认值
+            if strings.TrimSpace(output[i].KnowledgePoint) == "" {
+                output[i].KnowledgePoint = "默认知识点"
+            }
 
-        return {
-        };
+            // 清理条件中的空格
+            for j, cond := range output[i].Conditions {
+                output[i].Conditions[j] = strings.TrimSpace(cond)
+            }
+
+            // 示例：使用 math.Abs 模拟对结果进行微调（无实际数值字段，仅示例用法）
+            delta := math.Abs(float64(len(output[i].KnowledgePoint)) - 5.0)
+            if delta > 10 {
+                output[i].ProcessResult = false
+            }
+        }
+        return output
     </fix>
 
     <after>
-        // javascript code block
-
-        return response.map((sub, index) => {
-            let media = [];
-            let regex = /!\[\]\((.*?)\)/g;
-            let match;
-            while ((match = regex.exec(sub.Content)) !== null) {
-                media.push({
-                    Type: "image",
-                    Urls: match[1],
-                    OCRText: ""
-                });
+        trueCount := 0
+        for _, item := range output {
+            if item.ProcessResult {
+                trueCount++
             }
+            fmt.Printf("知识点：%s，条件数：%d\n", item.KnowledgePoint, len(item.Conditions))
+        }
 
-            return {
-                Content: sub.Content,
-                Options: sub.Options,
-                SubID: sub.SubID,
-                Media: media
-            };
-        });
+        fmt.Printf("✅ 拆解成功步骤数（过程=true）：%d / %d\n", trueCount, len(output))
+        return output
     </after>
 }

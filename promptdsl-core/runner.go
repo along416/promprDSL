@@ -3,6 +3,9 @@ package promptdslcore
 
 import (
 	"fmt"
+	"go/format"
+	"log"
+	"os"
 	"promptdslcore/parser"
 	"strings"
 
@@ -22,8 +25,9 @@ func RunPromptDSL(input string) (string, error) {
 	fmt.Println("🌳 ...end")
 	// 2. 构建 AST Node
 	ctx := tree.(*parser.PromptFileContext)
-	rootNode := BuildAST(ctx)
-	fmt.Printf("%v\n", rootNode)
+
+	rootNode := BuildAST(ctx,tokenStream)
+	// fmt.Printf("%v\n", rootNode)
 
 	// 3. 构造 Eval 上下文
 	str := &PromptEvalContext{
@@ -41,19 +45,23 @@ func RunPromptDSL(input string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	// pkgName := getCurrentPackageName()
+	code := GenerateAfterAndFixGoCode(rootNode, "main")
+	// 2. 使用 go/format 美化生成代码
+	formattedCode, err := format.Source([]byte(code))
+	if err != nil {
+		log.Printf("⚠️ Go代码格式化失败，使用未格式化代码: %v", err)
+		formattedCode = []byte(code)
+	}
 
-	return strings.Join(outputParts, "\n"), nil
+	// 3. 写入文件
+	err = os.WriteFile("code_gen.go", formattedCode, 0644)
+	if err != nil {
+		log.Fatalf("写入 code_gen.go 失败: %v", err)
+	}
+
+	return strings.Join(outputParts.Prompt, "\n"), nil
 }
-
-
-
-
-
-
-
-
-
-
 
 // func extractParts(node antlr.ParseTree) (systemTexts, userTexts []string, inputs map[string]string) {
 // 	inputs = make(map[string]string)

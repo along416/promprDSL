@@ -106,7 +106,7 @@ expr
     | STRING
     | NUMBER
     | BOOL
-    
+    // | paramPath '==' (paramPath | STRING | NUMBER | BOOL)
     ;
 
 
@@ -121,7 +121,7 @@ textLine
     | paramPath
     ;
 paramPath
-    : (ID | INPUT | OUTPUT | AFTER | BEFORE) ('.' ID )*
+    : (ID | INPUT | OUTPUT | AFTER | BEFORE | OUTPUTSPEC) ('.' ID )*
     ;
 // 结构体定义
 structDef
@@ -146,14 +146,11 @@ arrayLiteral
     : '[' (STRING (',' STRING)*)? ']' 
     ;
 
-afterSection
-    : '<after>' .*? '</after>'
-    ;
+afterSection : AFTER_BLOCK ;
+fixSection   : FIX_BLOCK ;
 
-fixSection
-    : '<fix>' .*? '</fix>'
-    ;
-
+AFTER_BLOCK : '<after>' .*? '</after>' ;
+FIX_BLOCK   : '<fix>'   .*? '</fix>' ;
 
 
 // 纯文本段
@@ -217,6 +214,7 @@ SEMI    : ';';
 
 
 // 空白和注释
-WS      : [ \t\r\n]+ -> skip ;
-LINE_COMMENT  : '//' ~[\r\n]* -> skip ;
-BLOCK_COMMENT : '/*' .*? '*/' -> skip ;
+WS              : [ \t\r\n]+         -> channel(HIDDEN) ;
+LINE_COMMENT    : '//' ~[\r\n]*      -> channel(HIDDEN) ;
+BLOCK_COMMENT   : '/*' .*? '*/'      -> channel(HIDDEN) ;
+

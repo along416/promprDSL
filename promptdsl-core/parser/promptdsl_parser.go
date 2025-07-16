@@ -33,20 +33,19 @@ func promptdslParserInit() {
 	staticData := &PromptDSLParserStaticData
 	staticData.LiteralNames = []string{
 		"", "'{'", "'}'", "':'", "'('", "')'", "'=='", "'!='", "','", "'='",
-		"'.'", "'@'", "'['", "']'", "'<after>'", "'</after>'", "'<fix>'", "'</fix>'",
-		"'-'", "'[]'", "'md'", "'json'", "'+'", "'string'", "'float'", "'int'",
-		"'prompt'", "'params'", "'system'", "'user'", "'note'", "'input'", "'output'",
-		"'format'", "'type'", "'struct'", "'before'", "'schema'", "'after'",
-		"'parse'", "'jsonfix'", "'markdown'", "'if'", "'else'", "'outputspec'",
-		"", "", "", "", "'|'", "';'",
+		"'.'", "'@'", "'['", "']'", "'-'", "'[]'", "'md'", "'json'", "'+'",
+		"", "", "'string'", "'float'", "'int'", "'prompt'", "'params'", "'system'",
+		"'user'", "'note'", "'input'", "'output'", "'format'", "'type'", "'struct'",
+		"'before'", "'schema'", "'after'", "'parse'", "'jsonfix'", "'markdown'",
+		"'if'", "'else'", "'outputspec'", "", "", "", "", "'|'", "';'",
 	}
 	staticData.SymbolicNames = []string{
 		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-		"", "", "", "", "", "PLUS", "STRING_TYPE", "FLOAT_TYPE", "INT_TYPE",
-		"PROMPT", "PARAMS", "SYSTEM", "USER", "NOTE", "INPUT", "OUTPUT", "FORMAT",
-		"TYPE", "STRUCT", "BEFORE", "SCHEMA", "AFTER", "PARSE", "JSONFIX", "MARKDOWN",
-		"IF", "ELSE", "OUTPUTSPEC", "ID", "STRING", "NUMBER", "BOOL", "PIPE",
-		"SEMI", "WS", "LINE_COMMENT", "BLOCK_COMMENT",
+		"", "PLUS", "AFTER_BLOCK", "FIX_BLOCK", "STRING_TYPE", "FLOAT_TYPE",
+		"INT_TYPE", "PROMPT", "PARAMS", "SYSTEM", "USER", "NOTE", "INPUT", "OUTPUT",
+		"FORMAT", "TYPE", "STRUCT", "BEFORE", "SCHEMA", "AFTER", "PARSE", "JSONFIX",
+		"MARKDOWN", "IF", "ELSE", "OUTPUTSPEC", "ID", "STRING", "NUMBER", "BOOL",
+		"PIPE", "SEMI", "WS", "LINE_COMMENT", "BLOCK_COMMENT",
 	}
 	staticData.RuleNames = []string{
 		"promptFile", "promptDef", "promptBlock", "inputSection", "outputSection",
@@ -59,7 +58,7 @@ func promptdslParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 53, 354, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 51, 340, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
@@ -91,76 +90,74 @@ func promptdslParserInit() {
 		24, 281, 8, 24, 1, 24, 1, 24, 1, 25, 1, 25, 1, 25, 5, 25, 288, 8, 25, 10,
 		25, 12, 25, 291, 9, 25, 1, 26, 1, 26, 3, 26, 295, 8, 26, 1, 27, 1, 27,
 		1, 27, 1, 27, 5, 27, 301, 8, 27, 10, 27, 12, 27, 304, 9, 27, 3, 27, 306,
-		8, 27, 1, 27, 1, 27, 1, 28, 1, 28, 5, 28, 312, 8, 28, 10, 28, 12, 28, 315,
-		9, 28, 1, 28, 1, 28, 1, 29, 1, 29, 5, 29, 321, 8, 29, 10, 29, 12, 29, 324,
-		9, 29, 1, 29, 1, 29, 1, 30, 4, 30, 329, 8, 30, 11, 30, 12, 30, 330, 1,
-		31, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31, 5, 31, 341, 8, 31,
-		10, 31, 12, 31, 344, 9, 31, 1, 31, 1, 31, 3, 31, 348, 8, 31, 1, 32, 1,
-		32, 1, 33, 1, 33, 1, 33, 2, 313, 322, 0, 34, 0, 2, 4, 6, 8, 10, 12, 14,
-		16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50,
-		52, 54, 56, 58, 60, 62, 64, 66, 0, 5, 1, 0, 6, 7, 4, 0, 31, 32, 36, 36,
-		38, 38, 45, 45, 4, 0, 3, 3, 18, 18, 45, 47, 51, 51, 1, 0, 46, 48, 1, 0,
-		20, 21, 374, 0, 69, 1, 0, 0, 0, 2, 75, 1, 0, 0, 0, 4, 93, 1, 0, 0, 0, 6,
-		95, 1, 0, 0, 0, 8, 104, 1, 0, 0, 0, 10, 109, 1, 0, 0, 0, 12, 117, 1, 0,
-		0, 0, 14, 137, 1, 0, 0, 0, 16, 142, 1, 0, 0, 0, 18, 144, 1, 0, 0, 0, 20,
-		156, 1, 0, 0, 0, 22, 158, 1, 0, 0, 0, 24, 172, 1, 0, 0, 0, 26, 174, 1,
-		0, 0, 0, 28, 176, 1, 0, 0, 0, 30, 178, 1, 0, 0, 0, 32, 206, 1, 0, 0, 0,
-		34, 208, 1, 0, 0, 0, 36, 217, 1, 0, 0, 0, 38, 235, 1, 0, 0, 0, 40, 237,
-		1, 0, 0, 0, 42, 256, 1, 0, 0, 0, 44, 258, 1, 0, 0, 0, 46, 266, 1, 0, 0,
-		0, 48, 276, 1, 0, 0, 0, 50, 284, 1, 0, 0, 0, 52, 294, 1, 0, 0, 0, 54, 296,
-		1, 0, 0, 0, 56, 309, 1, 0, 0, 0, 58, 318, 1, 0, 0, 0, 60, 328, 1, 0, 0,
-		0, 62, 347, 1, 0, 0, 0, 64, 349, 1, 0, 0, 0, 66, 351, 1, 0, 0, 0, 68, 70,
-		3, 2, 1, 0, 69, 68, 1, 0, 0, 0, 70, 71, 1, 0, 0, 0, 71, 69, 1, 0, 0, 0,
-		71, 72, 1, 0, 0, 0, 72, 73, 1, 0, 0, 0, 73, 74, 5, 0, 0, 1, 74, 1, 1, 0,
-		0, 0, 75, 76, 5, 26, 0, 0, 76, 77, 5, 45, 0, 0, 77, 79, 5, 1, 0, 0, 78,
-		80, 3, 4, 2, 0, 79, 78, 1, 0, 0, 0, 80, 81, 1, 0, 0, 0, 81, 79, 1, 0, 0,
-		0, 81, 82, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83, 84, 5, 2, 0, 0, 84, 3, 1,
-		0, 0, 0, 85, 94, 3, 6, 3, 0, 86, 94, 3, 8, 4, 0, 87, 94, 3, 14, 7, 0, 88,
-		94, 3, 22, 11, 0, 89, 94, 3, 34, 17, 0, 90, 94, 3, 56, 28, 0, 91, 94, 3,
-		58, 29, 0, 92, 94, 3, 18, 9, 0, 93, 85, 1, 0, 0, 0, 93, 86, 1, 0, 0, 0,
-		93, 87, 1, 0, 0, 0, 93, 88, 1, 0, 0, 0, 93, 89, 1, 0, 0, 0, 93, 90, 1,
-		0, 0, 0, 93, 91, 1, 0, 0, 0, 93, 92, 1, 0, 0, 0, 94, 5, 1, 0, 0, 0, 95,
-		96, 5, 31, 0, 0, 96, 98, 5, 1, 0, 0, 97, 99, 3, 40, 20, 0, 98, 97, 1, 0,
-		0, 0, 99, 100, 1, 0, 0, 0, 100, 98, 1, 0, 0, 0, 100, 101, 1, 0, 0, 0, 101,
-		102, 1, 0, 0, 0, 102, 103, 5, 2, 0, 0, 103, 7, 1, 0, 0, 0, 104, 107, 5,
-		32, 0, 0, 105, 108, 3, 10, 5, 0, 106, 108, 3, 12, 6, 0, 107, 105, 1, 0,
-		0, 0, 107, 106, 1, 0, 0, 0, 108, 9, 1, 0, 0, 0, 109, 111, 5, 1, 0, 0, 110,
-		112, 3, 40, 20, 0, 111, 110, 1, 0, 0, 0, 112, 113, 1, 0, 0, 0, 113, 111,
-		1, 0, 0, 0, 113, 114, 1, 0, 0, 0, 114, 115, 1, 0, 0, 0, 115, 116, 5, 2,
-		0, 0, 116, 11, 1, 0, 0, 0, 117, 118, 5, 3, 0, 0, 118, 119, 5, 41, 0, 0,
-		119, 13, 1, 0, 0, 0, 120, 121, 5, 28, 0, 0, 121, 123, 5, 1, 0, 0, 122,
-		124, 5, 45, 0, 0, 123, 122, 1, 0, 0, 0, 124, 125, 1, 0, 0, 0, 125, 123,
-		1, 0, 0, 0, 125, 126, 1, 0, 0, 0, 126, 127, 1, 0, 0, 0, 127, 138, 5, 2,
-		0, 0, 128, 129, 5, 28, 0, 0, 129, 131, 5, 1, 0, 0, 130, 132, 3, 16, 8,
-		0, 131, 130, 1, 0, 0, 0, 132, 133, 1, 0, 0, 0, 133, 131, 1, 0, 0, 0, 133,
-		134, 1, 0, 0, 0, 134, 135, 1, 0, 0, 0, 135, 136, 5, 2, 0, 0, 136, 138,
-		1, 0, 0, 0, 137, 120, 1, 0, 0, 0, 137, 128, 1, 0, 0, 0, 138, 15, 1, 0,
-		0, 0, 139, 143, 3, 30, 15, 0, 140, 143, 3, 38, 19, 0, 141, 143, 3, 42,
-		21, 0, 142, 139, 1, 0, 0, 0, 142, 140, 1, 0, 0, 0, 142, 141, 1, 0, 0, 0,
-		143, 17, 1, 0, 0, 0, 144, 145, 5, 45, 0, 0, 145, 149, 5, 1, 0, 0, 146,
-		148, 3, 20, 10, 0, 147, 146, 1, 0, 0, 0, 148, 151, 1, 0, 0, 0, 149, 147,
-		1, 0, 0, 0, 149, 150, 1, 0, 0, 0, 150, 152, 1, 0, 0, 0, 151, 149, 1, 0,
-		0, 0, 152, 153, 5, 2, 0, 0, 153, 19, 1, 0, 0, 0, 154, 157, 3, 44, 22, 0,
-		155, 157, 3, 42, 21, 0, 156, 154, 1, 0, 0, 0, 156, 155, 1, 0, 0, 0, 157,
-		21, 1, 0, 0, 0, 158, 159, 5, 29, 0, 0, 159, 161, 5, 1, 0, 0, 160, 162,
-		3, 24, 12, 0, 161, 160, 1, 0, 0, 0, 162, 163, 1, 0, 0, 0, 163, 161, 1,
-		0, 0, 0, 163, 164, 1, 0, 0, 0, 164, 165, 1, 0, 0, 0, 165, 166, 5, 2, 0,
-		0, 166, 23, 1, 0, 0, 0, 167, 173, 3, 30, 15, 0, 168, 173, 3, 44, 22, 0,
-		169, 173, 5, 44, 0, 0, 170, 173, 3, 38, 19, 0, 171, 173, 3, 42, 21, 0,
-		172, 167, 1, 0, 0, 0, 172, 168, 1, 0, 0, 0, 172, 169, 1, 0, 0, 0, 172,
-		170, 1, 0, 0, 0, 172, 171, 1, 0, 0, 0, 173, 25, 1, 0, 0, 0, 174, 175, 3,
-		24, 12, 0, 175, 27, 1, 0, 0, 0, 176, 177, 3, 24, 12, 0, 177, 29, 1, 0,
-		0, 0, 178, 179, 5, 42, 0, 0, 179, 180, 5, 4, 0, 0, 180, 181, 3, 32, 16,
-		0, 181, 182, 5, 5, 0, 0, 182, 186, 5, 1, 0, 0, 183, 185, 3, 26, 13, 0,
-		184, 183, 1, 0, 0, 0, 185, 188, 1, 0, 0, 0, 186, 184, 1, 0, 0, 0, 186,
+		8, 27, 1, 27, 1, 27, 1, 28, 1, 28, 1, 29, 1, 29, 1, 30, 4, 30, 315, 8,
+		30, 11, 30, 12, 30, 316, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31,
+		1, 31, 5, 31, 327, 8, 31, 10, 31, 12, 31, 330, 9, 31, 1, 31, 1, 31, 3,
+		31, 334, 8, 31, 1, 32, 1, 32, 1, 33, 1, 33, 1, 33, 0, 0, 34, 0, 2, 4, 6,
+		8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42,
+		44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 0, 5, 1, 0, 6, 7, 4, 0,
+		29, 30, 34, 34, 36, 36, 42, 43, 4, 0, 3, 3, 14, 14, 43, 45, 49, 49, 1,
+		0, 44, 46, 1, 0, 16, 17, 358, 0, 69, 1, 0, 0, 0, 2, 75, 1, 0, 0, 0, 4,
+		93, 1, 0, 0, 0, 6, 95, 1, 0, 0, 0, 8, 104, 1, 0, 0, 0, 10, 109, 1, 0, 0,
+		0, 12, 117, 1, 0, 0, 0, 14, 137, 1, 0, 0, 0, 16, 142, 1, 0, 0, 0, 18, 144,
+		1, 0, 0, 0, 20, 156, 1, 0, 0, 0, 22, 158, 1, 0, 0, 0, 24, 172, 1, 0, 0,
+		0, 26, 174, 1, 0, 0, 0, 28, 176, 1, 0, 0, 0, 30, 178, 1, 0, 0, 0, 32, 206,
+		1, 0, 0, 0, 34, 208, 1, 0, 0, 0, 36, 217, 1, 0, 0, 0, 38, 235, 1, 0, 0,
+		0, 40, 237, 1, 0, 0, 0, 42, 256, 1, 0, 0, 0, 44, 258, 1, 0, 0, 0, 46, 266,
+		1, 0, 0, 0, 48, 276, 1, 0, 0, 0, 50, 284, 1, 0, 0, 0, 52, 294, 1, 0, 0,
+		0, 54, 296, 1, 0, 0, 0, 56, 309, 1, 0, 0, 0, 58, 311, 1, 0, 0, 0, 60, 314,
+		1, 0, 0, 0, 62, 333, 1, 0, 0, 0, 64, 335, 1, 0, 0, 0, 66, 337, 1, 0, 0,
+		0, 68, 70, 3, 2, 1, 0, 69, 68, 1, 0, 0, 0, 70, 71, 1, 0, 0, 0, 71, 69,
+		1, 0, 0, 0, 71, 72, 1, 0, 0, 0, 72, 73, 1, 0, 0, 0, 73, 74, 5, 0, 0, 1,
+		74, 1, 1, 0, 0, 0, 75, 76, 5, 24, 0, 0, 76, 77, 5, 43, 0, 0, 77, 79, 5,
+		1, 0, 0, 78, 80, 3, 4, 2, 0, 79, 78, 1, 0, 0, 0, 80, 81, 1, 0, 0, 0, 81,
+		79, 1, 0, 0, 0, 81, 82, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83, 84, 5, 2, 0,
+		0, 84, 3, 1, 0, 0, 0, 85, 94, 3, 6, 3, 0, 86, 94, 3, 8, 4, 0, 87, 94, 3,
+		14, 7, 0, 88, 94, 3, 22, 11, 0, 89, 94, 3, 34, 17, 0, 90, 94, 3, 56, 28,
+		0, 91, 94, 3, 58, 29, 0, 92, 94, 3, 18, 9, 0, 93, 85, 1, 0, 0, 0, 93, 86,
+		1, 0, 0, 0, 93, 87, 1, 0, 0, 0, 93, 88, 1, 0, 0, 0, 93, 89, 1, 0, 0, 0,
+		93, 90, 1, 0, 0, 0, 93, 91, 1, 0, 0, 0, 93, 92, 1, 0, 0, 0, 94, 5, 1, 0,
+		0, 0, 95, 96, 5, 29, 0, 0, 96, 98, 5, 1, 0, 0, 97, 99, 3, 40, 20, 0, 98,
+		97, 1, 0, 0, 0, 99, 100, 1, 0, 0, 0, 100, 98, 1, 0, 0, 0, 100, 101, 1,
+		0, 0, 0, 101, 102, 1, 0, 0, 0, 102, 103, 5, 2, 0, 0, 103, 7, 1, 0, 0, 0,
+		104, 107, 5, 30, 0, 0, 105, 108, 3, 10, 5, 0, 106, 108, 3, 12, 6, 0, 107,
+		105, 1, 0, 0, 0, 107, 106, 1, 0, 0, 0, 108, 9, 1, 0, 0, 0, 109, 111, 5,
+		1, 0, 0, 110, 112, 3, 40, 20, 0, 111, 110, 1, 0, 0, 0, 112, 113, 1, 0,
+		0, 0, 113, 111, 1, 0, 0, 0, 113, 114, 1, 0, 0, 0, 114, 115, 1, 0, 0, 0,
+		115, 116, 5, 2, 0, 0, 116, 11, 1, 0, 0, 0, 117, 118, 5, 3, 0, 0, 118, 119,
+		5, 39, 0, 0, 119, 13, 1, 0, 0, 0, 120, 121, 5, 26, 0, 0, 121, 123, 5, 1,
+		0, 0, 122, 124, 5, 43, 0, 0, 123, 122, 1, 0, 0, 0, 124, 125, 1, 0, 0, 0,
+		125, 123, 1, 0, 0, 0, 125, 126, 1, 0, 0, 0, 126, 127, 1, 0, 0, 0, 127,
+		138, 5, 2, 0, 0, 128, 129, 5, 26, 0, 0, 129, 131, 5, 1, 0, 0, 130, 132,
+		3, 16, 8, 0, 131, 130, 1, 0, 0, 0, 132, 133, 1, 0, 0, 0, 133, 131, 1, 0,
+		0, 0, 133, 134, 1, 0, 0, 0, 134, 135, 1, 0, 0, 0, 135, 136, 5, 2, 0, 0,
+		136, 138, 1, 0, 0, 0, 137, 120, 1, 0, 0, 0, 137, 128, 1, 0, 0, 0, 138,
+		15, 1, 0, 0, 0, 139, 143, 3, 30, 15, 0, 140, 143, 3, 38, 19, 0, 141, 143,
+		3, 42, 21, 0, 142, 139, 1, 0, 0, 0, 142, 140, 1, 0, 0, 0, 142, 141, 1,
+		0, 0, 0, 143, 17, 1, 0, 0, 0, 144, 145, 5, 43, 0, 0, 145, 149, 5, 1, 0,
+		0, 146, 148, 3, 20, 10, 0, 147, 146, 1, 0, 0, 0, 148, 151, 1, 0, 0, 0,
+		149, 147, 1, 0, 0, 0, 149, 150, 1, 0, 0, 0, 150, 152, 1, 0, 0, 0, 151,
+		149, 1, 0, 0, 0, 152, 153, 5, 2, 0, 0, 153, 19, 1, 0, 0, 0, 154, 157, 3,
+		44, 22, 0, 155, 157, 3, 42, 21, 0, 156, 154, 1, 0, 0, 0, 156, 155, 1, 0,
+		0, 0, 157, 21, 1, 0, 0, 0, 158, 159, 5, 27, 0, 0, 159, 161, 5, 1, 0, 0,
+		160, 162, 3, 24, 12, 0, 161, 160, 1, 0, 0, 0, 162, 163, 1, 0, 0, 0, 163,
+		161, 1, 0, 0, 0, 163, 164, 1, 0, 0, 0, 164, 165, 1, 0, 0, 0, 165, 166,
+		5, 2, 0, 0, 166, 23, 1, 0, 0, 0, 167, 173, 3, 30, 15, 0, 168, 173, 3, 44,
+		22, 0, 169, 173, 5, 42, 0, 0, 170, 173, 3, 38, 19, 0, 171, 173, 3, 42,
+		21, 0, 172, 167, 1, 0, 0, 0, 172, 168, 1, 0, 0, 0, 172, 169, 1, 0, 0, 0,
+		172, 170, 1, 0, 0, 0, 172, 171, 1, 0, 0, 0, 173, 25, 1, 0, 0, 0, 174, 175,
+		3, 24, 12, 0, 175, 27, 1, 0, 0, 0, 176, 177, 3, 24, 12, 0, 177, 29, 1,
+		0, 0, 0, 178, 179, 5, 40, 0, 0, 179, 180, 5, 4, 0, 0, 180, 181, 3, 32,
+		16, 0, 181, 182, 5, 5, 0, 0, 182, 186, 5, 1, 0, 0, 183, 185, 3, 26, 13,
+		0, 184, 183, 1, 0, 0, 0, 185, 188, 1, 0, 0, 0, 186, 184, 1, 0, 0, 0, 186,
 		187, 1, 0, 0, 0, 187, 189, 1, 0, 0, 0, 188, 186, 1, 0, 0, 0, 189, 199,
-		5, 2, 0, 0, 190, 191, 5, 43, 0, 0, 191, 195, 5, 1, 0, 0, 192, 194, 3, 28,
+		5, 2, 0, 0, 190, 191, 5, 41, 0, 0, 191, 195, 5, 1, 0, 0, 192, 194, 3, 28,
 		14, 0, 193, 192, 1, 0, 0, 0, 194, 197, 1, 0, 0, 0, 195, 193, 1, 0, 0, 0,
 		195, 196, 1, 0, 0, 0, 196, 198, 1, 0, 0, 0, 197, 195, 1, 0, 0, 0, 198,
 		200, 5, 2, 0, 0, 199, 190, 1, 0, 0, 0, 199, 200, 1, 0, 0, 0, 200, 31, 1,
 		0, 0, 0, 201, 202, 3, 38, 19, 0, 202, 203, 7, 0, 0, 0, 203, 204, 3, 38,
 		19, 0, 204, 207, 1, 0, 0, 0, 205, 207, 3, 38, 19, 0, 206, 201, 1, 0, 0,
-		0, 206, 205, 1, 0, 0, 0, 207, 33, 1, 0, 0, 0, 208, 209, 5, 30, 0, 0, 209,
+		0, 206, 205, 1, 0, 0, 0, 207, 33, 1, 0, 0, 0, 208, 209, 5, 28, 0, 0, 209,
 		211, 5, 1, 0, 0, 210, 212, 3, 42, 21, 0, 211, 210, 1, 0, 0, 0, 212, 213,
 		1, 0, 0, 0, 213, 211, 1, 0, 0, 0, 213, 214, 1, 0, 0, 0, 214, 215, 1, 0,
 		0, 0, 215, 216, 5, 2, 0, 0, 216, 35, 1, 0, 0, 0, 217, 218, 3, 44, 22, 0,
@@ -169,54 +166,48 @@ func promptdslParserInit() {
 		1, 0, 0, 0, 224, 225, 1, 0, 0, 0, 225, 228, 1, 0, 0, 0, 226, 224, 1, 0,
 		0, 0, 227, 219, 1, 0, 0, 0, 227, 228, 1, 0, 0, 0, 228, 229, 1, 0, 0, 0,
 		229, 230, 5, 5, 0, 0, 230, 37, 1, 0, 0, 0, 231, 236, 3, 44, 22, 0, 232,
-		236, 5, 46, 0, 0, 233, 236, 5, 47, 0, 0, 234, 236, 5, 48, 0, 0, 235, 231,
+		236, 5, 44, 0, 0, 233, 236, 5, 45, 0, 0, 234, 236, 5, 46, 0, 0, 235, 231,
 		1, 0, 0, 0, 235, 232, 1, 0, 0, 0, 235, 233, 1, 0, 0, 0, 235, 234, 1, 0,
-		0, 0, 236, 39, 1, 0, 0, 0, 237, 238, 5, 45, 0, 0, 238, 239, 5, 3, 0, 0,
+		0, 0, 236, 39, 1, 0, 0, 0, 237, 238, 5, 43, 0, 0, 238, 239, 5, 3, 0, 0,
 		239, 242, 3, 62, 31, 0, 240, 241, 5, 9, 0, 0, 241, 243, 3, 64, 32, 0, 242,
 		240, 1, 0, 0, 0, 242, 243, 1, 0, 0, 0, 243, 247, 1, 0, 0, 0, 244, 246,
 		3, 48, 24, 0, 245, 244, 1, 0, 0, 0, 246, 249, 1, 0, 0, 0, 247, 245, 1,
 		0, 0, 0, 247, 248, 1, 0, 0, 0, 248, 251, 1, 0, 0, 0, 249, 247, 1, 0, 0,
-		0, 250, 252, 5, 50, 0, 0, 251, 250, 1, 0, 0, 0, 251, 252, 1, 0, 0, 0, 252,
-		41, 1, 0, 0, 0, 253, 257, 5, 46, 0, 0, 254, 257, 5, 52, 0, 0, 255, 257,
+		0, 250, 252, 5, 48, 0, 0, 251, 250, 1, 0, 0, 0, 251, 252, 1, 0, 0, 0, 252,
+		41, 1, 0, 0, 0, 253, 257, 5, 44, 0, 0, 254, 257, 5, 50, 0, 0, 255, 257,
 		3, 44, 22, 0, 256, 253, 1, 0, 0, 0, 256, 254, 1, 0, 0, 0, 256, 255, 1,
 		0, 0, 0, 257, 43, 1, 0, 0, 0, 258, 263, 7, 1, 0, 0, 259, 260, 5, 10, 0,
-		0, 260, 262, 5, 45, 0, 0, 261, 259, 1, 0, 0, 0, 262, 265, 1, 0, 0, 0, 263,
+		0, 260, 262, 5, 43, 0, 0, 261, 259, 1, 0, 0, 0, 262, 265, 1, 0, 0, 0, 263,
 		261, 1, 0, 0, 0, 263, 264, 1, 0, 0, 0, 264, 45, 1, 0, 0, 0, 265, 263, 1,
-		0, 0, 0, 266, 267, 5, 45, 0, 0, 267, 268, 5, 35, 0, 0, 268, 270, 5, 1,
+		0, 0, 0, 266, 267, 5, 43, 0, 0, 267, 268, 5, 33, 0, 0, 268, 270, 5, 1,
 		0, 0, 269, 271, 3, 40, 20, 0, 270, 269, 1, 0, 0, 0, 271, 272, 1, 0, 0,
 		0, 272, 270, 1, 0, 0, 0, 272, 273, 1, 0, 0, 0, 273, 274, 1, 0, 0, 0, 274,
 		275, 5, 2, 0, 0, 275, 47, 1, 0, 0, 0, 276, 277, 5, 11, 0, 0, 277, 278,
-		5, 45, 0, 0, 278, 280, 5, 4, 0, 0, 279, 281, 3, 50, 25, 0, 280, 279, 1,
+		5, 43, 0, 0, 278, 280, 5, 4, 0, 0, 279, 281, 3, 50, 25, 0, 280, 279, 1,
 		0, 0, 0, 280, 281, 1, 0, 0, 0, 281, 282, 1, 0, 0, 0, 282, 283, 5, 5, 0,
 		0, 283, 49, 1, 0, 0, 0, 284, 289, 3, 52, 26, 0, 285, 286, 5, 8, 0, 0, 286,
 		288, 3, 52, 26, 0, 287, 285, 1, 0, 0, 0, 288, 291, 1, 0, 0, 0, 289, 287,
 		1, 0, 0, 0, 289, 290, 1, 0, 0, 0, 290, 51, 1, 0, 0, 0, 291, 289, 1, 0,
-		0, 0, 292, 295, 5, 46, 0, 0, 293, 295, 3, 54, 27, 0, 294, 292, 1, 0, 0,
+		0, 0, 292, 295, 5, 44, 0, 0, 293, 295, 3, 54, 27, 0, 294, 292, 1, 0, 0,
 		0, 294, 293, 1, 0, 0, 0, 295, 53, 1, 0, 0, 0, 296, 305, 5, 12, 0, 0, 297,
-		302, 5, 46, 0, 0, 298, 299, 5, 8, 0, 0, 299, 301, 5, 46, 0, 0, 300, 298,
+		302, 5, 44, 0, 0, 298, 299, 5, 8, 0, 0, 299, 301, 5, 44, 0, 0, 300, 298,
 		1, 0, 0, 0, 301, 304, 1, 0, 0, 0, 302, 300, 1, 0, 0, 0, 302, 303, 1, 0,
 		0, 0, 303, 306, 1, 0, 0, 0, 304, 302, 1, 0, 0, 0, 305, 297, 1, 0, 0, 0,
 		305, 306, 1, 0, 0, 0, 306, 307, 1, 0, 0, 0, 307, 308, 5, 13, 0, 0, 308,
-		55, 1, 0, 0, 0, 309, 313, 5, 14, 0, 0, 310, 312, 9, 0, 0, 0, 311, 310,
-		1, 0, 0, 0, 312, 315, 1, 0, 0, 0, 313, 314, 1, 0, 0, 0, 313, 311, 1, 0,
-		0, 0, 314, 316, 1, 0, 0, 0, 315, 313, 1, 0, 0, 0, 316, 317, 5, 15, 0, 0,
-		317, 57, 1, 0, 0, 0, 318, 322, 5, 16, 0, 0, 319, 321, 9, 0, 0, 0, 320,
-		319, 1, 0, 0, 0, 321, 324, 1, 0, 0, 0, 322, 323, 1, 0, 0, 0, 322, 320,
-		1, 0, 0, 0, 323, 325, 1, 0, 0, 0, 324, 322, 1, 0, 0, 0, 325, 326, 5, 17,
-		0, 0, 326, 59, 1, 0, 0, 0, 327, 329, 7, 2, 0, 0, 328, 327, 1, 0, 0, 0,
-		329, 330, 1, 0, 0, 0, 330, 328, 1, 0, 0, 0, 330, 331, 1, 0, 0, 0, 331,
-		61, 1, 0, 0, 0, 332, 348, 5, 23, 0, 0, 333, 348, 5, 24, 0, 0, 334, 348,
-		5, 25, 0, 0, 335, 336, 5, 19, 0, 0, 336, 348, 3, 62, 31, 0, 337, 338, 5,
-		35, 0, 0, 338, 342, 5, 1, 0, 0, 339, 341, 3, 40, 20, 0, 340, 339, 1, 0,
-		0, 0, 341, 344, 1, 0, 0, 0, 342, 340, 1, 0, 0, 0, 342, 343, 1, 0, 0, 0,
-		343, 345, 1, 0, 0, 0, 344, 342, 1, 0, 0, 0, 345, 348, 5, 2, 0, 0, 346,
-		348, 5, 45, 0, 0, 347, 332, 1, 0, 0, 0, 347, 333, 1, 0, 0, 0, 347, 334,
-		1, 0, 0, 0, 347, 335, 1, 0, 0, 0, 347, 337, 1, 0, 0, 0, 347, 346, 1, 0,
-		0, 0, 348, 63, 1, 0, 0, 0, 349, 350, 7, 3, 0, 0, 350, 65, 1, 0, 0, 0, 351,
-		352, 7, 4, 0, 0, 352, 67, 1, 0, 0, 0, 38, 71, 81, 93, 100, 107, 113, 125,
+		55, 1, 0, 0, 0, 309, 310, 5, 19, 0, 0, 310, 57, 1, 0, 0, 0, 311, 312, 5,
+		20, 0, 0, 312, 59, 1, 0, 0, 0, 313, 315, 7, 2, 0, 0, 314, 313, 1, 0, 0,
+		0, 315, 316, 1, 0, 0, 0, 316, 314, 1, 0, 0, 0, 316, 317, 1, 0, 0, 0, 317,
+		61, 1, 0, 0, 0, 318, 334, 5, 21, 0, 0, 319, 334, 5, 22, 0, 0, 320, 334,
+		5, 23, 0, 0, 321, 322, 5, 15, 0, 0, 322, 334, 3, 62, 31, 0, 323, 324, 5,
+		33, 0, 0, 324, 328, 5, 1, 0, 0, 325, 327, 3, 40, 20, 0, 326, 325, 1, 0,
+		0, 0, 327, 330, 1, 0, 0, 0, 328, 326, 1, 0, 0, 0, 328, 329, 1, 0, 0, 0,
+		329, 331, 1, 0, 0, 0, 330, 328, 1, 0, 0, 0, 331, 334, 5, 2, 0, 0, 332,
+		334, 5, 43, 0, 0, 333, 318, 1, 0, 0, 0, 333, 319, 1, 0, 0, 0, 333, 320,
+		1, 0, 0, 0, 333, 321, 1, 0, 0, 0, 333, 323, 1, 0, 0, 0, 333, 332, 1, 0,
+		0, 0, 334, 63, 1, 0, 0, 0, 335, 336, 7, 3, 0, 0, 336, 65, 1, 0, 0, 0, 337,
+		338, 7, 4, 0, 0, 338, 67, 1, 0, 0, 0, 36, 71, 81, 93, 100, 107, 113, 125,
 		133, 137, 142, 149, 156, 163, 172, 186, 195, 199, 206, 213, 224, 227, 235,
-		242, 247, 251, 256, 263, 272, 280, 289, 294, 302, 305, 313, 322, 330, 342,
-		347,
+		242, 247, 251, 256, 263, 272, 280, 289, 294, 302, 305, 316, 328, 333,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -272,42 +263,40 @@ const (
 	PromptDSLParserT__14         = 15
 	PromptDSLParserT__15         = 16
 	PromptDSLParserT__16         = 17
-	PromptDSLParserT__17         = 18
-	PromptDSLParserT__18         = 19
-	PromptDSLParserT__19         = 20
-	PromptDSLParserT__20         = 21
-	PromptDSLParserPLUS          = 22
-	PromptDSLParserSTRING_TYPE   = 23
-	PromptDSLParserFLOAT_TYPE    = 24
-	PromptDSLParserINT_TYPE      = 25
-	PromptDSLParserPROMPT        = 26
-	PromptDSLParserPARAMS        = 27
-	PromptDSLParserSYSTEM        = 28
-	PromptDSLParserUSER          = 29
-	PromptDSLParserNOTE          = 30
-	PromptDSLParserINPUT         = 31
-	PromptDSLParserOUTPUT        = 32
-	PromptDSLParserFORMAT        = 33
-	PromptDSLParserTYPE          = 34
-	PromptDSLParserSTRUCT        = 35
-	PromptDSLParserBEFORE        = 36
-	PromptDSLParserSCHEMA        = 37
-	PromptDSLParserAFTER         = 38
-	PromptDSLParserPARSE         = 39
-	PromptDSLParserJSONFIX       = 40
-	PromptDSLParserMARKDOWN      = 41
-	PromptDSLParserIF            = 42
-	PromptDSLParserELSE          = 43
-	PromptDSLParserOUTPUTSPEC    = 44
-	PromptDSLParserID            = 45
-	PromptDSLParserSTRING        = 46
-	PromptDSLParserNUMBER        = 47
-	PromptDSLParserBOOL          = 48
-	PromptDSLParserPIPE          = 49
-	PromptDSLParserSEMI          = 50
-	PromptDSLParserWS            = 51
-	PromptDSLParserLINE_COMMENT  = 52
-	PromptDSLParserBLOCK_COMMENT = 53
+	PromptDSLParserPLUS          = 18
+	PromptDSLParserAFTER_BLOCK   = 19
+	PromptDSLParserFIX_BLOCK     = 20
+	PromptDSLParserSTRING_TYPE   = 21
+	PromptDSLParserFLOAT_TYPE    = 22
+	PromptDSLParserINT_TYPE      = 23
+	PromptDSLParserPROMPT        = 24
+	PromptDSLParserPARAMS        = 25
+	PromptDSLParserSYSTEM        = 26
+	PromptDSLParserUSER          = 27
+	PromptDSLParserNOTE          = 28
+	PromptDSLParserINPUT         = 29
+	PromptDSLParserOUTPUT        = 30
+	PromptDSLParserFORMAT        = 31
+	PromptDSLParserTYPE          = 32
+	PromptDSLParserSTRUCT        = 33
+	PromptDSLParserBEFORE        = 34
+	PromptDSLParserSCHEMA        = 35
+	PromptDSLParserAFTER         = 36
+	PromptDSLParserPARSE         = 37
+	PromptDSLParserJSONFIX       = 38
+	PromptDSLParserMARKDOWN      = 39
+	PromptDSLParserIF            = 40
+	PromptDSLParserELSE          = 41
+	PromptDSLParserOUTPUTSPEC    = 42
+	PromptDSLParserID            = 43
+	PromptDSLParserSTRING        = 44
+	PromptDSLParserNUMBER        = 45
+	PromptDSLParserBOOL          = 46
+	PromptDSLParserPIPE          = 47
+	PromptDSLParserSEMI          = 48
+	PromptDSLParserWS            = 49
+	PromptDSLParserLINE_COMMENT  = 50
+	PromptDSLParserBLOCK_COMMENT = 51
 )
 
 // PromptDSLParser rules.
@@ -684,7 +673,7 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&35192693669888) != 0) {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8798174969856) != 0) {
 		{
 			p.SetState(78)
 			p.PromptBlock()
@@ -975,14 +964,14 @@ func (p *PromptDSLParser) PromptBlock() (localctx IPromptBlockContext) {
 			p.NoteSection()
 		}
 
-	case PromptDSLParserT__13:
+	case PromptDSLParserAFTER_BLOCK:
 		p.EnterOuterAlt(localctx, 6)
 		{
 			p.SetState(90)
 			p.AfterSection()
 		}
 
-	case PromptDSLParserT__15:
+	case PromptDSLParserFIX_BLOCK:
 		p.EnterOuterAlt(localctx, 7)
 		{
 			p.SetState(91)
@@ -1873,7 +1862,7 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5036113295048704) != 0) {
+		for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0) {
 			{
 				p.SetState(130)
 				p.SysContent()
@@ -2238,7 +2227,7 @@ func (p *PromptDSLParser) ModuleDef() (localctx IModuleDefContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&4609502783471616) != 0 {
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1156773742379008) != 0 {
 		{
 			p.SetState(146)
 			p.ModuleContent()
@@ -2575,7 +2564,7 @@ func (p *PromptDSLParser) UserSection() (localctx IUserSectionContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5053705481093120) != 0) {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0) {
 		{
 			p.SetState(160)
 			p.UserContent()
@@ -2894,7 +2883,17 @@ func (s *ThencontentContext) ToStringTree(ruleNames []string, recog antlr.Recogn
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
+func (s *ThencontentContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterThencontent(s)
+	}
+}
 
+func (s *ThencontentContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitThencontent(s)
+	}
+}
 
 func (s *ThencontentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
@@ -2998,6 +2997,17 @@ func (s *ElsecontentContext) ToStringTree(ruleNames []string, recog antlr.Recogn
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
+func (s *ElsecontentContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterElsecontent(s)
+	}
+}
+
+func (s *ElsecontentContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitElsecontent(s)
+	}
+}
 
 func (s *ElsecontentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
@@ -3268,7 +3278,7 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5053705481093120) != 0 {
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0 {
 		{
 			p.SetState(183)
 			p.Thencontent()
@@ -3320,7 +3330,7 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5053705481093120) != 0 {
+		for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0 {
 			{
 				p.SetState(192)
 				p.Elsecontent()
@@ -3745,7 +3755,7 @@ func (p *PromptDSLParser) NoteSection() (localctx INoteSectionContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&4609502783471616) != 0) {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1156773742379008) != 0) {
 		{
 			p.SetState(210)
 			p.TextLine()
@@ -3940,7 +3950,7 @@ func (p *PromptDSLParser) DslCallExpr() (localctx IDslCallExprContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&528115621167104) != 0 {
+	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&136426951802880) != 0 {
 		{
 			p.SetState(219)
 			p.Expr()
@@ -4114,7 +4124,7 @@ func (p *PromptDSLParser) Expr() (localctx IExprContext) {
 	}
 
 	switch p.GetTokenStream().LA(1) {
-	case PromptDSLParserINPUT, PromptDSLParserOUTPUT, PromptDSLParserBEFORE, PromptDSLParserAFTER, PromptDSLParserID:
+	case PromptDSLParserINPUT, PromptDSLParserOUTPUT, PromptDSLParserBEFORE, PromptDSLParserAFTER, PromptDSLParserOUTPUTSPEC, PromptDSLParserID:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(231)
@@ -4568,7 +4578,7 @@ func (p *PromptDSLParser) TextLine() (localctx ITextLineContext) {
 			}
 		}
 
-	case PromptDSLParserINPUT, PromptDSLParserOUTPUT, PromptDSLParserBEFORE, PromptDSLParserAFTER, PromptDSLParserID:
+	case PromptDSLParserINPUT, PromptDSLParserOUTPUT, PromptDSLParserBEFORE, PromptDSLParserAFTER, PromptDSLParserOUTPUTSPEC, PromptDSLParserID:
 		p.EnterOuterAlt(localctx, 3)
 		{
 			p.SetState(255)
@@ -4607,6 +4617,7 @@ type IParamPathContext interface {
 	OUTPUT() antlr.TerminalNode
 	AFTER() antlr.TerminalNode
 	BEFORE() antlr.TerminalNode
+	OUTPUTSPEC() antlr.TerminalNode
 
 	// IsParamPathContext differentiates from other interfaces.
 	IsParamPathContext()
@@ -4668,6 +4679,10 @@ func (s *ParamPathContext) BEFORE() antlr.TerminalNode {
 	return s.GetToken(PromptDSLParserBEFORE, 0)
 }
 
+func (s *ParamPathContext) OUTPUTSPEC() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserOUTPUTSPEC, 0)
+}
+
 func (s *ParamPathContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -4708,7 +4723,7 @@ func (p *PromptDSLParser) ParamPath() (localctx IParamPathContext) {
 		p.SetState(258)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&35534411923456) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&13281649491968) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -5614,6 +5629,10 @@ type IAfterSectionContext interface {
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
+
+	// Getter signatures
+	AFTER_BLOCK() antlr.TerminalNode
+
 	// IsAfterSectionContext differentiates from other interfaces.
 	IsAfterSectionContext()
 }
@@ -5649,6 +5668,11 @@ func NewAfterSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext,
 }
 
 func (s *AfterSectionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *AfterSectionContext) AFTER_BLOCK() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserAFTER_BLOCK, 0)
+}
+
 func (s *AfterSectionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -5682,45 +5706,10 @@ func (s *AfterSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 func (p *PromptDSLParser) AfterSection() (localctx IAfterSectionContext) {
 	localctx = NewAfterSectionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 56, PromptDSLParserRULE_afterSection)
-	var _alt int
-
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(309)
-		p.Match(PromptDSLParserT__13)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(313)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 33, p.GetParserRuleContext())
-	if p.HasError() {
-		goto errorExit
-	}
-	for _alt != 1 && _alt != antlr.ATNInvalidAltNumber {
-		if _alt == 1+1 {
-			p.SetState(310)
-			p.MatchWildcard()
-
-		}
-		p.SetState(315)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 33, p.GetParserRuleContext())
-		if p.HasError() {
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(316)
-		p.Match(PromptDSLParserT__14)
+		p.Match(PromptDSLParserAFTER_BLOCK)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -5746,6 +5735,10 @@ type IFixSectionContext interface {
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
+
+	// Getter signatures
+	FIX_BLOCK() antlr.TerminalNode
+
 	// IsFixSectionContext differentiates from other interfaces.
 	IsFixSectionContext()
 }
@@ -5781,6 +5774,11 @@ func NewFixSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 }
 
 func (s *FixSectionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *FixSectionContext) FIX_BLOCK() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserFIX_BLOCK, 0)
+}
+
 func (s *FixSectionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -5814,45 +5812,10 @@ func (s *FixSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 func (p *PromptDSLParser) FixSection() (localctx IFixSectionContext) {
 	localctx = NewFixSectionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 58, PromptDSLParserRULE_fixSection)
-	var _alt int
-
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(318)
-		p.Match(PromptDSLParserT__15)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(322)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 34, p.GetParserRuleContext())
-	if p.HasError() {
-		goto errorExit
-	}
-	for _alt != 1 && _alt != antlr.ATNInvalidAltNumber {
-		if _alt == 1+1 {
-			p.SetState(319)
-			p.MatchWildcard()
-
-		}
-		p.SetState(324)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 34, p.GetParserRuleContext())
-		if p.HasError() {
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(325)
-		p.Match(PromptDSLParserT__16)
+		p.SetState(311)
+		p.Match(PromptDSLParserFIX_BLOCK)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -5993,19 +5956,19 @@ func (p *PromptDSLParser) TextBlock() (localctx ITextBlockContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(328)
+	p.SetState(314)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2498090418569224) != 0) {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&624522604593160) != 0) {
 		{
-			p.SetState(327)
+			p.SetState(313)
 			_la = p.GetTokenStream().LA(1)
 
-			if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2498090418569224) != 0) {
+			if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&624522604593160) != 0) {
 				p.GetErrorHandler().RecoverInline(p)
 			} else {
 				p.GetErrorHandler().ReportMatch(p)
@@ -6013,7 +5976,7 @@ func (p *PromptDSLParser) TextBlock() (localctx ITextBlockContext) {
 			}
 		}
 
-		p.SetState(330)
+		p.SetState(316)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -6199,7 +6162,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	p.EnterRule(localctx, 62, PromptDSLParserRULE_type)
 	var _la int
 
-	p.SetState(347)
+	p.SetState(333)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -6209,7 +6172,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserSTRING_TYPE:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(332)
+			p.SetState(318)
 			p.Match(PromptDSLParserSTRING_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6220,7 +6183,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserFLOAT_TYPE:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(333)
+			p.SetState(319)
 			p.Match(PromptDSLParserFLOAT_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6231,7 +6194,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserINT_TYPE:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(334)
+			p.SetState(320)
 			p.Match(PromptDSLParserINT_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6239,25 +6202,25 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 			}
 		}
 
-	case PromptDSLParserT__18:
+	case PromptDSLParserT__14:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(335)
-			p.Match(PromptDSLParserT__18)
+			p.SetState(321)
+			p.Match(PromptDSLParserT__14)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(336)
+			p.SetState(322)
 			p.Type_()
 		}
 
 	case PromptDSLParserSTRUCT:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(337)
+			p.SetState(323)
 			p.Match(PromptDSLParserSTRUCT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6265,14 +6228,14 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 			}
 		}
 		{
-			p.SetState(338)
+			p.SetState(324)
 			p.Match(PromptDSLParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(342)
+		p.SetState(328)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -6281,11 +6244,11 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 
 		for _la == PromptDSLParserID {
 			{
-				p.SetState(339)
+				p.SetState(325)
 				p.FieldDef()
 			}
 
-			p.SetState(344)
+			p.SetState(330)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -6293,7 +6256,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(345)
+			p.SetState(331)
 			p.Match(PromptDSLParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6304,7 +6267,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserID:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(346)
+			p.SetState(332)
 			p.Match(PromptDSLParserID)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6427,10 +6390,10 @@ func (p *PromptDSLParser) Value() (localctx IValueContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(349)
+		p.SetState(335)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&492581209243648) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&123145302310912) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -6529,10 +6492,10 @@ func (p *PromptDSLParser) FormatType() (localctx IFormatTypeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(351)
+		p.SetState(337)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(_la == PromptDSLParserT__19 || _la == PromptDSLParserT__20) {
+		if !(_la == PromptDSLParserT__15 || _la == PromptDSLParserT__16) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
