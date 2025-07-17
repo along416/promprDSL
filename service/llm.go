@@ -48,3 +48,12 @@ func (c *Client) GenerateText(ctx context.Context, prompt string) (string, error
 
 	return resp.Choices[0].Message.Content, nil
 }
+// // 提取 JSON 数组
+// func extractJSONArray(text string) string {
+// 	re := regexp.MustCompile(`(?s)(\[.*?\])`)
+// 	matches := re.FindStringSubmatch(text)
+// 	if len(matches) > 1 {
+// 		return matches[1] // 第一个子匹配是数组
+// 	}
+// 	return ""
+// }

@@ -12,14 +12,16 @@ import (
 
 func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStream) *RootNode {
 	result := &RootNode{
-		SysNodes:   []Node{},
-		UserNodes:  []Node{},
-		ModuleDefs: map[string][]Node{}, // 初始化 map
-		InFields:   []FieldDef{},
-		OutFields:  []FieldDef{},
-		BeforeCode: "",
-		AfterCode:  []string{},
-		FixCode:    []string{},
+		Vars:        make(map[string]interface{}), // 初始化空map
+		SysNodes:    []Node{},
+		UserNodes:   []Node{},
+		ModuleDefs:  map[string][]Node{}, // 初始化 map
+		InFields:    []FieldDef{},
+		OutFields:   []FieldDef{},
+		BeforeCode:  "",
+		AfterCode:   []string{},
+		FixCode:     []string{},
+		BeforeNodes: []Node{},
 	}
 	fmt.Println("Building AST...")
 	def := parseTree.PromptDef(0)
@@ -102,6 +104,7 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 			result.InFields = inNode.Fields
 
 		case *parser.OutputSectionContext:
+
 			// 解析输出字段，放到 result.OutDef
 			// 检查是哪种 output 类型
 			//所以这里其实是构造结构体，而不是处理outputspec，还是都处理？
@@ -169,17 +172,46 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 				mdNode := &MarkdownNode{Content: cleanQuotes(text)}
 				result.SysNodes = append(result.SysNodes, mdNode)
 			}
-			
+
+		// case *parser.BeforeSectionContext:
+		// 	for _, bc := range b.AllBeforeContent() {
+		// 		node := buildNodeFromBeforeContent(bc) // 你自定义的函数，返回 Node 接口实现
+		// 		result.BeforeNodes = append(result.BeforeNodes, node)
+		// 	}
 		case *parser.AfterSectionContext:
 			result.AfterCode = extractRawText(b, tokens)
 
 		case *parser.FixSectionContext:
 			result.FixCode = extractRawText(b, tokens)
 		}
+
 	}
 
 	return result
 }
+// // 假设 parser.BeforeContentContext 是 before 代码块中子内容的上下文类型
+// func buildNodeFromBeforeContent(ctx parser.IBeforeContentContext) Node {
+// 	// 这里根据 ctx 具体类型做判断，生成对应的 AST Node
+
+// 	switch c := ctx.(type) {
+// 	case *parser.TextLineContext:
+// 		// 比如文本节点
+// 		return &StringNode{Val: cleanQuotes(c.GetText())}
+// 	case *parser.ParamPathContext:
+// 		// 路径节点
+// 		return &ParamNode{Path: cleanQuotes(c.GetText())}
+// 	case *parser.IfStatementContext:
+// 		// 条件节点，调用你已有的构造函数
+// 		return buildIfNode(c)
+// 	case *parser.ExprContext:
+// 		// 表达式节点
+// 		return &StringNode{Val: cleanQuotes(c.GetText())}
+// 	// 你根据实际情况补充更多类型
+// 	default:
+// 		// 不支持的类型直接返回文本节点，避免panic
+// 		return &StringNode{Val: cleanQuotes(ctx.GetText())}
+// 	}
+// }
 
 func BuildSysNodes(root antlr.Tree) []Node {
 	moduleContentMap := make(map[string][]Node)

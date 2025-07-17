@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"strings"
 
 	openai "github.com/sashabaranov/go-openai"
 )
@@ -14,29 +16,35 @@ type LLMClient struct {
 
 // NewLLMClient 创建 LLMClient 实例，传入 API Key
 func NewLLMClient(apiKey string) *LLMClient {
+	cfg := openai.DefaultConfig(apiKey)
+	// 修改为你的自定义地址（如果有）
+	cfg.BaseURL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+
 	return &LLMClient{
-		client: openai.NewClient(apiKey),
+		client: openai.NewClientWithConfig(cfg),
 	}
 }
 
 // GeneratePromptResponse 使用 GPT-3.5 Turbo 生成对话回复
 func (c *LLMClient) GeneratePromptResponse(systemPrompt, userPrompt string) (string, error) {
-	resp, err := c.client.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleSystem,
-					Content: systemPrompt,
-				},
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: userPrompt,
-				},
+	// fmt.Println("GeneratePromptResponse:")
+	req := openai.ChatCompletionRequest{
+		Model: "qwen-max", // 你这里替换成你具体的 qwen 模型名字符串
+		Messages: []openai.ChatCompletionMessage{
+			{
+				Role:    openai.ChatMessageRoleSystem,
+				Content: systemPrompt,
+			},
+			{
+				Role:    openai.ChatMessageRoleUser,
+				Content: userPrompt,
 			},
 		},
-	)
+	}
+	fmt.Println("发送给模型的内容:", req.Messages)
+	resp, err := c.client.CreateChatCompletion(context.Background(), req)
+	fmt.Println("AI thingking...")
+	// fmt.Println("GeneratePromptResponse:",resp)
 	if err != nil {
 		return "", fmt.Errorf("调用 OpenAI 失败: %w", err)
 	}
@@ -45,5 +53,24 @@ func (c *LLMClient) GeneratePromptResponse(systemPrompt, userPrompt string) (str
 		return "", fmt.Errorf("OpenAI 返回空响应")
 	}
 
-	return resp.Choices[0].Message.Content, nil
+	content := strings.TrimSpace(resp.Choices[0].Message.Content)
+	if content == "" {
+		return "", fmt.Errorf("OpenAI 返回空字符串")
+	}
+	jsonPart := extractJSONArray(content)
+
+	if jsonPart == "" {
+		return "", fmt.Errorf("未能从模型响应中提取 JSON 数组")
+	}
+	return jsonPart, nil
+}
+
+// 提取 JSON 数组
+func extractJSONArray(text string) string {
+	re := regexp.MustCompile("(?s)```json\\s*(\\[.*?\\])\\s*```")
+	matches := re.FindStringSubmatch(text)
+	if len(matches) > 1 {
+		return matches[1] // 第一个子匹配是数组
+	}
+	return ""
 }

@@ -28,6 +28,15 @@ type PromptDSLListener interface {
 	// EnterOutputMarkdown is called when entering the outputMarkdown production.
 	EnterOutputMarkdown(c *OutputMarkdownContext)
 
+	// EnterBeforeSection is called when entering the beforeSection production.
+	EnterBeforeSection(c *BeforeSectionContext)
+
+	// EnterBeforeContent is called when entering the beforeContent production.
+	EnterBeforeContent(c *BeforeContentContext)
+
+	// EnterVarDef is called when entering the varDef production.
+	EnterVarDef(c *VarDefContext)
+
 	// EnterSystemSection is called when entering the systemSection production.
 	EnterSystemSection(c *SystemSectionContext)
 
@@ -129,6 +138,15 @@ type PromptDSLListener interface {
 
 	// ExitOutputMarkdown is called when exiting the outputMarkdown production.
 	ExitOutputMarkdown(c *OutputMarkdownContext)
+
+	// ExitBeforeSection is called when exiting the beforeSection production.
+	ExitBeforeSection(c *BeforeSectionContext)
+
+	// ExitBeforeContent is called when exiting the beforeContent production.
+	ExitBeforeContent(c *BeforeContentContext)
+
+	// ExitVarDef is called when exiting the varDef production.
+	ExitVarDef(c *VarDefContext)
 
 	// ExitSystemSection is called when exiting the systemSection production.
 	ExitSystemSection(c *SystemSectionContext)

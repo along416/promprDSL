@@ -44,7 +44,21 @@ outputSection
     ;
 outputStruct:'{' fieldDef+ '}';
 outputMarkdown: ':' MARKDOWN;
+//before
+beforeSection
+    : 'before' '{' beforeContent* '}'
+    ;
 
+beforeContent
+    : varDef
+    | expr
+    | ifStatement
+    | textLine
+    ;
+
+varDef
+    : ID '=' expr
+    ;
 //sys    
 systemSection
     : 'system' '{' ID+ '}'

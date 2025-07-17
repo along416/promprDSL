@@ -28,6 +28,15 @@ type PromptDSLVisitor interface {
 	// Visit a parse tree produced by PromptDSLParser#outputMarkdown.
 	VisitOutputMarkdown(ctx *OutputMarkdownContext) interface{}
 
+	// Visit a parse tree produced by PromptDSLParser#beforeSection.
+	VisitBeforeSection(ctx *BeforeSectionContext) interface{}
+
+	// Visit a parse tree produced by PromptDSLParser#beforeContent.
+	VisitBeforeContent(ctx *BeforeContentContext) interface{}
+
+	// Visit a parse tree produced by PromptDSLParser#varDef.
+	VisitVarDef(ctx *VarDefContext) interface{}
+
 	// Visit a parse tree produced by PromptDSLParser#systemSection.
 	VisitSystemSection(ctx *SystemSectionContext) interface{}
 

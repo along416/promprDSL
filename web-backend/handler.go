@@ -49,23 +49,25 @@ func HandleGenGuide(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 步骤 2：拆分为 system + user
-	systemPart := extractBlock(prompt, "system:")
-	userPart := extractBlock(prompt, "user:")
-
+	promptcontent := *prompt
+	systemPart := promptcontent.Sys
+	userPart := promptcontent.User
+	systemText := strings.Join(systemPart, "\n")
+	userText := strings.Join(userPart, "\n")
 	// 步骤 3：调用大模型
-	result, err := llm.GeneratePromptResponse(systemPart, userPart)
+	result, err := llm.GeneratePromptResponse(systemText,userText)
 	if err != nil {
 		http.Error(w, "调用大模型失败: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	resp := GenGuideResponse{
-		Prompt:      prompt,
+		Prompt:      systemText+userText,
 		ModelOutput: result,
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
-	resp = GenGuideResponse{Prompt: prompt}
+	resp = GenGuideResponse{Prompt: systemText+userText}
 
 }
 

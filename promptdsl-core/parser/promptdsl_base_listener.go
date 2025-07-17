@@ -62,6 +62,24 @@ func (s *BasePromptDSLListener) EnterOutputMarkdown(ctx *OutputMarkdownContext) 
 // ExitOutputMarkdown is called when production outputMarkdown is exited.
 func (s *BasePromptDSLListener) ExitOutputMarkdown(ctx *OutputMarkdownContext) {}
 
+// EnterBeforeSection is called when production beforeSection is entered.
+func (s *BasePromptDSLListener) EnterBeforeSection(ctx *BeforeSectionContext) {}
+
+// ExitBeforeSection is called when production beforeSection is exited.
+func (s *BasePromptDSLListener) ExitBeforeSection(ctx *BeforeSectionContext) {}
+
+// EnterBeforeContent is called when production beforeContent is entered.
+func (s *BasePromptDSLListener) EnterBeforeContent(ctx *BeforeContentContext) {}
+
+// ExitBeforeContent is called when production beforeContent is exited.
+func (s *BasePromptDSLListener) ExitBeforeContent(ctx *BeforeContentContext) {}
+
+// EnterVarDef is called when production varDef is entered.
+func (s *BasePromptDSLListener) EnterVarDef(ctx *VarDefContext) {}
+
+// ExitVarDef is called when production varDef is exited.
+func (s *BasePromptDSLListener) ExitVarDef(ctx *VarDefContext) {}
+
 // EnterSystemSection is called when production systemSection is entered.
 func (s *BasePromptDSLListener) EnterSystemSection(ctx *SystemSectionContext) {}
 

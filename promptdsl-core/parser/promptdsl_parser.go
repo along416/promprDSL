@@ -32,7 +32,7 @@ var PromptDSLParserStaticData struct {
 func promptdslParserInit() {
 	staticData := &PromptDSLParserStaticData
 	staticData.LiteralNames = []string{
-		"", "'{'", "'}'", "':'", "'('", "')'", "'=='", "'!='", "','", "'='",
+		"", "'{'", "'}'", "':'", "'='", "'('", "')'", "'=='", "'!='", "','",
 		"'.'", "'@'", "'['", "']'", "'-'", "'[]'", "'md'", "'json'", "'+'",
 		"", "", "'string'", "'float'", "'int'", "'prompt'", "'params'", "'system'",
 		"'user'", "'note'", "'input'", "'output'", "'format'", "'type'", "'struct'",
@@ -49,165 +49,178 @@ func promptdslParserInit() {
 	}
 	staticData.RuleNames = []string{
 		"promptFile", "promptDef", "promptBlock", "inputSection", "outputSection",
-		"outputStruct", "outputMarkdown", "systemSection", "sysContent", "moduleDef",
-		"moduleContent", "userSection", "userContent", "thencontent", "elsecontent",
-		"ifStatement", "condition", "noteSection", "dslCallExpr", "expr", "fieldDef",
-		"textLine", "paramPath", "structDef", "annotation", "annotationArgs",
-		"annotationValue", "arrayLiteral", "afterSection", "fixSection", "textBlock",
-		"type", "value", "formatType",
+		"outputStruct", "outputMarkdown", "beforeSection", "beforeContent",
+		"varDef", "systemSection", "sysContent", "moduleDef", "moduleContent",
+		"userSection", "userContent", "thencontent", "elsecontent", "ifStatement",
+		"condition", "noteSection", "dslCallExpr", "expr", "fieldDef", "textLine",
+		"paramPath", "structDef", "annotation", "annotationArgs", "annotationValue",
+		"arrayLiteral", "afterSection", "fixSection", "textBlock", "type", "value",
+		"formatType",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 51, 340, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 51, 366, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
 		21, 7, 21, 2, 22, 7, 22, 2, 23, 7, 23, 2, 24, 7, 24, 2, 25, 7, 25, 2, 26,
 		7, 26, 2, 27, 7, 27, 2, 28, 7, 28, 2, 29, 7, 29, 2, 30, 7, 30, 2, 31, 7,
-		31, 2, 32, 7, 32, 2, 33, 7, 33, 1, 0, 4, 0, 70, 8, 0, 11, 0, 12, 0, 71,
-		1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 80, 8, 1, 11, 1, 12, 1, 81, 1,
-		1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 94, 8, 2,
-		1, 3, 1, 3, 1, 3, 4, 3, 99, 8, 3, 11, 3, 12, 3, 100, 1, 3, 1, 3, 1, 4,
-		1, 4, 1, 4, 3, 4, 108, 8, 4, 1, 5, 1, 5, 4, 5, 112, 8, 5, 11, 5, 12, 5,
-		113, 1, 5, 1, 5, 1, 6, 1, 6, 1, 6, 1, 7, 1, 7, 1, 7, 4, 7, 124, 8, 7, 11,
-		7, 12, 7, 125, 1, 7, 1, 7, 1, 7, 1, 7, 4, 7, 132, 8, 7, 11, 7, 12, 7, 133,
-		1, 7, 1, 7, 3, 7, 138, 8, 7, 1, 8, 1, 8, 1, 8, 3, 8, 143, 8, 8, 1, 9, 1,
-		9, 1, 9, 5, 9, 148, 8, 9, 10, 9, 12, 9, 151, 9, 9, 1, 9, 1, 9, 1, 10, 1,
-		10, 3, 10, 157, 8, 10, 1, 11, 1, 11, 1, 11, 4, 11, 162, 8, 11, 11, 11,
-		12, 11, 163, 1, 11, 1, 11, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 3, 12, 173,
-		8, 12, 1, 13, 1, 13, 1, 14, 1, 14, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 1,
-		15, 5, 15, 185, 8, 15, 10, 15, 12, 15, 188, 9, 15, 1, 15, 1, 15, 1, 15,
-		1, 15, 5, 15, 194, 8, 15, 10, 15, 12, 15, 197, 9, 15, 1, 15, 3, 15, 200,
-		8, 15, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 3, 16, 207, 8, 16, 1, 17, 1,
-		17, 1, 17, 4, 17, 212, 8, 17, 11, 17, 12, 17, 213, 1, 17, 1, 17, 1, 18,
-		1, 18, 1, 18, 1, 18, 1, 18, 5, 18, 223, 8, 18, 10, 18, 12, 18, 226, 9,
-		18, 3, 18, 228, 8, 18, 1, 18, 1, 18, 1, 19, 1, 19, 1, 19, 1, 19, 3, 19,
-		236, 8, 19, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 3, 20, 243, 8, 20, 1, 20,
-		5, 20, 246, 8, 20, 10, 20, 12, 20, 249, 9, 20, 1, 20, 3, 20, 252, 8, 20,
-		1, 21, 1, 21, 1, 21, 3, 21, 257, 8, 21, 1, 22, 1, 22, 1, 22, 5, 22, 262,
-		8, 22, 10, 22, 12, 22, 265, 9, 22, 1, 23, 1, 23, 1, 23, 1, 23, 4, 23, 271,
-		8, 23, 11, 23, 12, 23, 272, 1, 23, 1, 23, 1, 24, 1, 24, 1, 24, 1, 24, 3,
-		24, 281, 8, 24, 1, 24, 1, 24, 1, 25, 1, 25, 1, 25, 5, 25, 288, 8, 25, 10,
-		25, 12, 25, 291, 9, 25, 1, 26, 1, 26, 3, 26, 295, 8, 26, 1, 27, 1, 27,
-		1, 27, 1, 27, 5, 27, 301, 8, 27, 10, 27, 12, 27, 304, 9, 27, 3, 27, 306,
-		8, 27, 1, 27, 1, 27, 1, 28, 1, 28, 1, 29, 1, 29, 1, 30, 4, 30, 315, 8,
-		30, 11, 30, 12, 30, 316, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31, 1, 31,
-		1, 31, 5, 31, 327, 8, 31, 10, 31, 12, 31, 330, 9, 31, 1, 31, 1, 31, 3,
-		31, 334, 8, 31, 1, 32, 1, 32, 1, 33, 1, 33, 1, 33, 0, 0, 34, 0, 2, 4, 6,
+		31, 2, 32, 7, 32, 2, 33, 7, 33, 2, 34, 7, 34, 2, 35, 7, 35, 2, 36, 7, 36,
+		1, 0, 4, 0, 76, 8, 0, 11, 0, 12, 0, 77, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+		1, 4, 1, 86, 8, 1, 11, 1, 12, 1, 87, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2,
+		1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 100, 8, 2, 1, 3, 1, 3, 1, 3, 4, 3, 105, 8,
+		3, 11, 3, 12, 3, 106, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4, 3, 4, 114, 8, 4, 1,
+		5, 1, 5, 4, 5, 118, 8, 5, 11, 5, 12, 5, 119, 1, 5, 1, 5, 1, 6, 1, 6, 1,
+		6, 1, 7, 1, 7, 1, 7, 5, 7, 130, 8, 7, 10, 7, 12, 7, 133, 9, 7, 1, 7, 1,
+		7, 1, 8, 1, 8, 1, 8, 1, 8, 3, 8, 141, 8, 8, 1, 9, 1, 9, 1, 9, 1, 9, 1,
+		10, 1, 10, 1, 10, 4, 10, 150, 8, 10, 11, 10, 12, 10, 151, 1, 10, 1, 10,
+		1, 10, 1, 10, 4, 10, 158, 8, 10, 11, 10, 12, 10, 159, 1, 10, 1, 10, 3,
+		10, 164, 8, 10, 1, 11, 1, 11, 1, 11, 3, 11, 169, 8, 11, 1, 12, 1, 12, 1,
+		12, 5, 12, 174, 8, 12, 10, 12, 12, 12, 177, 9, 12, 1, 12, 1, 12, 1, 13,
+		1, 13, 3, 13, 183, 8, 13, 1, 14, 1, 14, 1, 14, 4, 14, 188, 8, 14, 11, 14,
+		12, 14, 189, 1, 14, 1, 14, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 3, 15, 199,
+		8, 15, 1, 16, 1, 16, 1, 17, 1, 17, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1,
+		18, 5, 18, 211, 8, 18, 10, 18, 12, 18, 214, 9, 18, 1, 18, 1, 18, 1, 18,
+		1, 18, 5, 18, 220, 8, 18, 10, 18, 12, 18, 223, 9, 18, 1, 18, 3, 18, 226,
+		8, 18, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 3, 19, 233, 8, 19, 1, 20, 1,
+		20, 1, 20, 4, 20, 238, 8, 20, 11, 20, 12, 20, 239, 1, 20, 1, 20, 1, 21,
+		1, 21, 1, 21, 1, 21, 1, 21, 5, 21, 249, 8, 21, 10, 21, 12, 21, 252, 9,
+		21, 3, 21, 254, 8, 21, 1, 21, 1, 21, 1, 22, 1, 22, 1, 22, 1, 22, 3, 22,
+		262, 8, 22, 1, 23, 1, 23, 1, 23, 1, 23, 1, 23, 3, 23, 269, 8, 23, 1, 23,
+		5, 23, 272, 8, 23, 10, 23, 12, 23, 275, 9, 23, 1, 23, 3, 23, 278, 8, 23,
+		1, 24, 1, 24, 1, 24, 3, 24, 283, 8, 24, 1, 25, 1, 25, 1, 25, 5, 25, 288,
+		8, 25, 10, 25, 12, 25, 291, 9, 25, 1, 26, 1, 26, 1, 26, 1, 26, 4, 26, 297,
+		8, 26, 11, 26, 12, 26, 298, 1, 26, 1, 26, 1, 27, 1, 27, 1, 27, 1, 27, 3,
+		27, 307, 8, 27, 1, 27, 1, 27, 1, 28, 1, 28, 1, 28, 5, 28, 314, 8, 28, 10,
+		28, 12, 28, 317, 9, 28, 1, 29, 1, 29, 3, 29, 321, 8, 29, 1, 30, 1, 30,
+		1, 30, 1, 30, 5, 30, 327, 8, 30, 10, 30, 12, 30, 330, 9, 30, 3, 30, 332,
+		8, 30, 1, 30, 1, 30, 1, 31, 1, 31, 1, 32, 1, 32, 1, 33, 4, 33, 341, 8,
+		33, 11, 33, 12, 33, 342, 1, 34, 1, 34, 1, 34, 1, 34, 1, 34, 1, 34, 1, 34,
+		1, 34, 5, 34, 353, 8, 34, 10, 34, 12, 34, 356, 9, 34, 1, 34, 1, 34, 3,
+		34, 360, 8, 34, 1, 35, 1, 35, 1, 36, 1, 36, 1, 36, 0, 0, 37, 0, 2, 4, 6,
 		8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42,
-		44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 0, 5, 1, 0, 6, 7, 4, 0,
-		29, 30, 34, 34, 36, 36, 42, 43, 4, 0, 3, 3, 14, 14, 43, 45, 49, 49, 1,
-		0, 44, 46, 1, 0, 16, 17, 358, 0, 69, 1, 0, 0, 0, 2, 75, 1, 0, 0, 0, 4,
-		93, 1, 0, 0, 0, 6, 95, 1, 0, 0, 0, 8, 104, 1, 0, 0, 0, 10, 109, 1, 0, 0,
-		0, 12, 117, 1, 0, 0, 0, 14, 137, 1, 0, 0, 0, 16, 142, 1, 0, 0, 0, 18, 144,
-		1, 0, 0, 0, 20, 156, 1, 0, 0, 0, 22, 158, 1, 0, 0, 0, 24, 172, 1, 0, 0,
-		0, 26, 174, 1, 0, 0, 0, 28, 176, 1, 0, 0, 0, 30, 178, 1, 0, 0, 0, 32, 206,
-		1, 0, 0, 0, 34, 208, 1, 0, 0, 0, 36, 217, 1, 0, 0, 0, 38, 235, 1, 0, 0,
-		0, 40, 237, 1, 0, 0, 0, 42, 256, 1, 0, 0, 0, 44, 258, 1, 0, 0, 0, 46, 266,
-		1, 0, 0, 0, 48, 276, 1, 0, 0, 0, 50, 284, 1, 0, 0, 0, 52, 294, 1, 0, 0,
-		0, 54, 296, 1, 0, 0, 0, 56, 309, 1, 0, 0, 0, 58, 311, 1, 0, 0, 0, 60, 314,
-		1, 0, 0, 0, 62, 333, 1, 0, 0, 0, 64, 335, 1, 0, 0, 0, 66, 337, 1, 0, 0,
-		0, 68, 70, 3, 2, 1, 0, 69, 68, 1, 0, 0, 0, 70, 71, 1, 0, 0, 0, 71, 69,
-		1, 0, 0, 0, 71, 72, 1, 0, 0, 0, 72, 73, 1, 0, 0, 0, 73, 74, 5, 0, 0, 1,
-		74, 1, 1, 0, 0, 0, 75, 76, 5, 24, 0, 0, 76, 77, 5, 43, 0, 0, 77, 79, 5,
-		1, 0, 0, 78, 80, 3, 4, 2, 0, 79, 78, 1, 0, 0, 0, 80, 81, 1, 0, 0, 0, 81,
-		79, 1, 0, 0, 0, 81, 82, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83, 84, 5, 2, 0,
-		0, 84, 3, 1, 0, 0, 0, 85, 94, 3, 6, 3, 0, 86, 94, 3, 8, 4, 0, 87, 94, 3,
-		14, 7, 0, 88, 94, 3, 22, 11, 0, 89, 94, 3, 34, 17, 0, 90, 94, 3, 56, 28,
-		0, 91, 94, 3, 58, 29, 0, 92, 94, 3, 18, 9, 0, 93, 85, 1, 0, 0, 0, 93, 86,
-		1, 0, 0, 0, 93, 87, 1, 0, 0, 0, 93, 88, 1, 0, 0, 0, 93, 89, 1, 0, 0, 0,
-		93, 90, 1, 0, 0, 0, 93, 91, 1, 0, 0, 0, 93, 92, 1, 0, 0, 0, 94, 5, 1, 0,
-		0, 0, 95, 96, 5, 29, 0, 0, 96, 98, 5, 1, 0, 0, 97, 99, 3, 40, 20, 0, 98,
-		97, 1, 0, 0, 0, 99, 100, 1, 0, 0, 0, 100, 98, 1, 0, 0, 0, 100, 101, 1,
-		0, 0, 0, 101, 102, 1, 0, 0, 0, 102, 103, 5, 2, 0, 0, 103, 7, 1, 0, 0, 0,
-		104, 107, 5, 30, 0, 0, 105, 108, 3, 10, 5, 0, 106, 108, 3, 12, 6, 0, 107,
-		105, 1, 0, 0, 0, 107, 106, 1, 0, 0, 0, 108, 9, 1, 0, 0, 0, 109, 111, 5,
-		1, 0, 0, 110, 112, 3, 40, 20, 0, 111, 110, 1, 0, 0, 0, 112, 113, 1, 0,
-		0, 0, 113, 111, 1, 0, 0, 0, 113, 114, 1, 0, 0, 0, 114, 115, 1, 0, 0, 0,
-		115, 116, 5, 2, 0, 0, 116, 11, 1, 0, 0, 0, 117, 118, 5, 3, 0, 0, 118, 119,
-		5, 39, 0, 0, 119, 13, 1, 0, 0, 0, 120, 121, 5, 26, 0, 0, 121, 123, 5, 1,
-		0, 0, 122, 124, 5, 43, 0, 0, 123, 122, 1, 0, 0, 0, 124, 125, 1, 0, 0, 0,
-		125, 123, 1, 0, 0, 0, 125, 126, 1, 0, 0, 0, 126, 127, 1, 0, 0, 0, 127,
-		138, 5, 2, 0, 0, 128, 129, 5, 26, 0, 0, 129, 131, 5, 1, 0, 0, 130, 132,
-		3, 16, 8, 0, 131, 130, 1, 0, 0, 0, 132, 133, 1, 0, 0, 0, 133, 131, 1, 0,
-		0, 0, 133, 134, 1, 0, 0, 0, 134, 135, 1, 0, 0, 0, 135, 136, 5, 2, 0, 0,
-		136, 138, 1, 0, 0, 0, 137, 120, 1, 0, 0, 0, 137, 128, 1, 0, 0, 0, 138,
-		15, 1, 0, 0, 0, 139, 143, 3, 30, 15, 0, 140, 143, 3, 38, 19, 0, 141, 143,
-		3, 42, 21, 0, 142, 139, 1, 0, 0, 0, 142, 140, 1, 0, 0, 0, 142, 141, 1,
-		0, 0, 0, 143, 17, 1, 0, 0, 0, 144, 145, 5, 43, 0, 0, 145, 149, 5, 1, 0,
-		0, 146, 148, 3, 20, 10, 0, 147, 146, 1, 0, 0, 0, 148, 151, 1, 0, 0, 0,
-		149, 147, 1, 0, 0, 0, 149, 150, 1, 0, 0, 0, 150, 152, 1, 0, 0, 0, 151,
-		149, 1, 0, 0, 0, 152, 153, 5, 2, 0, 0, 153, 19, 1, 0, 0, 0, 154, 157, 3,
-		44, 22, 0, 155, 157, 3, 42, 21, 0, 156, 154, 1, 0, 0, 0, 156, 155, 1, 0,
-		0, 0, 157, 21, 1, 0, 0, 0, 158, 159, 5, 27, 0, 0, 159, 161, 5, 1, 0, 0,
-		160, 162, 3, 24, 12, 0, 161, 160, 1, 0, 0, 0, 162, 163, 1, 0, 0, 0, 163,
-		161, 1, 0, 0, 0, 163, 164, 1, 0, 0, 0, 164, 165, 1, 0, 0, 0, 165, 166,
-		5, 2, 0, 0, 166, 23, 1, 0, 0, 0, 167, 173, 3, 30, 15, 0, 168, 173, 3, 44,
-		22, 0, 169, 173, 5, 42, 0, 0, 170, 173, 3, 38, 19, 0, 171, 173, 3, 42,
-		21, 0, 172, 167, 1, 0, 0, 0, 172, 168, 1, 0, 0, 0, 172, 169, 1, 0, 0, 0,
-		172, 170, 1, 0, 0, 0, 172, 171, 1, 0, 0, 0, 173, 25, 1, 0, 0, 0, 174, 175,
-		3, 24, 12, 0, 175, 27, 1, 0, 0, 0, 176, 177, 3, 24, 12, 0, 177, 29, 1,
-		0, 0, 0, 178, 179, 5, 40, 0, 0, 179, 180, 5, 4, 0, 0, 180, 181, 3, 32,
-		16, 0, 181, 182, 5, 5, 0, 0, 182, 186, 5, 1, 0, 0, 183, 185, 3, 26, 13,
-		0, 184, 183, 1, 0, 0, 0, 185, 188, 1, 0, 0, 0, 186, 184, 1, 0, 0, 0, 186,
-		187, 1, 0, 0, 0, 187, 189, 1, 0, 0, 0, 188, 186, 1, 0, 0, 0, 189, 199,
-		5, 2, 0, 0, 190, 191, 5, 41, 0, 0, 191, 195, 5, 1, 0, 0, 192, 194, 3, 28,
-		14, 0, 193, 192, 1, 0, 0, 0, 194, 197, 1, 0, 0, 0, 195, 193, 1, 0, 0, 0,
-		195, 196, 1, 0, 0, 0, 196, 198, 1, 0, 0, 0, 197, 195, 1, 0, 0, 0, 198,
-		200, 5, 2, 0, 0, 199, 190, 1, 0, 0, 0, 199, 200, 1, 0, 0, 0, 200, 31, 1,
-		0, 0, 0, 201, 202, 3, 38, 19, 0, 202, 203, 7, 0, 0, 0, 203, 204, 3, 38,
-		19, 0, 204, 207, 1, 0, 0, 0, 205, 207, 3, 38, 19, 0, 206, 201, 1, 0, 0,
-		0, 206, 205, 1, 0, 0, 0, 207, 33, 1, 0, 0, 0, 208, 209, 5, 28, 0, 0, 209,
-		211, 5, 1, 0, 0, 210, 212, 3, 42, 21, 0, 211, 210, 1, 0, 0, 0, 212, 213,
-		1, 0, 0, 0, 213, 211, 1, 0, 0, 0, 213, 214, 1, 0, 0, 0, 214, 215, 1, 0,
-		0, 0, 215, 216, 5, 2, 0, 0, 216, 35, 1, 0, 0, 0, 217, 218, 3, 44, 22, 0,
-		218, 227, 5, 4, 0, 0, 219, 224, 3, 38, 19, 0, 220, 221, 5, 8, 0, 0, 221,
-		223, 3, 38, 19, 0, 222, 220, 1, 0, 0, 0, 223, 226, 1, 0, 0, 0, 224, 222,
-		1, 0, 0, 0, 224, 225, 1, 0, 0, 0, 225, 228, 1, 0, 0, 0, 226, 224, 1, 0,
-		0, 0, 227, 219, 1, 0, 0, 0, 227, 228, 1, 0, 0, 0, 228, 229, 1, 0, 0, 0,
-		229, 230, 5, 5, 0, 0, 230, 37, 1, 0, 0, 0, 231, 236, 3, 44, 22, 0, 232,
-		236, 5, 44, 0, 0, 233, 236, 5, 45, 0, 0, 234, 236, 5, 46, 0, 0, 235, 231,
-		1, 0, 0, 0, 235, 232, 1, 0, 0, 0, 235, 233, 1, 0, 0, 0, 235, 234, 1, 0,
-		0, 0, 236, 39, 1, 0, 0, 0, 237, 238, 5, 43, 0, 0, 238, 239, 5, 3, 0, 0,
-		239, 242, 3, 62, 31, 0, 240, 241, 5, 9, 0, 0, 241, 243, 3, 64, 32, 0, 242,
-		240, 1, 0, 0, 0, 242, 243, 1, 0, 0, 0, 243, 247, 1, 0, 0, 0, 244, 246,
-		3, 48, 24, 0, 245, 244, 1, 0, 0, 0, 246, 249, 1, 0, 0, 0, 247, 245, 1,
-		0, 0, 0, 247, 248, 1, 0, 0, 0, 248, 251, 1, 0, 0, 0, 249, 247, 1, 0, 0,
-		0, 250, 252, 5, 48, 0, 0, 251, 250, 1, 0, 0, 0, 251, 252, 1, 0, 0, 0, 252,
-		41, 1, 0, 0, 0, 253, 257, 5, 44, 0, 0, 254, 257, 5, 50, 0, 0, 255, 257,
-		3, 44, 22, 0, 256, 253, 1, 0, 0, 0, 256, 254, 1, 0, 0, 0, 256, 255, 1,
-		0, 0, 0, 257, 43, 1, 0, 0, 0, 258, 263, 7, 1, 0, 0, 259, 260, 5, 10, 0,
-		0, 260, 262, 5, 43, 0, 0, 261, 259, 1, 0, 0, 0, 262, 265, 1, 0, 0, 0, 263,
-		261, 1, 0, 0, 0, 263, 264, 1, 0, 0, 0, 264, 45, 1, 0, 0, 0, 265, 263, 1,
-		0, 0, 0, 266, 267, 5, 43, 0, 0, 267, 268, 5, 33, 0, 0, 268, 270, 5, 1,
-		0, 0, 269, 271, 3, 40, 20, 0, 270, 269, 1, 0, 0, 0, 271, 272, 1, 0, 0,
-		0, 272, 270, 1, 0, 0, 0, 272, 273, 1, 0, 0, 0, 273, 274, 1, 0, 0, 0, 274,
-		275, 5, 2, 0, 0, 275, 47, 1, 0, 0, 0, 276, 277, 5, 11, 0, 0, 277, 278,
-		5, 43, 0, 0, 278, 280, 5, 4, 0, 0, 279, 281, 3, 50, 25, 0, 280, 279, 1,
-		0, 0, 0, 280, 281, 1, 0, 0, 0, 281, 282, 1, 0, 0, 0, 282, 283, 5, 5, 0,
-		0, 283, 49, 1, 0, 0, 0, 284, 289, 3, 52, 26, 0, 285, 286, 5, 8, 0, 0, 286,
-		288, 3, 52, 26, 0, 287, 285, 1, 0, 0, 0, 288, 291, 1, 0, 0, 0, 289, 287,
-		1, 0, 0, 0, 289, 290, 1, 0, 0, 0, 290, 51, 1, 0, 0, 0, 291, 289, 1, 0,
-		0, 0, 292, 295, 5, 44, 0, 0, 293, 295, 3, 54, 27, 0, 294, 292, 1, 0, 0,
-		0, 294, 293, 1, 0, 0, 0, 295, 53, 1, 0, 0, 0, 296, 305, 5, 12, 0, 0, 297,
-		302, 5, 44, 0, 0, 298, 299, 5, 8, 0, 0, 299, 301, 5, 44, 0, 0, 300, 298,
-		1, 0, 0, 0, 301, 304, 1, 0, 0, 0, 302, 300, 1, 0, 0, 0, 302, 303, 1, 0,
-		0, 0, 303, 306, 1, 0, 0, 0, 304, 302, 1, 0, 0, 0, 305, 297, 1, 0, 0, 0,
-		305, 306, 1, 0, 0, 0, 306, 307, 1, 0, 0, 0, 307, 308, 5, 13, 0, 0, 308,
-		55, 1, 0, 0, 0, 309, 310, 5, 19, 0, 0, 310, 57, 1, 0, 0, 0, 311, 312, 5,
-		20, 0, 0, 312, 59, 1, 0, 0, 0, 313, 315, 7, 2, 0, 0, 314, 313, 1, 0, 0,
-		0, 315, 316, 1, 0, 0, 0, 316, 314, 1, 0, 0, 0, 316, 317, 1, 0, 0, 0, 317,
-		61, 1, 0, 0, 0, 318, 334, 5, 21, 0, 0, 319, 334, 5, 22, 0, 0, 320, 334,
-		5, 23, 0, 0, 321, 322, 5, 15, 0, 0, 322, 334, 3, 62, 31, 0, 323, 324, 5,
-		33, 0, 0, 324, 328, 5, 1, 0, 0, 325, 327, 3, 40, 20, 0, 326, 325, 1, 0,
-		0, 0, 327, 330, 1, 0, 0, 0, 328, 326, 1, 0, 0, 0, 328, 329, 1, 0, 0, 0,
-		329, 331, 1, 0, 0, 0, 330, 328, 1, 0, 0, 0, 331, 334, 5, 2, 0, 0, 332,
-		334, 5, 43, 0, 0, 333, 318, 1, 0, 0, 0, 333, 319, 1, 0, 0, 0, 333, 320,
-		1, 0, 0, 0, 333, 321, 1, 0, 0, 0, 333, 323, 1, 0, 0, 0, 333, 332, 1, 0,
-		0, 0, 334, 63, 1, 0, 0, 0, 335, 336, 7, 3, 0, 0, 336, 65, 1, 0, 0, 0, 337,
-		338, 7, 4, 0, 0, 338, 67, 1, 0, 0, 0, 36, 71, 81, 93, 100, 107, 113, 125,
-		133, 137, 142, 149, 156, 163, 172, 186, 195, 199, 206, 213, 224, 227, 235,
-		242, 247, 251, 256, 263, 272, 280, 289, 294, 302, 305, 316, 328, 333,
+		44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 0, 5, 1, 0,
+		7, 8, 4, 0, 29, 30, 34, 34, 36, 36, 42, 43, 4, 0, 3, 3, 14, 14, 43, 45,
+		49, 49, 1, 0, 44, 46, 1, 0, 16, 17, 385, 0, 75, 1, 0, 0, 0, 2, 81, 1, 0,
+		0, 0, 4, 99, 1, 0, 0, 0, 6, 101, 1, 0, 0, 0, 8, 110, 1, 0, 0, 0, 10, 115,
+		1, 0, 0, 0, 12, 123, 1, 0, 0, 0, 14, 126, 1, 0, 0, 0, 16, 140, 1, 0, 0,
+		0, 18, 142, 1, 0, 0, 0, 20, 163, 1, 0, 0, 0, 22, 168, 1, 0, 0, 0, 24, 170,
+		1, 0, 0, 0, 26, 182, 1, 0, 0, 0, 28, 184, 1, 0, 0, 0, 30, 198, 1, 0, 0,
+		0, 32, 200, 1, 0, 0, 0, 34, 202, 1, 0, 0, 0, 36, 204, 1, 0, 0, 0, 38, 232,
+		1, 0, 0, 0, 40, 234, 1, 0, 0, 0, 42, 243, 1, 0, 0, 0, 44, 261, 1, 0, 0,
+		0, 46, 263, 1, 0, 0, 0, 48, 282, 1, 0, 0, 0, 50, 284, 1, 0, 0, 0, 52, 292,
+		1, 0, 0, 0, 54, 302, 1, 0, 0, 0, 56, 310, 1, 0, 0, 0, 58, 320, 1, 0, 0,
+		0, 60, 322, 1, 0, 0, 0, 62, 335, 1, 0, 0, 0, 64, 337, 1, 0, 0, 0, 66, 340,
+		1, 0, 0, 0, 68, 359, 1, 0, 0, 0, 70, 361, 1, 0, 0, 0, 72, 363, 1, 0, 0,
+		0, 74, 76, 3, 2, 1, 0, 75, 74, 1, 0, 0, 0, 76, 77, 1, 0, 0, 0, 77, 75,
+		1, 0, 0, 0, 77, 78, 1, 0, 0, 0, 78, 79, 1, 0, 0, 0, 79, 80, 5, 0, 0, 1,
+		80, 1, 1, 0, 0, 0, 81, 82, 5, 24, 0, 0, 82, 83, 5, 43, 0, 0, 83, 85, 5,
+		1, 0, 0, 84, 86, 3, 4, 2, 0, 85, 84, 1, 0, 0, 0, 86, 87, 1, 0, 0, 0, 87,
+		85, 1, 0, 0, 0, 87, 88, 1, 0, 0, 0, 88, 89, 1, 0, 0, 0, 89, 90, 5, 2, 0,
+		0, 90, 3, 1, 0, 0, 0, 91, 100, 3, 6, 3, 0, 92, 100, 3, 8, 4, 0, 93, 100,
+		3, 20, 10, 0, 94, 100, 3, 28, 14, 0, 95, 100, 3, 40, 20, 0, 96, 100, 3,
+		62, 31, 0, 97, 100, 3, 64, 32, 0, 98, 100, 3, 24, 12, 0, 99, 91, 1, 0,
+		0, 0, 99, 92, 1, 0, 0, 0, 99, 93, 1, 0, 0, 0, 99, 94, 1, 0, 0, 0, 99, 95,
+		1, 0, 0, 0, 99, 96, 1, 0, 0, 0, 99, 97, 1, 0, 0, 0, 99, 98, 1, 0, 0, 0,
+		100, 5, 1, 0, 0, 0, 101, 102, 5, 29, 0, 0, 102, 104, 5, 1, 0, 0, 103, 105,
+		3, 46, 23, 0, 104, 103, 1, 0, 0, 0, 105, 106, 1, 0, 0, 0, 106, 104, 1,
+		0, 0, 0, 106, 107, 1, 0, 0, 0, 107, 108, 1, 0, 0, 0, 108, 109, 5, 2, 0,
+		0, 109, 7, 1, 0, 0, 0, 110, 113, 5, 30, 0, 0, 111, 114, 3, 10, 5, 0, 112,
+		114, 3, 12, 6, 0, 113, 111, 1, 0, 0, 0, 113, 112, 1, 0, 0, 0, 114, 9, 1,
+		0, 0, 0, 115, 117, 5, 1, 0, 0, 116, 118, 3, 46, 23, 0, 117, 116, 1, 0,
+		0, 0, 118, 119, 1, 0, 0, 0, 119, 117, 1, 0, 0, 0, 119, 120, 1, 0, 0, 0,
+		120, 121, 1, 0, 0, 0, 121, 122, 5, 2, 0, 0, 122, 11, 1, 0, 0, 0, 123, 124,
+		5, 3, 0, 0, 124, 125, 5, 39, 0, 0, 125, 13, 1, 0, 0, 0, 126, 127, 5, 34,
+		0, 0, 127, 131, 5, 1, 0, 0, 128, 130, 3, 16, 8, 0, 129, 128, 1, 0, 0, 0,
+		130, 133, 1, 0, 0, 0, 131, 129, 1, 0, 0, 0, 131, 132, 1, 0, 0, 0, 132,
+		134, 1, 0, 0, 0, 133, 131, 1, 0, 0, 0, 134, 135, 5, 2, 0, 0, 135, 15, 1,
+		0, 0, 0, 136, 141, 3, 18, 9, 0, 137, 141, 3, 44, 22, 0, 138, 141, 3, 36,
+		18, 0, 139, 141, 3, 48, 24, 0, 140, 136, 1, 0, 0, 0, 140, 137, 1, 0, 0,
+		0, 140, 138, 1, 0, 0, 0, 140, 139, 1, 0, 0, 0, 141, 17, 1, 0, 0, 0, 142,
+		143, 5, 43, 0, 0, 143, 144, 5, 4, 0, 0, 144, 145, 3, 44, 22, 0, 145, 19,
+		1, 0, 0, 0, 146, 147, 5, 26, 0, 0, 147, 149, 5, 1, 0, 0, 148, 150, 5, 43,
+		0, 0, 149, 148, 1, 0, 0, 0, 150, 151, 1, 0, 0, 0, 151, 149, 1, 0, 0, 0,
+		151, 152, 1, 0, 0, 0, 152, 153, 1, 0, 0, 0, 153, 164, 5, 2, 0, 0, 154,
+		155, 5, 26, 0, 0, 155, 157, 5, 1, 0, 0, 156, 158, 3, 22, 11, 0, 157, 156,
+		1, 0, 0, 0, 158, 159, 1, 0, 0, 0, 159, 157, 1, 0, 0, 0, 159, 160, 1, 0,
+		0, 0, 160, 161, 1, 0, 0, 0, 161, 162, 5, 2, 0, 0, 162, 164, 1, 0, 0, 0,
+		163, 146, 1, 0, 0, 0, 163, 154, 1, 0, 0, 0, 164, 21, 1, 0, 0, 0, 165, 169,
+		3, 36, 18, 0, 166, 169, 3, 44, 22, 0, 167, 169, 3, 48, 24, 0, 168, 165,
+		1, 0, 0, 0, 168, 166, 1, 0, 0, 0, 168, 167, 1, 0, 0, 0, 169, 23, 1, 0,
+		0, 0, 170, 171, 5, 43, 0, 0, 171, 175, 5, 1, 0, 0, 172, 174, 3, 26, 13,
+		0, 173, 172, 1, 0, 0, 0, 174, 177, 1, 0, 0, 0, 175, 173, 1, 0, 0, 0, 175,
+		176, 1, 0, 0, 0, 176, 178, 1, 0, 0, 0, 177, 175, 1, 0, 0, 0, 178, 179,
+		5, 2, 0, 0, 179, 25, 1, 0, 0, 0, 180, 183, 3, 50, 25, 0, 181, 183, 3, 48,
+		24, 0, 182, 180, 1, 0, 0, 0, 182, 181, 1, 0, 0, 0, 183, 27, 1, 0, 0, 0,
+		184, 185, 5, 27, 0, 0, 185, 187, 5, 1, 0, 0, 186, 188, 3, 30, 15, 0, 187,
+		186, 1, 0, 0, 0, 188, 189, 1, 0, 0, 0, 189, 187, 1, 0, 0, 0, 189, 190,
+		1, 0, 0, 0, 190, 191, 1, 0, 0, 0, 191, 192, 5, 2, 0, 0, 192, 29, 1, 0,
+		0, 0, 193, 199, 3, 36, 18, 0, 194, 199, 3, 50, 25, 0, 195, 199, 5, 42,
+		0, 0, 196, 199, 3, 44, 22, 0, 197, 199, 3, 48, 24, 0, 198, 193, 1, 0, 0,
+		0, 198, 194, 1, 0, 0, 0, 198, 195, 1, 0, 0, 0, 198, 196, 1, 0, 0, 0, 198,
+		197, 1, 0, 0, 0, 199, 31, 1, 0, 0, 0, 200, 201, 3, 30, 15, 0, 201, 33,
+		1, 0, 0, 0, 202, 203, 3, 30, 15, 0, 203, 35, 1, 0, 0, 0, 204, 205, 5, 40,
+		0, 0, 205, 206, 5, 5, 0, 0, 206, 207, 3, 38, 19, 0, 207, 208, 5, 6, 0,
+		0, 208, 212, 5, 1, 0, 0, 209, 211, 3, 32, 16, 0, 210, 209, 1, 0, 0, 0,
+		211, 214, 1, 0, 0, 0, 212, 210, 1, 0, 0, 0, 212, 213, 1, 0, 0, 0, 213,
+		215, 1, 0, 0, 0, 214, 212, 1, 0, 0, 0, 215, 225, 5, 2, 0, 0, 216, 217,
+		5, 41, 0, 0, 217, 221, 5, 1, 0, 0, 218, 220, 3, 34, 17, 0, 219, 218, 1,
+		0, 0, 0, 220, 223, 1, 0, 0, 0, 221, 219, 1, 0, 0, 0, 221, 222, 1, 0, 0,
+		0, 222, 224, 1, 0, 0, 0, 223, 221, 1, 0, 0, 0, 224, 226, 5, 2, 0, 0, 225,
+		216, 1, 0, 0, 0, 225, 226, 1, 0, 0, 0, 226, 37, 1, 0, 0, 0, 227, 228, 3,
+		44, 22, 0, 228, 229, 7, 0, 0, 0, 229, 230, 3, 44, 22, 0, 230, 233, 1, 0,
+		0, 0, 231, 233, 3, 44, 22, 0, 232, 227, 1, 0, 0, 0, 232, 231, 1, 0, 0,
+		0, 233, 39, 1, 0, 0, 0, 234, 235, 5, 28, 0, 0, 235, 237, 5, 1, 0, 0, 236,
+		238, 3, 48, 24, 0, 237, 236, 1, 0, 0, 0, 238, 239, 1, 0, 0, 0, 239, 237,
+		1, 0, 0, 0, 239, 240, 1, 0, 0, 0, 240, 241, 1, 0, 0, 0, 241, 242, 5, 2,
+		0, 0, 242, 41, 1, 0, 0, 0, 243, 244, 3, 50, 25, 0, 244, 253, 5, 5, 0, 0,
+		245, 250, 3, 44, 22, 0, 246, 247, 5, 9, 0, 0, 247, 249, 3, 44, 22, 0, 248,
+		246, 1, 0, 0, 0, 249, 252, 1, 0, 0, 0, 250, 248, 1, 0, 0, 0, 250, 251,
+		1, 0, 0, 0, 251, 254, 1, 0, 0, 0, 252, 250, 1, 0, 0, 0, 253, 245, 1, 0,
+		0, 0, 253, 254, 1, 0, 0, 0, 254, 255, 1, 0, 0, 0, 255, 256, 5, 6, 0, 0,
+		256, 43, 1, 0, 0, 0, 257, 262, 3, 50, 25, 0, 258, 262, 5, 44, 0, 0, 259,
+		262, 5, 45, 0, 0, 260, 262, 5, 46, 0, 0, 261, 257, 1, 0, 0, 0, 261, 258,
+		1, 0, 0, 0, 261, 259, 1, 0, 0, 0, 261, 260, 1, 0, 0, 0, 262, 45, 1, 0,
+		0, 0, 263, 264, 5, 43, 0, 0, 264, 265, 5, 3, 0, 0, 265, 268, 3, 68, 34,
+		0, 266, 267, 5, 4, 0, 0, 267, 269, 3, 70, 35, 0, 268, 266, 1, 0, 0, 0,
+		268, 269, 1, 0, 0, 0, 269, 273, 1, 0, 0, 0, 270, 272, 3, 54, 27, 0, 271,
+		270, 1, 0, 0, 0, 272, 275, 1, 0, 0, 0, 273, 271, 1, 0, 0, 0, 273, 274,
+		1, 0, 0, 0, 274, 277, 1, 0, 0, 0, 275, 273, 1, 0, 0, 0, 276, 278, 5, 48,
+		0, 0, 277, 276, 1, 0, 0, 0, 277, 278, 1, 0, 0, 0, 278, 47, 1, 0, 0, 0,
+		279, 283, 5, 44, 0, 0, 280, 283, 5, 50, 0, 0, 281, 283, 3, 50, 25, 0, 282,
+		279, 1, 0, 0, 0, 282, 280, 1, 0, 0, 0, 282, 281, 1, 0, 0, 0, 283, 49, 1,
+		0, 0, 0, 284, 289, 7, 1, 0, 0, 285, 286, 5, 10, 0, 0, 286, 288, 5, 43,
+		0, 0, 287, 285, 1, 0, 0, 0, 288, 291, 1, 0, 0, 0, 289, 287, 1, 0, 0, 0,
+		289, 290, 1, 0, 0, 0, 290, 51, 1, 0, 0, 0, 291, 289, 1, 0, 0, 0, 292, 293,
+		5, 43, 0, 0, 293, 294, 5, 33, 0, 0, 294, 296, 5, 1, 0, 0, 295, 297, 3,
+		46, 23, 0, 296, 295, 1, 0, 0, 0, 297, 298, 1, 0, 0, 0, 298, 296, 1, 0,
+		0, 0, 298, 299, 1, 0, 0, 0, 299, 300, 1, 0, 0, 0, 300, 301, 5, 2, 0, 0,
+		301, 53, 1, 0, 0, 0, 302, 303, 5, 11, 0, 0, 303, 304, 5, 43, 0, 0, 304,
+		306, 5, 5, 0, 0, 305, 307, 3, 56, 28, 0, 306, 305, 1, 0, 0, 0, 306, 307,
+		1, 0, 0, 0, 307, 308, 1, 0, 0, 0, 308, 309, 5, 6, 0, 0, 309, 55, 1, 0,
+		0, 0, 310, 315, 3, 58, 29, 0, 311, 312, 5, 9, 0, 0, 312, 314, 3, 58, 29,
+		0, 313, 311, 1, 0, 0, 0, 314, 317, 1, 0, 0, 0, 315, 313, 1, 0, 0, 0, 315,
+		316, 1, 0, 0, 0, 316, 57, 1, 0, 0, 0, 317, 315, 1, 0, 0, 0, 318, 321, 5,
+		44, 0, 0, 319, 321, 3, 60, 30, 0, 320, 318, 1, 0, 0, 0, 320, 319, 1, 0,
+		0, 0, 321, 59, 1, 0, 0, 0, 322, 331, 5, 12, 0, 0, 323, 328, 5, 44, 0, 0,
+		324, 325, 5, 9, 0, 0, 325, 327, 5, 44, 0, 0, 326, 324, 1, 0, 0, 0, 327,
+		330, 1, 0, 0, 0, 328, 326, 1, 0, 0, 0, 328, 329, 1, 0, 0, 0, 329, 332,
+		1, 0, 0, 0, 330, 328, 1, 0, 0, 0, 331, 323, 1, 0, 0, 0, 331, 332, 1, 0,
+		0, 0, 332, 333, 1, 0, 0, 0, 333, 334, 5, 13, 0, 0, 334, 61, 1, 0, 0, 0,
+		335, 336, 5, 19, 0, 0, 336, 63, 1, 0, 0, 0, 337, 338, 5, 20, 0, 0, 338,
+		65, 1, 0, 0, 0, 339, 341, 7, 2, 0, 0, 340, 339, 1, 0, 0, 0, 341, 342, 1,
+		0, 0, 0, 342, 340, 1, 0, 0, 0, 342, 343, 1, 0, 0, 0, 343, 67, 1, 0, 0,
+		0, 344, 360, 5, 21, 0, 0, 345, 360, 5, 22, 0, 0, 346, 360, 5, 23, 0, 0,
+		347, 348, 5, 15, 0, 0, 348, 360, 3, 68, 34, 0, 349, 350, 5, 33, 0, 0, 350,
+		354, 5, 1, 0, 0, 351, 353, 3, 46, 23, 0, 352, 351, 1, 0, 0, 0, 353, 356,
+		1, 0, 0, 0, 354, 352, 1, 0, 0, 0, 354, 355, 1, 0, 0, 0, 355, 357, 1, 0,
+		0, 0, 356, 354, 1, 0, 0, 0, 357, 360, 5, 2, 0, 0, 358, 360, 5, 43, 0, 0,
+		359, 344, 1, 0, 0, 0, 359, 345, 1, 0, 0, 0, 359, 346, 1, 0, 0, 0, 359,
+		347, 1, 0, 0, 0, 359, 349, 1, 0, 0, 0, 359, 358, 1, 0, 0, 0, 360, 69, 1,
+		0, 0, 0, 361, 362, 7, 3, 0, 0, 362, 71, 1, 0, 0, 0, 363, 364, 7, 4, 0,
+		0, 364, 73, 1, 0, 0, 0, 38, 77, 87, 99, 106, 113, 119, 131, 140, 151, 159,
+		163, 168, 175, 182, 189, 198, 212, 221, 225, 232, 239, 250, 253, 261, 268,
+		273, 277, 282, 289, 298, 306, 315, 320, 328, 331, 342, 354, 359,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -308,33 +321,36 @@ const (
 	PromptDSLParserRULE_outputSection   = 4
 	PromptDSLParserRULE_outputStruct    = 5
 	PromptDSLParserRULE_outputMarkdown  = 6
-	PromptDSLParserRULE_systemSection   = 7
-	PromptDSLParserRULE_sysContent      = 8
-	PromptDSLParserRULE_moduleDef       = 9
-	PromptDSLParserRULE_moduleContent   = 10
-	PromptDSLParserRULE_userSection     = 11
-	PromptDSLParserRULE_userContent     = 12
-	PromptDSLParserRULE_thencontent     = 13
-	PromptDSLParserRULE_elsecontent     = 14
-	PromptDSLParserRULE_ifStatement     = 15
-	PromptDSLParserRULE_condition       = 16
-	PromptDSLParserRULE_noteSection     = 17
-	PromptDSLParserRULE_dslCallExpr     = 18
-	PromptDSLParserRULE_expr            = 19
-	PromptDSLParserRULE_fieldDef        = 20
-	PromptDSLParserRULE_textLine        = 21
-	PromptDSLParserRULE_paramPath       = 22
-	PromptDSLParserRULE_structDef       = 23
-	PromptDSLParserRULE_annotation      = 24
-	PromptDSLParserRULE_annotationArgs  = 25
-	PromptDSLParserRULE_annotationValue = 26
-	PromptDSLParserRULE_arrayLiteral    = 27
-	PromptDSLParserRULE_afterSection    = 28
-	PromptDSLParserRULE_fixSection      = 29
-	PromptDSLParserRULE_textBlock       = 30
-	PromptDSLParserRULE_type            = 31
-	PromptDSLParserRULE_value           = 32
-	PromptDSLParserRULE_formatType      = 33
+	PromptDSLParserRULE_beforeSection   = 7
+	PromptDSLParserRULE_beforeContent   = 8
+	PromptDSLParserRULE_varDef          = 9
+	PromptDSLParserRULE_systemSection   = 10
+	PromptDSLParserRULE_sysContent      = 11
+	PromptDSLParserRULE_moduleDef       = 12
+	PromptDSLParserRULE_moduleContent   = 13
+	PromptDSLParserRULE_userSection     = 14
+	PromptDSLParserRULE_userContent     = 15
+	PromptDSLParserRULE_thencontent     = 16
+	PromptDSLParserRULE_elsecontent     = 17
+	PromptDSLParserRULE_ifStatement     = 18
+	PromptDSLParserRULE_condition       = 19
+	PromptDSLParserRULE_noteSection     = 20
+	PromptDSLParserRULE_dslCallExpr     = 21
+	PromptDSLParserRULE_expr            = 22
+	PromptDSLParserRULE_fieldDef        = 23
+	PromptDSLParserRULE_textLine        = 24
+	PromptDSLParserRULE_paramPath       = 25
+	PromptDSLParserRULE_structDef       = 26
+	PromptDSLParserRULE_annotation      = 27
+	PromptDSLParserRULE_annotationArgs  = 28
+	PromptDSLParserRULE_annotationValue = 29
+	PromptDSLParserRULE_arrayLiteral    = 30
+	PromptDSLParserRULE_afterSection    = 31
+	PromptDSLParserRULE_fixSection      = 32
+	PromptDSLParserRULE_textBlock       = 33
+	PromptDSLParserRULE_type            = 34
+	PromptDSLParserRULE_value           = 35
+	PromptDSLParserRULE_formatType      = 36
 )
 
 // IPromptFileContext is an interface to support dynamic dispatch.
@@ -466,7 +482,7 @@ func (p *PromptDSLParser) PromptFile() (localctx IPromptFileContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(69)
+	p.SetState(75)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -475,11 +491,11 @@ func (p *PromptDSLParser) PromptFile() (localctx IPromptFileContext) {
 
 	for ok := true; ok; ok = _la == PromptDSLParserPROMPT {
 		{
-			p.SetState(68)
+			p.SetState(74)
 			p.PromptDef()
 		}
 
-		p.SetState(71)
+		p.SetState(77)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -487,7 +503,7 @@ func (p *PromptDSLParser) PromptFile() (localctx IPromptFileContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(73)
+		p.SetState(79)
 		p.Match(PromptDSLParserEOF)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -643,7 +659,7 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(75)
+		p.SetState(81)
 		p.Match(PromptDSLParserPROMPT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -651,7 +667,7 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 		}
 	}
 	{
-		p.SetState(76)
+		p.SetState(82)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -659,14 +675,14 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 		}
 	}
 	{
-		p.SetState(77)
+		p.SetState(83)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(79)
+	p.SetState(85)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -675,11 +691,11 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 
 	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8798174969856) != 0) {
 		{
-			p.SetState(78)
+			p.SetState(84)
 			p.PromptBlock()
 		}
 
-		p.SetState(81)
+		p.SetState(87)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -687,7 +703,7 @@ func (p *PromptDSLParser) PromptDef() (localctx IPromptDefContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(83)
+		p.SetState(89)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -922,7 +938,7 @@ func (s *PromptBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 func (p *PromptDSLParser) PromptBlock() (localctx IPromptBlockContext) {
 	localctx = NewPromptBlockContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 4, PromptDSLParserRULE_promptBlock)
-	p.SetState(93)
+	p.SetState(99)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -932,56 +948,56 @@ func (p *PromptDSLParser) PromptBlock() (localctx IPromptBlockContext) {
 	case PromptDSLParserINPUT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(85)
+			p.SetState(91)
 			p.InputSection()
 		}
 
 	case PromptDSLParserOUTPUT:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(86)
+			p.SetState(92)
 			p.OutputSection()
 		}
 
 	case PromptDSLParserSYSTEM:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(87)
+			p.SetState(93)
 			p.SystemSection()
 		}
 
 	case PromptDSLParserUSER:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(88)
+			p.SetState(94)
 			p.UserSection()
 		}
 
 	case PromptDSLParserNOTE:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(89)
+			p.SetState(95)
 			p.NoteSection()
 		}
 
 	case PromptDSLParserAFTER_BLOCK:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(90)
+			p.SetState(96)
 			p.AfterSection()
 		}
 
 	case PromptDSLParserFIX_BLOCK:
 		p.EnterOuterAlt(localctx, 7)
 		{
-			p.SetState(91)
+			p.SetState(97)
 			p.FixSection()
 		}
 
 	case PromptDSLParserID:
 		p.EnterOuterAlt(localctx, 8)
 		{
-			p.SetState(92)
+			p.SetState(98)
 			p.ModuleDef()
 		}
 
@@ -1133,7 +1149,7 @@ func (p *PromptDSLParser) InputSection() (localctx IInputSectionContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(95)
+		p.SetState(101)
 		p.Match(PromptDSLParserINPUT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1141,14 +1157,14 @@ func (p *PromptDSLParser) InputSection() (localctx IInputSectionContext) {
 		}
 	}
 	{
-		p.SetState(96)
+		p.SetState(102)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(98)
+	p.SetState(104)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1157,11 +1173,11 @@ func (p *PromptDSLParser) InputSection() (localctx IInputSectionContext) {
 
 	for ok := true; ok; ok = _la == PromptDSLParserID {
 		{
-			p.SetState(97)
+			p.SetState(103)
 			p.FieldDef()
 		}
 
-		p.SetState(100)
+		p.SetState(106)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1169,7 +1185,7 @@ func (p *PromptDSLParser) InputSection() (localctx IInputSectionContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(102)
+		p.SetState(108)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1309,14 +1325,14 @@ func (p *PromptDSLParser) OutputSection() (localctx IOutputSectionContext) {
 	p.EnterRule(localctx, 8, PromptDSLParserRULE_outputSection)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(104)
+		p.SetState(110)
 		p.Match(PromptDSLParserOUTPUT)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(107)
+	p.SetState(113)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1325,13 +1341,13 @@ func (p *PromptDSLParser) OutputSection() (localctx IOutputSectionContext) {
 	switch p.GetTokenStream().LA(1) {
 	case PromptDSLParserT__0:
 		{
-			p.SetState(105)
+			p.SetState(111)
 			p.OutputStruct()
 		}
 
 	case PromptDSLParserT__2:
 		{
-			p.SetState(106)
+			p.SetState(112)
 			p.OutputMarkdown()
 		}
 
@@ -1478,14 +1494,14 @@ func (p *PromptDSLParser) OutputStruct() (localctx IOutputStructContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(109)
+		p.SetState(115)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(111)
+	p.SetState(117)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1494,11 +1510,11 @@ func (p *PromptDSLParser) OutputStruct() (localctx IOutputStructContext) {
 
 	for ok := true; ok; ok = _la == PromptDSLParserID {
 		{
-			p.SetState(110)
+			p.SetState(116)
 			p.FieldDef()
 		}
 
-		p.SetState(113)
+		p.SetState(119)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1506,7 +1522,7 @@ func (p *PromptDSLParser) OutputStruct() (localctx IOutputStructContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(115)
+		p.SetState(121)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1612,7 +1628,7 @@ func (p *PromptDSLParser) OutputMarkdown() (localctx IOutputMarkdownContext) {
 	p.EnterRule(localctx, 12, PromptDSLParserRULE_outputMarkdown)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(117)
+		p.SetState(123)
 		p.Match(PromptDSLParserT__2)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1620,12 +1636,532 @@ func (p *PromptDSLParser) OutputMarkdown() (localctx IOutputMarkdownContext) {
 		}
 	}
 	{
-		p.SetState(118)
+		p.SetState(124)
 		p.Match(PromptDSLParserMARKDOWN)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IBeforeSectionContext is an interface to support dynamic dispatch.
+type IBeforeSectionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	BEFORE() antlr.TerminalNode
+	AllBeforeContent() []IBeforeContentContext
+	BeforeContent(i int) IBeforeContentContext
+
+	// IsBeforeSectionContext differentiates from other interfaces.
+	IsBeforeSectionContext()
+}
+
+type BeforeSectionContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyBeforeSectionContext() *BeforeSectionContext {
+	var p = new(BeforeSectionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_beforeSection
+	return p
+}
+
+func InitEmptyBeforeSectionContext(p *BeforeSectionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_beforeSection
+}
+
+func (*BeforeSectionContext) IsBeforeSectionContext() {}
+
+func NewBeforeSectionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BeforeSectionContext {
+	var p = new(BeforeSectionContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_beforeSection
+
+	return p
+}
+
+func (s *BeforeSectionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *BeforeSectionContext) BEFORE() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserBEFORE, 0)
+}
+
+func (s *BeforeSectionContext) AllBeforeContent() []IBeforeContentContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IBeforeContentContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IBeforeContentContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IBeforeContentContext); ok {
+			tst[i] = t.(IBeforeContentContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *BeforeSectionContext) BeforeContent(i int) IBeforeContentContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IBeforeContentContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBeforeContentContext)
+}
+
+func (s *BeforeSectionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *BeforeSectionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *BeforeSectionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterBeforeSection(s)
+	}
+}
+
+func (s *BeforeSectionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitBeforeSection(s)
+	}
+}
+
+func (s *BeforeSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitBeforeSection(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) BeforeSection() (localctx IBeforeSectionContext) {
+	localctx = NewBeforeSectionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 14, PromptDSLParserRULE_beforeSection)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(126)
+		p.Match(PromptDSLParserBEFORE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(127)
+		p.Match(PromptDSLParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(131)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0 {
+		{
+			p.SetState(128)
+			p.BeforeContent()
+		}
+
+		p.SetState(133)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+	{
+		p.SetState(134)
+		p.Match(PromptDSLParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IBeforeContentContext is an interface to support dynamic dispatch.
+type IBeforeContentContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	VarDef() IVarDefContext
+	Expr() IExprContext
+	IfStatement() IIfStatementContext
+	TextLine() ITextLineContext
+
+	// IsBeforeContentContext differentiates from other interfaces.
+	IsBeforeContentContext()
+}
+
+type BeforeContentContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyBeforeContentContext() *BeforeContentContext {
+	var p = new(BeforeContentContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_beforeContent
+	return p
+}
+
+func InitEmptyBeforeContentContext(p *BeforeContentContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_beforeContent
+}
+
+func (*BeforeContentContext) IsBeforeContentContext() {}
+
+func NewBeforeContentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *BeforeContentContext {
+	var p = new(BeforeContentContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_beforeContent
+
+	return p
+}
+
+func (s *BeforeContentContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *BeforeContentContext) VarDef() IVarDefContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IVarDefContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IVarDefContext)
+}
+
+func (s *BeforeContentContext) Expr() IExprContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExprContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExprContext)
+}
+
+func (s *BeforeContentContext) IfStatement() IIfStatementContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIfStatementContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIfStatementContext)
+}
+
+func (s *BeforeContentContext) TextLine() ITextLineContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITextLineContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITextLineContext)
+}
+
+func (s *BeforeContentContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *BeforeContentContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *BeforeContentContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterBeforeContent(s)
+	}
+}
+
+func (s *BeforeContentContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitBeforeContent(s)
+	}
+}
+
+func (s *BeforeContentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitBeforeContent(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) BeforeContent() (localctx IBeforeContentContext) {
+	localctx = NewBeforeContentContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 16, PromptDSLParserRULE_beforeContent)
+	p.SetState(140)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 7, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(136)
+			p.VarDef()
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(137)
+			p.Expr()
+		}
+
+	case 3:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(138)
+			p.IfStatement()
+		}
+
+	case 4:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(139)
+			p.TextLine()
+		}
+
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IVarDefContext is an interface to support dynamic dispatch.
+type IVarDefContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	ID() antlr.TerminalNode
+	Expr() IExprContext
+
+	// IsVarDefContext differentiates from other interfaces.
+	IsVarDefContext()
+}
+
+type VarDefContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyVarDefContext() *VarDefContext {
+	var p = new(VarDefContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_varDef
+	return p
+}
+
+func InitEmptyVarDefContext(p *VarDefContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromptDSLParserRULE_varDef
+}
+
+func (*VarDefContext) IsVarDefContext() {}
+
+func NewVarDefContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *VarDefContext {
+	var p = new(VarDefContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromptDSLParserRULE_varDef
+
+	return p
+}
+
+func (s *VarDefContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *VarDefContext) ID() antlr.TerminalNode {
+	return s.GetToken(PromptDSLParserID, 0)
+}
+
+func (s *VarDefContext) Expr() IExprContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExprContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExprContext)
+}
+
+func (s *VarDefContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *VarDefContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *VarDefContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.EnterVarDef(s)
+	}
+}
+
+func (s *VarDefContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromptDSLListener); ok {
+		listenerT.ExitVarDef(s)
+	}
+}
+
+func (s *VarDefContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromptDSLVisitor:
+		return t.VisitVarDef(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromptDSLParser) VarDef() (localctx IVarDefContext) {
+	localctx = NewVarDefContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 18, PromptDSLParserRULE_varDef)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(142)
+		p.Match(PromptDSLParserID)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(143)
+		p.Match(PromptDSLParserT__3)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(144)
+		p.Expr()
 	}
 
 errorExit:
@@ -1776,20 +2312,20 @@ func (s *SystemSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 
 func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 	localctx = NewSystemSectionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, PromptDSLParserRULE_systemSection)
+	p.EnterRule(localctx, 20, PromptDSLParserRULE_systemSection)
 	var _la int
 
-	p.SetState(137)
+	p.SetState(163)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 8, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 10, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(120)
+			p.SetState(146)
 			p.Match(PromptDSLParserSYSTEM)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1797,14 +2333,14 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 			}
 		}
 		{
-			p.SetState(121)
+			p.SetState(147)
 			p.Match(PromptDSLParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(123)
+		p.SetState(149)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1813,7 +2349,7 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 
 		for ok := true; ok; ok = _la == PromptDSLParserID {
 			{
-				p.SetState(122)
+				p.SetState(148)
 				p.Match(PromptDSLParserID)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -1821,7 +2357,7 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 				}
 			}
 
-			p.SetState(125)
+			p.SetState(151)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -1829,7 +2365,7 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(127)
+			p.SetState(153)
 			p.Match(PromptDSLParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1840,7 +2376,7 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(128)
+			p.SetState(154)
 			p.Match(PromptDSLParserSYSTEM)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1848,14 +2384,14 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 			}
 		}
 		{
-			p.SetState(129)
+			p.SetState(155)
 			p.Match(PromptDSLParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(131)
+		p.SetState(157)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1864,11 +2400,11 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 
 		for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0) {
 			{
-				p.SetState(130)
+				p.SetState(156)
 				p.SysContent()
 			}
 
-			p.SetState(133)
+			p.SetState(159)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -1876,7 +2412,7 @@ func (p *PromptDSLParser) SystemSection() (localctx ISystemSectionContext) {
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(135)
+			p.SetState(161)
 			p.Match(PromptDSLParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2029,32 +2565,32 @@ func (s *SysContentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) SysContent() (localctx ISysContentContext) {
 	localctx = NewSysContentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, PromptDSLParserRULE_sysContent)
-	p.SetState(142)
+	p.EnterRule(localctx, 22, PromptDSLParserRULE_sysContent)
+	p.SetState(168)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 9, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 11, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(139)
+			p.SetState(165)
 			p.IfStatement()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(140)
+			p.SetState(166)
 			p.Expr()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(141)
+			p.SetState(167)
 			p.TextLine()
 		}
 
@@ -2200,12 +2736,12 @@ func (s *ModuleDefContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) ModuleDef() (localctx IModuleDefContext) {
 	localctx = NewModuleDefContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, PromptDSLParserRULE_moduleDef)
+	p.EnterRule(localctx, 24, PromptDSLParserRULE_moduleDef)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(144)
+		p.SetState(170)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2213,14 +2749,14 @@ func (p *PromptDSLParser) ModuleDef() (localctx IModuleDefContext) {
 		}
 	}
 	{
-		p.SetState(145)
+		p.SetState(171)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(149)
+	p.SetState(175)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2229,11 +2765,11 @@ func (p *PromptDSLParser) ModuleDef() (localctx IModuleDefContext) {
 
 	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1156773742379008) != 0 {
 		{
-			p.SetState(146)
+			p.SetState(172)
 			p.ModuleContent()
 		}
 
-		p.SetState(151)
+		p.SetState(177)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2241,7 +2777,7 @@ func (p *PromptDSLParser) ModuleDef() (localctx IModuleDefContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(152)
+		p.SetState(178)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2373,25 +2909,25 @@ func (s *ModuleContentContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 
 func (p *PromptDSLParser) ModuleContent() (localctx IModuleContentContext) {
 	localctx = NewModuleContentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, PromptDSLParserRULE_moduleContent)
-	p.SetState(156)
+	p.EnterRule(localctx, 26, PromptDSLParserRULE_moduleContent)
+	p.SetState(182)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 11, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 13, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(154)
+			p.SetState(180)
 			p.ParamPath()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(155)
+			p.SetState(181)
 			p.TextLine()
 		}
 
@@ -2537,12 +3073,12 @@ func (s *UserSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PromptDSLParser) UserSection() (localctx IUserSectionContext) {
 	localctx = NewUserSectionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 22, PromptDSLParserRULE_userSection)
+	p.EnterRule(localctx, 28, PromptDSLParserRULE_userSection)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(158)
+		p.SetState(184)
 		p.Match(PromptDSLParserUSER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2550,14 +3086,14 @@ func (p *PromptDSLParser) UserSection() (localctx IUserSectionContext) {
 		}
 	}
 	{
-		p.SetState(159)
+		p.SetState(185)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(161)
+	p.SetState(187)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2566,11 +3102,11 @@ func (p *PromptDSLParser) UserSection() (localctx IUserSectionContext) {
 
 	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0) {
 		{
-			p.SetState(160)
+			p.SetState(186)
 			p.UserContent()
 		}
 
-		p.SetState(163)
+		p.SetState(189)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2578,7 +3114,7 @@ func (p *PromptDSLParser) UserSection() (localctx IUserSectionContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(165)
+		p.SetState(191)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2749,32 +3285,32 @@ func (s *UserContentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PromptDSLParser) UserContent() (localctx IUserContentContext) {
 	localctx = NewUserContentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, PromptDSLParserRULE_userContent)
-	p.SetState(172)
+	p.EnterRule(localctx, 30, PromptDSLParserRULE_userContent)
+	p.SetState(198)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 13, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 15, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(167)
+			p.SetState(193)
 			p.IfStatement()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(168)
+			p.SetState(194)
 			p.ParamPath()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(169)
+			p.SetState(195)
 			p.Match(PromptDSLParserOUTPUTSPEC)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2785,14 +3321,14 @@ func (p *PromptDSLParser) UserContent() (localctx IUserContentContext) {
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(170)
+			p.SetState(196)
 			p.Expr()
 		}
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(171)
+			p.SetState(197)
 			p.TextLine()
 		}
 
@@ -2907,10 +3443,10 @@ func (s *ThencontentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PromptDSLParser) Thencontent() (localctx IThencontentContext) {
 	localctx = NewThencontentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 26, PromptDSLParserRULE_thencontent)
+	p.EnterRule(localctx, 32, PromptDSLParserRULE_thencontent)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(174)
+		p.SetState(200)
 		p.UserContent()
 	}
 
@@ -3021,10 +3557,10 @@ func (s *ElsecontentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PromptDSLParser) Elsecontent() (localctx IElsecontentContext) {
 	localctx = NewElsecontentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 28, PromptDSLParserRULE_elsecontent)
+	p.EnterRule(localctx, 34, PromptDSLParserRULE_elsecontent)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(176)
+		p.SetState(202)
 		p.UserContent()
 	}
 
@@ -3231,12 +3767,12 @@ func (s *IfStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 	localctx = NewIfStatementContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 30, PromptDSLParserRULE_ifStatement)
+	p.EnterRule(localctx, 36, PromptDSLParserRULE_ifStatement)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(178)
+		p.SetState(204)
 		p.Match(PromptDSLParserIF)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3244,19 +3780,7 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 		}
 	}
 	{
-		p.SetState(179)
-		p.Match(PromptDSLParserT__3)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(180)
-		p.Condition()
-	}
-	{
-		p.SetState(181)
+		p.SetState(205)
 		p.Match(PromptDSLParserT__4)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3264,14 +3788,26 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 		}
 	}
 	{
-		p.SetState(182)
+		p.SetState(206)
+		p.Condition()
+	}
+	{
+		p.SetState(207)
+		p.Match(PromptDSLParserT__5)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(208)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(186)
+	p.SetState(212)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3280,11 +3816,11 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 
 	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0 {
 		{
-			p.SetState(183)
+			p.SetState(209)
 			p.Thencontent()
 		}
 
-		p.SetState(188)
+		p.SetState(214)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -3292,14 +3828,14 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(189)
+		p.SetState(215)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(199)
+	p.SetState(225)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3308,7 +3844,7 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 
 	if _la == PromptDSLParserELSE {
 		{
-			p.SetState(190)
+			p.SetState(216)
 			p.Match(PromptDSLParserELSE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3316,14 +3852,14 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 			}
 		}
 		{
-			p.SetState(191)
+			p.SetState(217)
 			p.Match(PromptDSLParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(195)
+		p.SetState(221)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -3332,11 +3868,11 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 
 		for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1263426370273280) != 0 {
 			{
-				p.SetState(192)
+				p.SetState(218)
 				p.Elsecontent()
 			}
 
-			p.SetState(197)
+			p.SetState(223)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -3344,7 +3880,7 @@ func (p *PromptDSLParser) IfStatement() (localctx IIfStatementContext) {
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(198)
+			p.SetState(224)
 			p.Match(PromptDSLParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3531,27 +4067,27 @@ func (s *ConditionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) Condition() (localctx IConditionContext) {
 	localctx = NewConditionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 32, PromptDSLParserRULE_condition)
+	p.EnterRule(localctx, 38, PromptDSLParserRULE_condition)
 	var _la int
 
-	p.SetState(206)
+	p.SetState(232)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 17, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 19, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(201)
+			p.SetState(227)
 
 			var _x = p.Expr()
 
 			localctx.(*ConditionContext).lhs = _x
 		}
 		{
-			p.SetState(202)
+			p.SetState(228)
 
 			var _lt = p.GetTokenStream().LT(1)
 
@@ -3559,7 +4095,7 @@ func (p *PromptDSLParser) Condition() (localctx IConditionContext) {
 
 			_la = p.GetTokenStream().LA(1)
 
-			if !(_la == PromptDSLParserT__5 || _la == PromptDSLParserT__6) {
+			if !(_la == PromptDSLParserT__6 || _la == PromptDSLParserT__7) {
 				var _ri = p.GetErrorHandler().RecoverInline(p)
 
 				localctx.(*ConditionContext).op = _ri
@@ -3569,7 +4105,7 @@ func (p *PromptDSLParser) Condition() (localctx IConditionContext) {
 			}
 		}
 		{
-			p.SetState(203)
+			p.SetState(229)
 
 			var _x = p.Expr()
 
@@ -3579,7 +4115,7 @@ func (p *PromptDSLParser) Condition() (localctx IConditionContext) {
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(205)
+			p.SetState(231)
 
 			var _x = p.Expr()
 
@@ -3728,12 +4264,12 @@ func (s *NoteSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PromptDSLParser) NoteSection() (localctx INoteSectionContext) {
 	localctx = NewNoteSectionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 34, PromptDSLParserRULE_noteSection)
+	p.EnterRule(localctx, 40, PromptDSLParserRULE_noteSection)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(208)
+		p.SetState(234)
 		p.Match(PromptDSLParserNOTE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3741,14 +4277,14 @@ func (p *PromptDSLParser) NoteSection() (localctx INoteSectionContext) {
 		}
 	}
 	{
-		p.SetState(209)
+		p.SetState(235)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(211)
+	p.SetState(237)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3757,11 +4293,11 @@ func (p *PromptDSLParser) NoteSection() (localctx INoteSectionContext) {
 
 	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1156773742379008) != 0) {
 		{
-			p.SetState(210)
+			p.SetState(236)
 			p.TextLine()
 		}
 
-		p.SetState(213)
+		p.SetState(239)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -3769,7 +4305,7 @@ func (p *PromptDSLParser) NoteSection() (localctx INoteSectionContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(215)
+		p.SetState(241)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3927,23 +4463,23 @@ func (s *DslCallExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PromptDSLParser) DslCallExpr() (localctx IDslCallExprContext) {
 	localctx = NewDslCallExprContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 36, PromptDSLParserRULE_dslCallExpr)
+	p.EnterRule(localctx, 42, PromptDSLParserRULE_dslCallExpr)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(217)
+		p.SetState(243)
 		p.ParamPath()
 	}
 	{
-		p.SetState(218)
-		p.Match(PromptDSLParserT__3)
+		p.SetState(244)
+		p.Match(PromptDSLParserT__4)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(227)
+	p.SetState(253)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3952,31 +4488,31 @@ func (p *PromptDSLParser) DslCallExpr() (localctx IDslCallExprContext) {
 
 	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&136426951802880) != 0 {
 		{
-			p.SetState(219)
+			p.SetState(245)
 			p.Expr()
 		}
-		p.SetState(224)
+		p.SetState(250)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		for _la == PromptDSLParserT__7 {
+		for _la == PromptDSLParserT__8 {
 			{
-				p.SetState(220)
-				p.Match(PromptDSLParserT__7)
+				p.SetState(246)
+				p.Match(PromptDSLParserT__8)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit
 				}
 			}
 			{
-				p.SetState(221)
+				p.SetState(247)
 				p.Expr()
 			}
 
-			p.SetState(226)
+			p.SetState(252)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -3986,8 +4522,8 @@ func (p *PromptDSLParser) DslCallExpr() (localctx IDslCallExprContext) {
 
 	}
 	{
-		p.SetState(229)
-		p.Match(PromptDSLParserT__4)
+		p.SetState(255)
+		p.Match(PromptDSLParserT__5)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -4116,8 +4652,8 @@ func (s *ExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) Expr() (localctx IExprContext) {
 	localctx = NewExprContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 38, PromptDSLParserRULE_expr)
-	p.SetState(235)
+	p.EnterRule(localctx, 44, PromptDSLParserRULE_expr)
+	p.SetState(261)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4127,14 +4663,14 @@ func (p *PromptDSLParser) Expr() (localctx IExprContext) {
 	case PromptDSLParserINPUT, PromptDSLParserOUTPUT, PromptDSLParserBEFORE, PromptDSLParserAFTER, PromptDSLParserOUTPUTSPEC, PromptDSLParserID:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(231)
+			p.SetState(257)
 			p.ParamPath()
 		}
 
 	case PromptDSLParserSTRING:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(232)
+			p.SetState(258)
 			p.Match(PromptDSLParserSTRING)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4145,7 +4681,7 @@ func (p *PromptDSLParser) Expr() (localctx IExprContext) {
 	case PromptDSLParserNUMBER:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(233)
+			p.SetState(259)
 			p.Match(PromptDSLParserNUMBER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4156,7 +4692,7 @@ func (p *PromptDSLParser) Expr() (localctx IExprContext) {
 	case PromptDSLParserBOOL:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(234)
+			p.SetState(260)
 			p.Match(PromptDSLParserBOOL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4346,12 +4882,12 @@ func (s *FieldDefContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 	localctx = NewFieldDefContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 40, PromptDSLParserRULE_fieldDef)
+	p.EnterRule(localctx, 46, PromptDSLParserRULE_fieldDef)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(237)
+		p.SetState(263)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4359,7 +4895,7 @@ func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 		}
 	}
 	{
-		p.SetState(238)
+		p.SetState(264)
 		p.Match(PromptDSLParserT__2)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4367,32 +4903,32 @@ func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 		}
 	}
 	{
-		p.SetState(239)
+		p.SetState(265)
 		p.Type_()
 	}
-	p.SetState(242)
+	p.SetState(268)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == PromptDSLParserT__8 {
+	if _la == PromptDSLParserT__3 {
 		{
-			p.SetState(240)
-			p.Match(PromptDSLParserT__8)
+			p.SetState(266)
+			p.Match(PromptDSLParserT__3)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(241)
+			p.SetState(267)
 			p.Value()
 		}
 
 	}
-	p.SetState(247)
+	p.SetState(273)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4401,18 +4937,18 @@ func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 
 	for _la == PromptDSLParserT__10 {
 		{
-			p.SetState(244)
+			p.SetState(270)
 			p.Annotation()
 		}
 
-		p.SetState(249)
+		p.SetState(275)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 	}
-	p.SetState(251)
+	p.SetState(277)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4421,7 +4957,7 @@ func (p *PromptDSLParser) FieldDef() (localctx IFieldDefContext) {
 
 	if _la == PromptDSLParserSEMI {
 		{
-			p.SetState(250)
+			p.SetState(276)
 			p.Match(PromptDSLParserSEMI)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4548,8 +5084,8 @@ func (s *TextLineContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) TextLine() (localctx ITextLineContext) {
 	localctx = NewTextLineContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 42, PromptDSLParserRULE_textLine)
-	p.SetState(256)
+	p.EnterRule(localctx, 48, PromptDSLParserRULE_textLine)
+	p.SetState(282)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4559,7 +5095,7 @@ func (p *PromptDSLParser) TextLine() (localctx ITextLineContext) {
 	case PromptDSLParserSTRING:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(253)
+			p.SetState(279)
 			p.Match(PromptDSLParserSTRING)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4570,7 +5106,7 @@ func (p *PromptDSLParser) TextLine() (localctx ITextLineContext) {
 	case PromptDSLParserLINE_COMMENT:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(254)
+			p.SetState(280)
 			p.Match(PromptDSLParserLINE_COMMENT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4581,7 +5117,7 @@ func (p *PromptDSLParser) TextLine() (localctx ITextLineContext) {
 	case PromptDSLParserINPUT, PromptDSLParserOUTPUT, PromptDSLParserBEFORE, PromptDSLParserAFTER, PromptDSLParserOUTPUTSPEC, PromptDSLParserID:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(255)
+			p.SetState(281)
 			p.ParamPath()
 		}
 
@@ -4715,12 +5251,12 @@ func (s *ParamPathContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) ParamPath() (localctx IParamPathContext) {
 	localctx = NewParamPathContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 44, PromptDSLParserRULE_paramPath)
+	p.EnterRule(localctx, 50, PromptDSLParserRULE_paramPath)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(258)
+		p.SetState(284)
 		_la = p.GetTokenStream().LA(1)
 
 		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&13281649491968) != 0) {
@@ -4730,7 +5266,7 @@ func (p *PromptDSLParser) ParamPath() (localctx IParamPathContext) {
 			p.Consume()
 		}
 	}
-	p.SetState(263)
+	p.SetState(289)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4739,7 +5275,7 @@ func (p *PromptDSLParser) ParamPath() (localctx IParamPathContext) {
 
 	for _la == PromptDSLParserT__9 {
 		{
-			p.SetState(259)
+			p.SetState(285)
 			p.Match(PromptDSLParserT__9)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4747,7 +5283,7 @@ func (p *PromptDSLParser) ParamPath() (localctx IParamPathContext) {
 			}
 		}
 		{
-			p.SetState(260)
+			p.SetState(286)
 			p.Match(PromptDSLParserID)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4755,7 +5291,7 @@ func (p *PromptDSLParser) ParamPath() (localctx IParamPathContext) {
 			}
 		}
 
-		p.SetState(265)
+		p.SetState(291)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -4906,12 +5442,12 @@ func (s *StructDefContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 	localctx = NewStructDefContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 46, PromptDSLParserRULE_structDef)
+	p.EnterRule(localctx, 52, PromptDSLParserRULE_structDef)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(266)
+		p.SetState(292)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4919,7 +5455,7 @@ func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 		}
 	}
 	{
-		p.SetState(267)
+		p.SetState(293)
 		p.Match(PromptDSLParserSTRUCT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4927,14 +5463,14 @@ func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 		}
 	}
 	{
-		p.SetState(268)
+		p.SetState(294)
 		p.Match(PromptDSLParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(270)
+	p.SetState(296)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4943,11 +5479,11 @@ func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 
 	for ok := true; ok; ok = _la == PromptDSLParserID {
 		{
-			p.SetState(269)
+			p.SetState(295)
 			p.FieldDef()
 		}
 
-		p.SetState(272)
+		p.SetState(298)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -4955,7 +5491,7 @@ func (p *PromptDSLParser) StructDef() (localctx IStructDefContext) {
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(274)
+		p.SetState(300)
 		p.Match(PromptDSLParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5075,12 +5611,12 @@ func (s *AnnotationContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) Annotation() (localctx IAnnotationContext) {
 	localctx = NewAnnotationContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 48, PromptDSLParserRULE_annotation)
+	p.EnterRule(localctx, 54, PromptDSLParserRULE_annotation)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(276)
+		p.SetState(302)
 		p.Match(PromptDSLParserT__10)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5088,7 +5624,7 @@ func (p *PromptDSLParser) Annotation() (localctx IAnnotationContext) {
 		}
 	}
 	{
-		p.SetState(277)
+		p.SetState(303)
 		p.Match(PromptDSLParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5096,14 +5632,14 @@ func (p *PromptDSLParser) Annotation() (localctx IAnnotationContext) {
 		}
 	}
 	{
-		p.SetState(278)
-		p.Match(PromptDSLParserT__3)
+		p.SetState(304)
+		p.Match(PromptDSLParserT__4)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(280)
+	p.SetState(306)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5112,14 +5648,14 @@ func (p *PromptDSLParser) Annotation() (localctx IAnnotationContext) {
 
 	if _la == PromptDSLParserT__11 || _la == PromptDSLParserSTRING {
 		{
-			p.SetState(279)
+			p.SetState(305)
 			p.AnnotationArgs()
 		}
 
 	}
 	{
-		p.SetState(282)
-		p.Match(PromptDSLParserT__4)
+		p.SetState(308)
+		p.Match(PromptDSLParserT__5)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -5259,36 +5795,36 @@ func (s *AnnotationArgsContext) Accept(visitor antlr.ParseTreeVisitor) interface
 
 func (p *PromptDSLParser) AnnotationArgs() (localctx IAnnotationArgsContext) {
 	localctx = NewAnnotationArgsContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 50, PromptDSLParserRULE_annotationArgs)
+	p.EnterRule(localctx, 56, PromptDSLParserRULE_annotationArgs)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(284)
+		p.SetState(310)
 		p.AnnotationValue()
 	}
-	p.SetState(289)
+	p.SetState(315)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == PromptDSLParserT__7 {
+	for _la == PromptDSLParserT__8 {
 		{
-			p.SetState(285)
-			p.Match(PromptDSLParserT__7)
+			p.SetState(311)
+			p.Match(PromptDSLParserT__8)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(286)
+			p.SetState(312)
 			p.AnnotationValue()
 		}
 
-		p.SetState(291)
+		p.SetState(317)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -5408,8 +5944,8 @@ func (s *AnnotationValueContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 
 func (p *PromptDSLParser) AnnotationValue() (localctx IAnnotationValueContext) {
 	localctx = NewAnnotationValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 52, PromptDSLParserRULE_annotationValue)
-	p.SetState(294)
+	p.EnterRule(localctx, 58, PromptDSLParserRULE_annotationValue)
+	p.SetState(320)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5419,7 +5955,7 @@ func (p *PromptDSLParser) AnnotationValue() (localctx IAnnotationValueContext) {
 	case PromptDSLParserSTRING:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(292)
+			p.SetState(318)
 			p.Match(PromptDSLParserSTRING)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -5430,7 +5966,7 @@ func (p *PromptDSLParser) AnnotationValue() (localctx IAnnotationValueContext) {
 	case PromptDSLParserT__11:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(293)
+			p.SetState(319)
 			p.ArrayLiteral()
 		}
 
@@ -5539,19 +6075,19 @@ func (s *ArrayLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 
 func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 	localctx = NewArrayLiteralContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 54, PromptDSLParserRULE_arrayLiteral)
+	p.EnterRule(localctx, 60, PromptDSLParserRULE_arrayLiteral)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(296)
+		p.SetState(322)
 		p.Match(PromptDSLParserT__11)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(305)
+	p.SetState(331)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5560,31 +6096,31 @@ func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 
 	if _la == PromptDSLParserSTRING {
 		{
-			p.SetState(297)
+			p.SetState(323)
 			p.Match(PromptDSLParserSTRING)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(302)
+		p.SetState(328)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		for _la == PromptDSLParserT__7 {
+		for _la == PromptDSLParserT__8 {
 			{
-				p.SetState(298)
-				p.Match(PromptDSLParserT__7)
+				p.SetState(324)
+				p.Match(PromptDSLParserT__8)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit
 				}
 			}
 			{
-				p.SetState(299)
+				p.SetState(325)
 				p.Match(PromptDSLParserSTRING)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -5592,7 +6128,7 @@ func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 				}
 			}
 
-			p.SetState(304)
+			p.SetState(330)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -5602,7 +6138,7 @@ func (p *PromptDSLParser) ArrayLiteral() (localctx IArrayLiteralContext) {
 
 	}
 	{
-		p.SetState(307)
+		p.SetState(333)
 		p.Match(PromptDSLParserT__12)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5705,10 +6241,10 @@ func (s *AfterSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 
 func (p *PromptDSLParser) AfterSection() (localctx IAfterSectionContext) {
 	localctx = NewAfterSectionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 56, PromptDSLParserRULE_afterSection)
+	p.EnterRule(localctx, 62, PromptDSLParserRULE_afterSection)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(309)
+		p.SetState(335)
 		p.Match(PromptDSLParserAFTER_BLOCK)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5811,10 +6347,10 @@ func (s *FixSectionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) FixSection() (localctx IFixSectionContext) {
 	localctx = NewFixSectionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 58, PromptDSLParserRULE_fixSection)
+	p.EnterRule(localctx, 64, PromptDSLParserRULE_fixSection)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(311)
+		p.SetState(337)
 		p.Match(PromptDSLParserFIX_BLOCK)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5952,11 +6488,11 @@ func (s *TextBlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) TextBlock() (localctx ITextBlockContext) {
 	localctx = NewTextBlockContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 60, PromptDSLParserRULE_textBlock)
+	p.EnterRule(localctx, 66, PromptDSLParserRULE_textBlock)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(314)
+	p.SetState(340)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -5965,7 +6501,7 @@ func (p *PromptDSLParser) TextBlock() (localctx ITextBlockContext) {
 
 	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&624522604593160) != 0) {
 		{
-			p.SetState(313)
+			p.SetState(339)
 			_la = p.GetTokenStream().LA(1)
 
 			if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&624522604593160) != 0) {
@@ -5976,7 +6512,7 @@ func (p *PromptDSLParser) TextBlock() (localctx ITextBlockContext) {
 			}
 		}
 
-		p.SetState(316)
+		p.SetState(342)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -6159,10 +6695,10 @@ func (s *TypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	localctx = NewTypeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 62, PromptDSLParserRULE_type)
+	p.EnterRule(localctx, 68, PromptDSLParserRULE_type)
 	var _la int
 
-	p.SetState(333)
+	p.SetState(359)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -6172,7 +6708,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserSTRING_TYPE:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(318)
+			p.SetState(344)
 			p.Match(PromptDSLParserSTRING_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6183,7 +6719,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserFLOAT_TYPE:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(319)
+			p.SetState(345)
 			p.Match(PromptDSLParserFLOAT_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6194,7 +6730,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserINT_TYPE:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(320)
+			p.SetState(346)
 			p.Match(PromptDSLParserINT_TYPE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6205,7 +6741,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserT__14:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(321)
+			p.SetState(347)
 			p.Match(PromptDSLParserT__14)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6213,14 +6749,14 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 			}
 		}
 		{
-			p.SetState(322)
+			p.SetState(348)
 			p.Type_()
 		}
 
 	case PromptDSLParserSTRUCT:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(323)
+			p.SetState(349)
 			p.Match(PromptDSLParserSTRUCT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6228,14 +6764,14 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 			}
 		}
 		{
-			p.SetState(324)
+			p.SetState(350)
 			p.Match(PromptDSLParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(328)
+		p.SetState(354)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -6244,11 +6780,11 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 
 		for _la == PromptDSLParserID {
 			{
-				p.SetState(325)
+				p.SetState(351)
 				p.FieldDef()
 			}
 
-			p.SetState(330)
+			p.SetState(356)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -6256,7 +6792,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 			_la = p.GetTokenStream().LA(1)
 		}
 		{
-			p.SetState(331)
+			p.SetState(357)
 			p.Match(PromptDSLParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6267,7 +6803,7 @@ func (p *PromptDSLParser) Type_() (localctx ITypeContext) {
 	case PromptDSLParserID:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(332)
+			p.SetState(358)
 			p.Match(PromptDSLParserID)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -6385,12 +6921,12 @@ func (s *ValueContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) Value() (localctx IValueContext) {
 	localctx = NewValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 64, PromptDSLParserRULE_value)
+	p.EnterRule(localctx, 70, PromptDSLParserRULE_value)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(335)
+		p.SetState(361)
 		_la = p.GetTokenStream().LA(1)
 
 		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&123145302310912) != 0) {
@@ -6487,12 +7023,12 @@ func (s *FormatTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromptDSLParser) FormatType() (localctx IFormatTypeContext) {
 	localctx = NewFormatTypeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 66, PromptDSLParserRULE_formatType)
+	p.EnterRule(localctx, 72, PromptDSLParserRULE_formatType)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(337)
+		p.SetState(363)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == PromptDSLParserT__15 || _la == PromptDSLParserT__16) {

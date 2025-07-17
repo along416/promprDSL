@@ -15,6 +15,7 @@ type FieldDef struct {
 }
 
 type PromptEvalContext struct {
+	Vars       map[string]interface{}
 	InFields   []FieldDef
 	OutFields  []FieldDef
 	Input      any
@@ -353,44 +354,49 @@ func (node *ForNode) Eval(_ *PromptEvalContext) ([]string, error) {
 }
 
 type RootNode struct {
-	SysNodes   []Node
-	UserNodes  []Node
-	ModuleDefs map[string][]Node // 初始化 map
-	InFields   []FieldDef
-	OutFields  []FieldDef
-	BeforeCode string
-	FixCode    []string
-	AfterCode  []string
+	Vars        map[string]interface{}
+	SysNodes    []Node
+	UserNodes   []Node
+	BeforeNodes []Node
+	ModuleDefs  map[string][]Node // 初始化 map
+	InFields    []FieldDef
+	OutFields   []FieldDef
+	BeforeCode  string
+	FixCode     []string
+	AfterCode   []string
 	// 其它部分
 }
 type final struct {
-	Prompt []string 
-	After  string          
-	Fix    string          
+	User  []string
+	Sys   []string
+	After string
+	Fix   string
 }
 
 func (r *RootNode) Eval(ctx *PromptEvalContext) (*final, error) {
 
-	var result []string
+	var user []string
+	var sys []string
 	for _, node := range r.SysNodes {
 		out, err := node.Eval(ctx)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, out...)
+		sys = append(sys, out...)
 	}
 	for _, node := range r.UserNodes {
 		out, err := node.Eval(ctx)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, out...)
+		user = append(user, out...)
 	}
 
 	return &final{
-		Prompt: result,
-		After:  "AfterProcess",
-		Fix:    "FixProcess",
+		User:  user,
+		Sys:   sys,
+		After: "AfterProcess",
+		Fix:   "FixProcess",
 	}, nil
 }
 

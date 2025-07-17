@@ -35,6 +35,18 @@ func (v *BasePromptDSLVisitor) VisitOutputMarkdown(ctx *OutputMarkdownContext) i
 	return v.VisitChildren(ctx)
 }
 
+func (v *BasePromptDSLVisitor) VisitBeforeSection(ctx *BeforeSectionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitBeforeContent(ctx *BeforeContentContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePromptDSLVisitor) VisitVarDef(ctx *VarDefContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BasePromptDSLVisitor) VisitSystemSection(ctx *SystemSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
