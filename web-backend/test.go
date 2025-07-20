@@ -55,13 +55,24 @@ func main() {
 	// 	return
 	// }
 	log.Println("模型输出:\n", result)
+	// 将结果写入 model_output.json 文件
+	err = os.WriteFile("model_output.json", []byte(result), 0644)
+	if err != nil {
+		log.Fatalf("写入模型结果文件失败: %v", err)
+	}
+
 	// 假设模型输出是 JSON 数组字符串（或你需要先解析处理）
 
-	final, err := CallUserPostProcessor(result)
-	if err != nil {
-		log.Fatalf("调用 AfterProcess 失败: %v", err)
-	}
-	log.Println("后处理结果:", final)
+	//然后就结束了，然后就走下一步生成代码了，
+	//这个程序内部的东西要怎么传到下一个main文件
+	//要input，output，参数，函数，main
+	//main包括
+	
+	// final, err := CallUserPostProcessor(result)
+	// if err != nil {
+	// 	log.Fatalf("调用 AfterProcess 失败: %v", err)
+	// }
+	// log.Println("后处理结果:", final)
 
 	//goja
 	// //处理输出，调用生成的函数执行
@@ -180,7 +191,7 @@ func CallUserPostProcessor(jsonStr string) ([]map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("outputBytes:",string(outputBytes))
+	fmt.Println("outputBytes:", string(outputBytes))
 	cmd.Wait()
 
 	var finalOutput []map[string]interface{}
