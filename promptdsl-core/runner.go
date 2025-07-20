@@ -28,6 +28,7 @@ func RunPromptDSL(input string) (*final, error) {
 
 	rootNode := BuildAST(ctx, tokenStream)
 	// fmt.Printf("%v\n", rootNode)
+	fmt.Printf("📦 OutFields: %+v\n", rootNode.OutFields)
 
 	// 3. 构造 Eval 上下文
 	str := &PromptEvalContext{

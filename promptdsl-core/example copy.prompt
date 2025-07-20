@@ -6,7 +6,7 @@ prompt SplitSolutionSteps {
 
     output {
  
-            Conditions: []string @jsonname("条件")  @latex("所有公式使用latex")
+            Conditions: []string @jsonname("条件")  @latex("所有公式使用latex")@nil("latex中的单斜杠必须转义为合法双斜杠")
             KnowledgePoint: string @jsonname("知识点")  @latex("所有公式使用latex")
             ProcessResult: string @jsonname("过程")  @latex("所有公式使用latex")
 	}

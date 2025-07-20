@@ -12,11 +12,11 @@ import (
 var symbolToImport = map[string]string{
 	"fmt.":     "fmt",
 	"strings.": "strings",
-	"math":     "math",
-	"json":     "encoding/json",
-	"log":      "log",
-	"io":       "io",
-	"os":       "os",
+	"math.":     "math",
+	"json.":     "encoding/json",
+	"log.":      "log",
+	"io.":       "io",
+	"os.":       "os",
 	// ...
 }
 
@@ -59,7 +59,7 @@ func BuildOutputSpecText(fields []FieldDef) string {
 		}
 
 		// 添加字段及注释
-		b.WriteString(fmt.Sprintf("    \"%s\": %s", f.JsonName, example))
+		b.WriteString(fmt.Sprintf("    \"%s\": %s  // %s", f.JsonName, example, strings.Join(f.Annotations, ",")))
 		if i < len(fields)-1 {
 			b.WriteString(",\n")
 		} else {
@@ -153,7 +153,7 @@ func GenerateAfterAndFixGoCode(root *RootNode, pkgName string) string {
 	// b.WriteString("    // 输出简单 JSON 测试一下 stdout 是否返回\n")
 	// b.WriteString("    fmt.Println(`[{\"result\": \"ok\"}]`)\n")
 
-	b.WriteString("    inputBytes, err := io.ReadAll(os.Stdin)\n")
+	b.WriteString("    inputBytes, err := os.ReadFile(\"model_output.json\")\n")
 	b.WriteString("    if err != nil {\n")
 	b.WriteString("        fmt.Fprintf(os.Stderr, \"读取输入失败: %v\\n\", err)\n")
 	b.WriteString("        os.Exit(1)\n")
