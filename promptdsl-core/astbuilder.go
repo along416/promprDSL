@@ -12,16 +12,17 @@ import (
 
 func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStream) *RootNode {
 	result := &RootNode{
-		Vars:        make(map[string]interface{}), // 初始化空map
-		SysNodes:    []Node{},
-		UserNodes:   []Node{},
-		ModuleDefs:  map[string][]Node{}, // 初始化 map
-		InFields:    []FieldDef{},
-		OutFields:   []FieldDef{},
-		BeforeCode:  "",
-		AfterCode:   []string{},
-		FixCode:     []string{},
-		BeforeNodes: []Node{},
+		Vars:             make(map[string]interface{}), // 初始化空map
+		SysNodes:         []Node{},
+		UserNodes:        []Node{},
+		ModuleDefs:       map[string][]Node{}, // 初始化 map
+		InFields:         []FieldDef{},
+		OutFields:        []FieldDef{},
+		BeforeCode:       "",
+		AfterCode:        []string{},
+		FixCode:          []string{},
+		BeforeNodes:      []Node{},
+		outputspectNodes: OutputSpecNode{},
 	}
 	fmt.Println("Building AST...")
 	def := parseTree.PromptDef(0)
@@ -68,7 +69,11 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 			// fmt.Println("contentNodes:",contentNodes)
 		case *parser.UserSectionContext:
 			for _, uc := range b.AllUserContent() {
-				result.UserNodes = append(result.UserNodes, buildUserNode(uc))
+				node := buildUserNode(uc)
+				result.UserNodes = append(result.UserNodes, node)
+				if outSpec, ok := node.(*OutputSpecNode); ok {
+					result.outputspectNodes = *outSpec
+				}
 			}
 		case *parser.InputSectionContext:
 			// 解析输入字段，放到 result.InDef
@@ -109,7 +114,37 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 			// 检查是哪种 output 类型
 			//所以这里其实是构造结构体，而不是处理outputspec，还是都处理？
 			fmt.Println("OutputSection")
-
+			defaultAnnotations := b.AllDefaultAnnotation()
+			// 先构建 defaultAnnotation map，方便查找
+			defaultAnnoMap := map[string][]string{}
+			for _, defAnn := range defaultAnnotations {
+				name := defAnn.ID().GetText()
+				var vals []string
+				if defAnn.AnnotationArgs() != nil {
+					for _, v := range defAnn.AnnotationArgs().AllAnnotationValue() {
+						if s := v.STRING(); s != nil {
+							raw := s.GetText()
+							unquoted, err := strconv.Unquote(raw)
+							if err != nil {
+								unquoted = raw
+							}
+							vals = append(vals, unquoted)
+						} else if arr := v.ArrayLiteral(); arr != nil {
+							var parts []string
+							for _, s := range arr.AllSTRING() {
+								raw := s.GetText()
+								unquoted, err := strconv.Unquote(raw)
+								if err != nil {
+									unquoted = raw
+								}
+								parts = append(parts, unquoted)
+							}
+							vals = append(vals, strings.Join(parts, ","))
+						}
+					}
+				}
+				defaultAnnoMap[name] = append(defaultAnnoMap[name], vals...)
+			}
 			if structCtx := b.OutputStruct(); structCtx != nil {
 				var fields []FieldDef
 				for _, field := range structCtx.AllFieldDef() {
@@ -119,9 +154,9 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 					// 解析注解
 					var annotations []string
 					jsonName := name // 默认就是字段名
+
 					for _, ann := range field.AllAnnotation() {
 						annName := ann.ID().GetText()
-
 						if ann.AnnotationArgs() != nil {
 							for _, v := range ann.AnnotationArgs().AllAnnotationValue() {
 								var val string
@@ -154,7 +189,12 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 								}
 							}
 						}
+						// 再加 defaultAnnotation 中对应注解的参数（如果有）
+						if defVals, ok := defaultAnnoMap[annName]; ok {
+							annotations = append(annotations, defVals...)
+						}
 					}
+
 					fields = append(fields, FieldDef{
 						Name:        name,
 						Type:        typ,
@@ -189,6 +229,7 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 
 	return result
 }
+
 // // 假设 parser.BeforeContentContext 是 before 代码块中子内容的上下文类型
 // func buildNodeFromBeforeContent(ctx parser.IBeforeContentContext) Node {
 // 	// 这里根据 ctx 具体类型做判断，生成对应的 AST Node
@@ -286,6 +327,30 @@ func BuildSysNodesC(ctx parser.ISysContentContext) Node {
 func buildUserNode(ctx parser.IUserContentContext) Node {
 	// fmt.Println("😊buildUserNode:")
 	userCtx := ctx.(*parser.UserContentContext)
+	// 优先判断 ARRAY_OUTPUTSPEC（形如 []outputspec）
+	if userCtx.ARRAY_OUTPUTSPEC() != nil {
+		text := userCtx.ARRAY_OUTPUTSPEC().GetText()
+		fmt.Println("😊ARRAY_OUTPUTSPEC:", text)
+
+		// 直接去掉前缀 []，拿到实际类型名
+		rawType := strings.TrimPrefix(text, "[]")
+		return &OutputSpecNode{
+			IsArray: true,
+			RawTyp:  rawType,
+		}
+	}
+
+	// 普通 OUTPUTSPEC（非数组形式）
+	if userCtx.OUTPUTSPEC() != nil {
+		text := userCtx.OUTPUTSPEC().GetText()
+		fmt.Println("😊OUTPUTSPEC:", text)
+
+		return &OutputSpecNode{
+			IsArray: false,
+			RawTyp:  text,
+		}
+	}
+
 	for i := 0; i < userCtx.GetChildCount(); i++ {
 		child := userCtx.GetChild(i)
 		switch sub := child.(type) {

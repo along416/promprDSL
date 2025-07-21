@@ -131,6 +131,10 @@ func (v *BasePromptDSLVisitor) VisitArrayLiteral(ctx *ArrayLiteralContext) inter
 	return v.VisitChildren(ctx)
 }
 
+func (v *BasePromptDSLVisitor) VisitDefaultAnnotation(ctx *DefaultAnnotationContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BasePromptDSLVisitor) VisitAfterSection(ctx *AfterSectionContext) interface{} {
 	return v.VisitChildren(ctx)
 }

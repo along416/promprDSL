@@ -100,6 +100,9 @@ type PromptDSLListener interface {
 	// EnterArrayLiteral is called when entering the arrayLiteral production.
 	EnterArrayLiteral(c *ArrayLiteralContext)
 
+	// EnterDefaultAnnotation is called when entering the defaultAnnotation production.
+	EnterDefaultAnnotation(c *DefaultAnnotationContext)
+
 	// EnterAfterSection is called when entering the afterSection production.
 	EnterAfterSection(c *AfterSectionContext)
 
@@ -210,6 +213,9 @@ type PromptDSLListener interface {
 
 	// ExitArrayLiteral is called when exiting the arrayLiteral production.
 	ExitArrayLiteral(c *ArrayLiteralContext)
+
+	// ExitDefaultAnnotation is called when exiting the defaultAnnotation production.
+	ExitDefaultAnnotation(c *DefaultAnnotationContext)
 
 	// ExitAfterSection is called when exiting the afterSection production.
 	ExitAfterSection(c *AfterSectionContext)

@@ -28,7 +28,11 @@ func main() {
 	// 可选: 添加时间戳、文件名等信息
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	fileContent, err := os.ReadFile("../promptdsl-core/example copy.prompt") // 文件扩展名你自己定义
+	// 指定 prompt 文件夹路径
+	// promptDir := "../promptdsl-core/prompts"
+	
+	
+	fileContent, err := os.ReadFile("../promptdsl-core/prompts/Sp.prompt") 
 	if err != nil {
 		panic(fmt.Errorf("读取 DSL 文件失败: %v", err))
 	}
@@ -50,10 +54,10 @@ func main() {
 	llm := service.NewLLMClient(apiKey)
 	result, err := llm.GeneratePromptResponse(systemText, userText)
 
-	// if err != nil {
-	// 	http.Error(w, "调用大模型失败: "+err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
+	if err != nil {
+		fmt .Println("调用大模型失败: ", err)
+		return
+	}
 	log.Println("模型输出:\n", result)
 	// 将结果写入 model_output.json 文件
 	err = os.WriteFile("model_output.json", []byte(result), 0644)

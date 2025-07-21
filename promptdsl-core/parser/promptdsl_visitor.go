@@ -100,6 +100,9 @@ type PromptDSLVisitor interface {
 	// Visit a parse tree produced by PromptDSLParser#arrayLiteral.
 	VisitArrayLiteral(ctx *ArrayLiteralContext) interface{}
 
+	// Visit a parse tree produced by PromptDSLParser#defaultAnnotation.
+	VisitDefaultAnnotation(ctx *DefaultAnnotationContext) interface{}
+
 	// Visit a parse tree produced by PromptDSLParser#afterSection.
 	VisitAfterSection(ctx *AfterSectionContext) interface{}
 

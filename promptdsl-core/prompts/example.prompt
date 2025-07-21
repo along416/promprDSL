@@ -4,8 +4,9 @@ prompt SplitSolutionSteps {
             process: string
     }
 
+    @nlsjegi("你好")
     output {
- 
+
             Conditions: []string @jsonname("条件")  @latex("所有公式使用latex")
             KnowledgePoint: string @jsonname("知识点")  @latex("所有公式使用latex")
             ProcessResult: string @jsonname("过程")  @latex("所有公式使用latex")
@@ -40,7 +41,7 @@ prompt SplitSolutionSteps {
         input.process
         "条件，知识点，结果"
         "请将输出内容严格按照以下格式返回："
-        outputspec
+        outputspec.[]
     }
 
     <fix>

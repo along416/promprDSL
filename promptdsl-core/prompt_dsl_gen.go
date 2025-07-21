@@ -12,6 +12,7 @@ type FieldDef struct {
 	JsonName    string
 	Hint        string
 	Annotations []string
+	SubFields   []FieldDef
 }
 
 type PromptEvalContext struct {
@@ -162,13 +163,19 @@ func (node *StringNode) Eval(_ *PromptEvalContext) ([]string, error) {
 }
 
 type OutputSpecNode struct {
-	Format string
+	IsArray bool
+	RawTyp  string
 }
 
-func (node *OutputSpecNode) Eval(_ *PromptEvalContext) ([]string, error) {
+func (node *OutputSpecNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	// TODO
+		if node.IsArray {
+			// 用户没有指定字段名，输出数组形式（多个字段）
+			return []string{BuildOutputSpecText(ctx.OutFields, true)}, nil
+		}
+		return []string{BuildOutputSpecText(ctx.OutFields, false)}, nil
 
-	return []string{}, nil
+	// return []string{}, nil
 }
 
 type ModuleRefNode struct {
@@ -304,16 +311,12 @@ func (p *ParamNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 		if val, ok := inputMap[key]; ok {
 			return []string{fmt.Sprintf("%v", val)}, nil
 		}
-	case "outputspec":
-		if key == "" {
-			return []string{BuildOutputSpecText(ctx.OutFields)}, nil
-		}
-		for _, field := range ctx.OutFields {
-			if field.Name == key {
-				ex := BuildOutputSpecText([]FieldDef{field})
-				return []string{ex}, nil
-			}
-		}
+	// case "outputspec":
+	// 	if key != "" {
+	// 		// 用户没有指定字段名，输出数组形式（多个字段）
+	// 		return []string{BuildOutputSpecText(ctx.OutFields, true)}, nil
+	// 	}
+	// 	return []string{BuildOutputSpecText(ctx.OutFields, false)}, nil
 	case "output":
 		//结构体引用
 		//TODO
@@ -364,6 +367,8 @@ type RootNode struct {
 	BeforeCode  string
 	FixCode     []string
 	AfterCode   []string
+	outputspectNodes OutputSpecNode
+	// IsArray     bool
 	// 其它部分
 }
 type final struct {

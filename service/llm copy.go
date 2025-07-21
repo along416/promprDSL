@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 
@@ -57,6 +58,7 @@ func (c *LLMClient) GeneratePromptResponse(systemPrompt, userPrompt string) (str
 	if content == "" {
 		return "", fmt.Errorf("OpenAI 返回空字符串")
 	}
+	log.Println("OpenAI 输出:", content)
 	jsonPart := extractJSONArray(content)
 
 	if jsonPart == "" {
@@ -67,7 +69,7 @@ func (c *LLMClient) GeneratePromptResponse(systemPrompt, userPrompt string) (str
 
 // 提取 JSON 数组
 func extractJSONArray(text string) string {
-	re := regexp.MustCompile("(?s)```json\\s*(\\[.*?\\])\\s*```")
+	re := regexp.MustCompile("(?s)```json\\s*(\\{.*?\\}|\\[.*?\\])\\s*```")
 	matches := re.FindStringSubmatch(text)
 	if len(matches) > 1 {
 		return matches[1] // 第一个子匹配是数组

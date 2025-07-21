@@ -4,7 +4,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"math"
 	"os"
 	"strings"
 )
@@ -22,50 +21,37 @@ type OutputContext struct {
 
 type FinalContext struct {
 	Input  InputContext
-	Output []OutputContext
+	Output OutputContext
 }
 
-func AfterProcess(output []OutputContext) []OutputContext {
+func AfterProcess(output OutputContext) OutputContext {
 
-	trueCount := 0
-	for _, item := range output {
-		if item.ProcessResult != "" {
-			trueCount++
-		}
+	if strings.TrimSpace(output.ProcessResult) != "" {
+		// 做些统计或操作
 	}
 	return output
 
 }
 
-func FixProcess(response string) ([]OutputContext, error) {
+func FixProcess(response string) (OutputContext, error) {
 
-	var output []OutputContext
-
-	// 解析 JSON 字符串
+	var output OutputContext
 	err := json.Unmarshal([]byte(response), &output)
 	if err != nil {
-
-		return nil, err
+		return OutputContext{}, err
 	}
 
-	for i := range output {
-		// 如果知识点为空，填入默认值
-		if strings.TrimSpace(output[i].KnowledgePoint) == "" {
-			output[i].KnowledgePoint = "默认知识点"
-		}
-
-		// 清理条件中的空格
-		for j, cond := range output[i].Conditions {
-			output[i].Conditions[j] = strings.TrimSpace(cond)
-		}
-
-		// 示例逻辑：根据知识点长度进行一些微调检查
-		delta := math.Abs(float64(len(output[i].KnowledgePoint)) - 5.0)
-		if delta > 10 {
-		}
+	if strings.TrimSpace(output.KnowledgePoint) == "" {
+		output.KnowledgePoint = "默认知识点"
 	}
 
-	return output, err
+	for j, cond := range output.Conditions {
+		output.Conditions[j] = strings.TrimSpace(cond)
+	}
+
+	// 其他逻辑...
+
+	return output, nil
 
 }
 

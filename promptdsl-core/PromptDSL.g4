@@ -40,7 +40,8 @@ inputSection
 
 //output
 outputSection
-    : 'output' (outputStruct | outputMarkdown)
+
+    : defaultAnnotation* 'output' (outputStruct | outputMarkdown)
     ;
 outputStruct:'{' fieldDef+ '}';
 outputMarkdown: ':' MARKDOWN;
@@ -82,9 +83,13 @@ userSection
 userContent
     : ifStatement
     | paramPath
+    | ARRAY_OUTPUTSPEC
     | OUTPUTSPEC
     | expr
     | textLine
+    ;
+ARRAY_OUTPUTSPEC 
+    : '[' ']' OUTPUTSPEC
     ;
 thencontent
     : userContent
@@ -135,7 +140,7 @@ textLine
     | paramPath
     ;
 paramPath
-    : (ID | INPUT | OUTPUT | AFTER | BEFORE | OUTPUTSPEC) ('.' ID )*
+    : (ID | INPUT | OUTPUT | AFTER | BEFORE ) ('.' ID )*
     ;
 // 结构体定义
 structDef
@@ -144,7 +149,7 @@ structDef
 
 // 注解
 annotation
-    : '@' ID '(' annotationArgs? ')' 
+    : '@' ID ('(' annotationArgs? ')')? 
     ;
 
 annotationArgs
@@ -160,6 +165,9 @@ arrayLiteral
     : '[' (STRING (',' STRING)*)? ']' 
     ;
 
+defaultAnnotation
+    : '@' ID ('(' annotationArgs? ')')? 
+    ;
 afterSection : AFTER_BLOCK ;
 fixSection   : FIX_BLOCK ;
 
@@ -177,11 +185,11 @@ FLOAT_TYPE  : 'float';
 INT_TYPE    : 'int';
 // 类型定义
 type
-    : STRING_TYPE
+    : 'struct' '{' fieldDef* '}' 
     | FLOAT_TYPE
     | INT_TYPE
     | '[]' type
-    | 'struct' '{' fieldDef* '}'    
+    | STRING_TYPE   
     | ID 
     ;
 

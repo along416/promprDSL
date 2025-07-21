@@ -206,6 +206,12 @@ func (s *BasePromptDSLListener) EnterArrayLiteral(ctx *ArrayLiteralContext) {}
 // ExitArrayLiteral is called when production arrayLiteral is exited.
 func (s *BasePromptDSLListener) ExitArrayLiteral(ctx *ArrayLiteralContext) {}
 
+// EnterDefaultAnnotation is called when production defaultAnnotation is entered.
+func (s *BasePromptDSLListener) EnterDefaultAnnotation(ctx *DefaultAnnotationContext) {}
+
+// ExitDefaultAnnotation is called when production defaultAnnotation is exited.
+func (s *BasePromptDSLListener) ExitDefaultAnnotation(ctx *DefaultAnnotationContext) {}
+
 // EnterAfterSection is called when production afterSection is entered.
 func (s *BasePromptDSLListener) EnterAfterSection(ctx *AfterSectionContext) {}
 
