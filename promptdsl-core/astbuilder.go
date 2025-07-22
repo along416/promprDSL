@@ -287,13 +287,41 @@ func BuildSysNodes(root antlr.Tree) []Node {
 	return result
 }
 func BuildSysNodesC(ctx parser.ISysContentContext) Node {
-	sysCtx := ctx.(*parser.SysContentContext)
-	for i := 0; i < sysCtx.GetChildCount(); i++ {
-		child := sysCtx.GetChild(i)
+	nodeCtx := ctx.(*parser.SysContentContext)
+	// 优先判断 ARRAY_OUTPUTSPEC（形如 []outputspec）
+	if nodeCtx.ARRAY_OUTPUTSPEC() != nil {
+		text := nodeCtx.ARRAY_OUTPUTSPEC().GetText()
+		fmt.Println("😊ARRAY_OUTPUTSPEC:", text)
+
+		// 直接去掉前缀 []，拿到实际类型名
+		rawType := strings.TrimPrefix(text, "[]")
+		return &OutputSpecNode{
+			IsArray: true,
+			RawTyp:  rawType,
+		}
+	}
+
+	// 普通 OUTPUTSPEC（非数组形式）
+	if nodeCtx.OUTPUTSPEC() != nil {
+		text := nodeCtx.OUTPUTSPEC().GetText()
+		fmt.Println("😊OUTPUTSPEC:", text)
+		return &OutputSpecNode{
+			IsArray: false,
+			RawTyp:  text,
+		}
+	}
+
+	for i := 0; i < nodeCtx.GetChildCount(); i++ {
+		child := nodeCtx.GetChild(i)
 		switch sub := child.(type) {
+		case *parser.ParamPathContext:
+			// fmt.Println("😊param path:", sub.GetText())
+			return &ParamNode{Path: cleanQuotes(sub.GetText())}
 		case *parser.TextLineContext:
+			fmt.Println("😊stringtext:", sub.GetText())
 			return &StringNode{Val: cleanQuotes(sub.GetText())}
 		case *parser.IfStatementContext:
+			fmt.Println("😊IfStatementContext:", sub.GetText())
 			return buildIfNode(sub)
 		case *parser.ExprContext:
 			return &StringNode{Val: cleanQuotes(sub.GetText())} // 临时
@@ -307,10 +335,10 @@ func BuildSysNodesC(ctx parser.ISysContentContext) Node {
 // 构建一个 userContent 的 Node
 func buildUserNode(ctx parser.IUserContentContext) Node {
 	// fmt.Println("😊buildUserNode:")
-	userCtx := ctx.(*parser.UserContentContext)
+	nodeCtx := ctx.(*parser.UserContentContext)
 	// 优先判断 ARRAY_OUTPUTSPEC（形如 []outputspec）
-	if userCtx.ARRAY_OUTPUTSPEC() != nil {
-		text := userCtx.ARRAY_OUTPUTSPEC().GetText()
+	if nodeCtx.ARRAY_OUTPUTSPEC() != nil {
+		text := nodeCtx.ARRAY_OUTPUTSPEC().GetText()
 		fmt.Println("😊ARRAY_OUTPUTSPEC:", text)
 
 		// 直接去掉前缀 []，拿到实际类型名
@@ -322,18 +350,17 @@ func buildUserNode(ctx parser.IUserContentContext) Node {
 	}
 
 	// 普通 OUTPUTSPEC（非数组形式）
-	if userCtx.OUTPUTSPEC() != nil {
-		text := userCtx.OUTPUTSPEC().GetText()
+	if nodeCtx.OUTPUTSPEC() != nil {
+		text := nodeCtx.OUTPUTSPEC().GetText()
 		fmt.Println("😊OUTPUTSPEC:", text)
-
 		return &OutputSpecNode{
 			IsArray: false,
 			RawTyp:  text,
 		}
 	}
 
-	for i := 0; i < userCtx.GetChildCount(); i++ {
-		child := userCtx.GetChild(i)
+	for i := 0; i < nodeCtx.GetChildCount(); i++ {
+		child := nodeCtx.GetChild(i)
 		switch sub := child.(type) {
 		case *parser.ParamPathContext:
 			// fmt.Println("😊param path:", sub.GetText())
