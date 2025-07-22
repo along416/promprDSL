@@ -67,17 +67,25 @@ systemSection
     ;
 sysContent
     : ifStatement
+    | paramPath
+    | ARRAY_OUTPUTSPEC
+    | OUTPUTSPEC
     | expr
     | textLine
     ;
 moduleDef: ID '{' moduleContent* '}';
 moduleContent
-    : paramPath
+    : ifStatement
+    | paramPath
+    | ARRAY_OUTPUTSPEC
+    | OUTPUTSPEC
+    | expr
     | textLine
     ;
 //user
 userSection
-    : 'user' '{' userContent+ '}'
+    : 'user' '{' ID+ '}'
+    | 'user' '{' userContent+ '}'
     ;
 
 userContent

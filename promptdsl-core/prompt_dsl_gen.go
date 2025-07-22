@@ -182,17 +182,6 @@ type ModuleRefNode struct {
 	Name string
 }
 
-//	type EvalContext struct {
-//		ModuleDefs map[string][]Node
-//		// 你可以根据需要添加其他字段，比如变量、环境等
-//	}
-//
-
-// 从上下文中查找模块定义,平铺moudlenode列表方便遍历
-//
-//	func (ctx *PromptEvalContext) LookupModule(name string) []Node {
-//		return
-//	}
 func (m *ModuleRefNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 
 	nodes := ctx.ModuleDefs[m.Name]
@@ -200,7 +189,6 @@ func (m *ModuleRefNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 		return []string{fmt.Sprintf("[Missing module: %s]", m.Name)}, nil
 		// return nil,nil
 	}
-
 	var result []string
 	for _, node := range nodes {
 		str, err := node.Eval(ctx)

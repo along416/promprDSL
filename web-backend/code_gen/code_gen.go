@@ -95,7 +95,7 @@ func FixProcess(response string) ([]OutputContext, error) {
 
 func main() {
 	fmt.Fprintln(os.Stderr, "[main] 程序启动，等待输入...")
-	inputBytes, err := os.ReadFile("../model_output.json")
+	inputBytes, err := os.ReadFile("model_output.json")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "读取输入失败: %v\n", err)
 		os.Exit(1)

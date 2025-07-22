@@ -66,8 +66,15 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 				}
 			}
 			result.ModuleDefs[modName] = contentNodes
-			// fmt.Println("contentNodes:",contentNodes)
 		case *parser.UserSectionContext:
+			if len(b.AllID()) >0{
+				// ID 模式，生成 ModuleRefNode
+				for _, id := range b.AllID() {
+					modName := id.GetText()
+					result.SysNodes = append(result.SysNodes, &ModuleRefNode{Name: modName})
+				}
+				fmt.Println("result.SysNodes:", result.SysNodes)
+			}
 			for _, uc := range b.AllUserContent() {
 				node := buildUserNode(uc)
 				result.UserNodes = append(result.UserNodes, node)
@@ -230,30 +237,6 @@ func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStre
 	return result
 }
 
-// // 假设 parser.BeforeContentContext 是 before 代码块中子内容的上下文类型
-// func buildNodeFromBeforeContent(ctx parser.IBeforeContentContext) Node {
-// 	// 这里根据 ctx 具体类型做判断，生成对应的 AST Node
-
-// 	switch c := ctx.(type) {
-// 	case *parser.TextLineContext:
-// 		// 比如文本节点
-// 		return &StringNode{Val: cleanQuotes(c.GetText())}
-// 	case *parser.ParamPathContext:
-// 		// 路径节点
-// 		return &ParamNode{Path: cleanQuotes(c.GetText())}
-// 	case *parser.IfStatementContext:
-// 		// 条件节点，调用你已有的构造函数
-// 		return buildIfNode(c)
-// 	case *parser.ExprContext:
-// 		// 表达式节点
-// 		return &StringNode{Val: cleanQuotes(c.GetText())}
-// 	// 你根据实际情况补充更多类型
-// 	default:
-// 		// 不支持的类型直接返回文本节点，避免panic
-// 		return &StringNode{Val: cleanQuotes(ctx.GetText())}
-// 	}
-// }
-
 func BuildSysNodes(root antlr.Tree) []Node {
 	moduleContentMap := make(map[string][]Node)
 
@@ -280,7 +263,6 @@ func BuildSysNodes(root antlr.Tree) []Node {
 		}
 	}
 	collectModules(root)
-
 	// Step 2: 提取 sysSection 中的模块名，展开为 AST 节点
 	var result []Node
 	var expandSys func(antlr.Tree)
@@ -302,7 +284,6 @@ func BuildSysNodes(root antlr.Tree) []Node {
 		}
 	}
 	expandSys(root)
-
 	return result
 }
 func BuildSysNodesC(ctx parser.ISysContentContext) Node {
