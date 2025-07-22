@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"unicode"
 )
 
 type InputContext struct {
@@ -21,50 +22,87 @@ type OutputContext struct {
 
 type FinalContext struct {
 	Input  InputContext
-	Output OutputContext
+	Output []OutputContext
 }
 
-func AfterProcess(output OutputContext) OutputContext {
+func AfterProcess(output []OutputContext) []OutputContext {
 
-	if strings.TrimSpace(output.ProcessResult) != "" {
-		// 做些统计或操作
+	trueCount := 0
+	for _, item := range output {
+		if item.ProcessResult != "" {
+			trueCount++
+		}
 	}
 	return output
 
 }
 
-func FixProcess(response string) (OutputContext, error) {
+func FixProcess(response string) ([]OutputContext, error) {
 
-	var output OutputContext
-	err := json.Unmarshal([]byte(response), &output)
+	// 用strings.Builder手动替换单反斜杠
+	fmt.Println("response:", response)
+	var results []OutputContext
+	err := json.Unmarshal([]byte(response), &results)
 	if err != nil {
-		return OutputContext{}, err
+		var buf strings.Builder
+		for i := 0; i < len(response); i++ {
+			if response[i] == '\\' {
+				// 判断是否有下一个字符
+				if i+1 < len(response) {
+					next := response[i+1]
+					// 如果是两个连续的反斜杠
+					if next == '\\' {
+						// 再判断第三个字符是否存在，且不是字母或反斜杠
+						if i+2 >= len(response) || !(unicode.IsLetter(rune(response[i+2])) || response[i+2] == '\\') {
+							// 变成 4 个斜杠
+							buf.WriteString(`\\\\`)
+						} else {
+							// 保留原样 2 个斜杠
+							buf.WriteString(`\\`)
+							if response[i+3] == '\\' {
+								i++
+							}
+						}
+						i++ // 跳过下一个斜杠
+					} else if next == '"' {
+						// 保留一个反斜杠
+						buf.WriteByte('\\')
+						i++ // 跳过 "
+					} else {
+						// fmt.Println("last char is \\")
+						// 单独的 \，不是合法转义，变成两个
+						buf.WriteString(`\\`)
+					}
+				} else {
+					// 最后一个字符是反斜杠，补一个
+					buf.WriteString(`\`)
+				}
+			} else {
+				buf.WriteByte(response[i])
+			}
+		}
+		fixed := buf.String()
+		fmt.Println("fixed:", fixed)
+		err := json.Unmarshal([]byte(fixed), &results)
+		if err != nil {
+			return nil, fmt.Errorf("JSON 解析失败: %w", err)
+		}
+		return results, nil
 	}
-
-	if strings.TrimSpace(output.KnowledgePoint) == "" {
-		output.KnowledgePoint = "默认知识点"
-	}
-
-	for j, cond := range output.Conditions {
-		output.Conditions[j] = strings.TrimSpace(cond)
-	}
-
-	// 其他逻辑...
-
-	return output, nil
+	return results, nil
 
 }
 
 func main() {
 	fmt.Fprintln(os.Stderr, "[main] 程序启动，等待输入...")
-	inputBytes, err := os.ReadFile("model_output.json")
+	inputBytes, err := os.ReadFile("../model_output.json")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "读取输入失败: %v\n", err)
 		os.Exit(1)
 	}
 
 	output, err := FixProcess(string(inputBytes))
-	if err := json.Unmarshal(inputBytes, &output); err != nil {
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "解析输入 JSON 失败011111: %v\n", err)
 		os.Exit(1)
 	}

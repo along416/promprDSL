@@ -15,14 +15,58 @@ import (
 )
 
 var symbolToImport = map[string]string{
+	// 基础功能
 	"fmt.":     "fmt",
 	"strings.": "strings",
+	"strconv.": "strconv",
+	"bytes.":   "bytes",
 	"math.":    "math",
-	"json.":    "encoding/json",
-	"log.":     "log",
+	"math/rand.": "math/rand",
+	"time.":    "time",
+	"unicode.": "unicode",
+	"unicode/utf8.": "unicode/utf8",
+	"json"	: "encoding/json",
+
+	// IO 与文件
 	"io.":      "io",
+	"io/ioutil.": "io/ioutil", // 旧版兼容，Go 1.16 后用 os.ReadFile 等替代
 	"os.":      "os",
-	// ...
+	"path.":    "path",
+	"path/filepath.": "path/filepath",
+
+	// 网络与编码
+	"net.":     "net",
+	"net/http.": "net/http",
+	"net/url.": "net/url",
+	"encoding/json.": "encoding/json",
+	"encoding/xml.":  "encoding/xml",
+	"encoding/base64.": "encoding/base64",
+	"encoding/hex.": "encoding/hex",
+
+	// 日志与调试
+	"log.":     "log",
+	"debug/pe.": "debug/pe", // 示例：用于调试工具
+
+	// 并发与同步
+	"sync.":    "sync",
+	"sync/atomic.": "sync/atomic",
+	"context.": "context",
+
+	// 正则与错误处理
+	"regexp.":  "regexp",
+	"errors.":  "errors",
+
+	// 反射与运行时
+	"reflect.": "reflect",
+	"runtime.": "runtime",
+	"runtime/debug.": "runtime/debug",
+
+	// 测试（如果是生成测试代码时）
+	"testing.": "testing",
+
+	// 数据结构与容器
+	"container/list.": "container/list",
+	"container/heap.": "container/heap",
 }
 
 //eval
@@ -182,14 +226,16 @@ func GenerateAfterAndFixGoCode(root *RootNode, pkgName string) string {
 	hasAfter := strings.TrimSpace(afterCode) != ""
 
 	if hasFix {
+		
 		b.WriteString("    output,err := FixProcess(string(inputBytes))\n")
-		b.WriteString("    if err := json.Unmarshal(inputBytes, &output); err != nil {\n")
+		b.WriteString("    if err != nil {\n")
 		b.WriteString("        fmt.Fprintf(os.Stderr, \"解析输入 JSON 失败011111: %v\\n\", err)\n")
 		b.WriteString("        os.Exit(1)\n")
 		b.WriteString("    }\n")
 		if hasAfter {
 			b.WriteString("    output = AfterProcess(output)\n")
 		}
+
 	} else if hasAfter {
 		b.WriteString(fmt.Sprintf("    var output %s\n",outputTypeStr))
 		b.WriteString("    if err := json.Unmarshal(inputBytes, &output); err != nil {\n")

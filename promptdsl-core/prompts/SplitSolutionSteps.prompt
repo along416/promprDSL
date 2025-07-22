@@ -3,8 +3,8 @@ prompt SplitSolutionSteps {
             question: string
             process: string
     }
-    @latex("其中所有数学公式必须使用 LaTeX 格式")
-    @kl("并用单个美元符号'$...$'包裹")
+    @latex("严格遵守以下规定设计数学公式使用标准通用的latex格式")
+    @kl("数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格")
     output {
 
             Conditions: []string @jsonname("条件")  @latex @kl
@@ -46,33 +46,57 @@ prompt SplitSolutionSteps {
     }
 
     <fix>
-        var output []OutputContext
-
-        // 解析 JSON 字符串
-        err := json.Unmarshal([]byte(response), &output)
+       	// 用strings.Builder手动替换单反斜杠
+        fmt.Println("response:", response)
+        var results []OutputContext
+        err := json.Unmarshal([]byte(response), &results)
         if err != nil {
-
-            return nil,err
+            var buf strings.Builder
+            for i := 0; i < len(response); i++ {
+                if response[i] == '\\' {
+                    // 判断是否有下一个字符
+                    if i+1 < len(response) {
+                        next := response[i+1]
+                        // 如果是两个连续的反斜杠
+                        if next == '\\' {
+                            // 再判断第三个字符是否存在，且不是字母或反斜杠
+                            if i+2 >= len(response) || !(unicode.IsLetter(rune(response[i+2])) || response[i+2] == '\\') {
+                                // 变成 4 个斜杠
+                                buf.WriteString(`\\\\`)
+                            } else {
+                                // 保留原样 2 个斜杠
+							    buf.WriteString(`\\`)
+                                if response[i+3] == '\\' {
+                                    i++
+                                }
+                            }
+                            i++ // 跳过下一个斜杠
+                        } else if next == '"' {
+                            // 保留一个反斜杠
+                            buf.WriteByte('\\')
+                            i++ // 跳过 "
+                        } else {
+                            // fmt.Println("last char is \\")
+                            // 单独的 \，不是合法转义，变成两个
+                            buf.WriteString(`\\`)
+                        }
+                    } else {
+                        // 最后一个字符是反斜杠，补一个
+                        buf.WriteString(`\`)
+                    }
+                } else {
+                    buf.WriteByte(response[i])
+                }
+            }
+            fixed := buf.String()
+            fmt.Println("fixed:", fixed)
+            err := json.Unmarshal([]byte(fixed), &results)
+            if err != nil {
+                return nil, fmt.Errorf("JSON 解析失败: %w", err)
+            }
+            return results, nil
         }
-
-        for i := range output {
-            // 如果知识点为空，填入默认值
-            if strings.TrimSpace(output[i].KnowledgePoint) == "" {
-                output[i].KnowledgePoint = "默认知识点"
-            }
-
-            // 清理条件中的空格
-            for j, cond := range output[i].Conditions {
-                output[i].Conditions[j] = strings.TrimSpace(cond)
-            }
-
-            // 示例逻辑：根据知识点长度进行一些微调检查
-            delta := math.Abs(float64(len(output[i].KnowledgePoint)) - 5.0)
-            if delta > 10 {
-            }
-        }
-
-        return output,err
+        return results, nil
     </fix>
 
     <after>

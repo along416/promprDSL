@@ -32,7 +32,7 @@ func main() {
 	// promptDir := "../promptdsl-core/prompts"
 	
 	
-	fileContent, err := os.ReadFile("../promptdsl-core/prompts/Sp.prompt") 
+	fileContent, err := os.ReadFile("../promptdsl-core/prompts/SplitSolutionSteps.prompt") 
 	if err != nil {
 		panic(fmt.Errorf("读取 DSL 文件失败: %v", err))
 	}

@@ -18,7 +18,6 @@ type LLMClient struct {
 // NewLLMClient 创建 LLMClient 实例，传入 API Key
 func NewLLMClient(apiKey string) *LLMClient {
 	cfg := openai.DefaultConfig(apiKey)
-	// 修改为你的自定义地址（如果有）
 	cfg.BaseURL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 
 	return &LLMClient{
