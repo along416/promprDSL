@@ -26,9 +26,13 @@ func RunPromptDSL(input string) (*final, error) {
 	// 2. 构建 AST Node
 	ctx := tree.(*parser.PromptFileContext)
 
-	rootNode := BuildAST(ctx, tokenStream)
+	rootNode := ConvertASTtoPrompt(ctx, tokenStream)
 	// fmt.Printf("%v\n", rootNode)
 	fmt.Printf("📦 OutFields: %+v\n", rootNode.OutFields)
+
+	//生成sys+user+after+fix代码
+	Generateprompthandle(rootNode, getCurrentPackageName())
+
 
 	// 3. 构造 Eval 上下文
 	str := &PromptEvalContext{
@@ -50,6 +54,7 @@ func RunPromptDSL(input string) (*final, error) {
 	// 		return "", err
 	// 	}
 	// }
+
 
 	// 4. 执行 AST，得到 prompt 字符串
 	outputParts, err := rootNode.Eval(str)

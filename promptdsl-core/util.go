@@ -128,7 +128,7 @@ func BuildOutputSpecText(fields []FieldDef, asArray bool) string {
 	return b.String()
 }
 
-func GenerateAfterAndFixGoCode(root *RootNode, pkgName string) string {
+func GenerateAfterAndFixGoCode(root *PromptNode, pkgName string) string {
 	var b strings.Builder
 	//传个参进来
 	outputTypeStr := "OutputContext"
@@ -258,7 +258,7 @@ func GenerateAfterAndFixGoCode(root *RootNode, pkgName string) string {
 
 	return b.String()
 }
-func GenerateFIX(root *RootNode, pkgName string) string {
+func GenerateFIX(root *PromptNode, pkgName string) string {
 	// 写入 Fix 函数（如果有）
 	var b strings.Builder
 	if strings.TrimSpace(root.FixCode[0]) != "" {

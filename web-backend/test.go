@@ -43,7 +43,11 @@ func main() {
 		log.Fatalf("RunPromptDSL error: %v", err)
 	}
 	fmt.Println("生成的 Prompt:\n", prompt)
-	// 步骤 2：提取 system / user 块
+	//生成sys+user+after_gen.go
+	
+	//生成workflow
+
+	//执行生成代码
 	promptcontent := *prompt
 	systemPart := promptcontent.Sys
 	userPart := promptcontent.User
@@ -60,6 +64,7 @@ func main() {
 	}
 	log.Println("模型输出:\n", result)
 	// 将结果写入 model_output.json 文件
+
 	err = os.WriteFile("model_output.json", []byte(result), 0644)
 	if err != nil {
 		log.Fatalf("写入模型结果文件失败: %v", err)
@@ -73,6 +78,7 @@ func main() {
 	//main包括
 	
 	// final, err := CallUserPostProcessor(result)
+	// fmt.Println(final)
 	// if err != nil {
 	// 	log.Fatalf("调用 AfterProcess 失败: %v", err)
 	// }
@@ -161,47 +167,55 @@ func main() {
 }
 
 // 假设 result 是 string，包含 JSON 数组（即模型返回结果）
-func CallUserPostProcessor(jsonStr string) ([]map[string]interface{}, error) {
+func CallUserPostProcessor[T any](jsonStr string) (T, error) {
+	var zeroValue T // 用于返回零值
+
 	fmt.Println("CallUserPostProcessor进入前")
+
+	// 执行外部命令：运行 Go 程序
 	cmd := exec.Command("go", "run", "code_gen/code_gen.go")
 	cmd.Stderr = os.Stderr
-	// cmd.Stdout = os.Stdout // 可选，也能打印标准输出（调试用）
-	stdin, _ := cmd.StdinPipe()
-	// if err := cmd.Start(); err != nil {
-	// 	fmt.Println("cmd.Start error:", err)
-	// 	return nil, err
-	// }
+
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return zeroValue, fmt.Errorf("无法获取 StdinPipe: %v", err)
+	}
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		fmt.Println("2Error:", err)
-		return nil, err
+		return zeroValue, fmt.Errorf("无法获取 StdoutPipe: %v", err)
 	}
 
+	// 启动外部命令
 	if err := cmd.Start(); err != nil {
-		fmt.Println("3Error:", err)
-		return nil, err
+		return zeroValue, fmt.Errorf("cmd.Start 错误: %v", err)
 	}
 
 	// 传入 JSON 输入
 	_, err = stdin.Write([]byte(jsonStr))
 	if err != nil {
-		return nil, err
+		return zeroValue, fmt.Errorf("写入 stdin 错误: %v", err)
 	}
 	stdin.Close()
 
-	// 读取输出
+	// 读取命令输出
 	outputBytes, err := io.ReadAll(stdout)
 	if err != nil {
-		return nil, err
+		return zeroValue, fmt.Errorf("读取 Stdout 错误: %v", err)
 	}
 	fmt.Println("outputBytes:", string(outputBytes))
-	cmd.Wait()
 
-	var finalOutput []map[string]interface{}
-	err = json.Unmarshal(outputBytes, &finalOutput)
-	if err != nil {
-		return nil, fmt.Errorf("无法解析 AfterProcess 输出: %v", err)
+	// 等待命令完成
+	if err := cmd.Wait(); err != nil {
+		return zeroValue, fmt.Errorf("等待命令完成时发生错误: %v", err)
 	}
-	return finalOutput, nil
+
+	// 将输出的 JSON 解析为目标类型
+	var result T
+	err = json.Unmarshal(outputBytes, &result)
+	if err != nil {
+		return zeroValue, fmt.Errorf("无法解析 AfterProcess 输出: %v", err)
+	}
+
+	return result, nil
 }

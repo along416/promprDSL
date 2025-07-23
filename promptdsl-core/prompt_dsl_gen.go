@@ -169,11 +169,11 @@ type OutputSpecNode struct {
 
 func (node *OutputSpecNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	// TODO
-		if node.IsArray {
-			// 用户没有指定字段名，输出数组形式（多个字段）
-			return []string{BuildOutputSpecText(ctx.OutFields, true)}, nil
-		}
-		return []string{BuildOutputSpecText(ctx.OutFields, false)}, nil
+	if node.IsArray {
+		// 用户没有指定字段名，输出数组形式（多个字段）
+		return []string{BuildOutputSpecText(ctx.OutFields, true)}, nil
+	}
+	return []string{BuildOutputSpecText(ctx.OutFields, false)}, nil
 
 	// return []string{}, nil
 }
@@ -344,17 +344,17 @@ func (node *ForNode) Eval(_ *PromptEvalContext) ([]string, error) {
 	return []string{}, nil
 }
 
-type RootNode struct {
-	Vars        map[string]interface{}
-	SysNodes    []Node
-	UserNodes   []Node
-	BeforeNodes []Node
-	ModuleDefs  map[string][]Node // 初始化 map
-	InFields    []FieldDef
-	OutFields   []FieldDef
-	BeforeCode  string
-	FixCode     []string
-	AfterCode   []string
+type PromptNode struct {
+	Vars             map[string]interface{}
+	SysNodes         []Node
+	UserNodes        []Node
+	BeforeNodes      []Node
+	ModuleDefs       map[string][]Node // 初始化 map
+	InFields         []FieldDef
+	OutFields        []FieldDef
+	BeforeCode       string
+	FixCode          []string
+	AfterCode        []string
 	outputspectNodes OutputSpecNode
 	// IsArray     bool
 	// 其它部分
@@ -366,7 +366,7 @@ type final struct {
 	Fix   string
 }
 
-func (r *RootNode) Eval(ctx *PromptEvalContext) (*final, error) {
+func (r *PromptNode) Eval(ctx *PromptEvalContext) (*final, error) {
 
 	var user []string
 	var sys []string

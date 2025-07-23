@@ -10,8 +10,8 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 )
 
-func BuildAST(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStream) *RootNode {
-	result := &RootNode{
+func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStream) *PromptNode {
+	result := &PromptNode{
 		Vars:             make(map[string]interface{}), // 初始化空map
 		SysNodes:         []Node{},
 		UserNodes:        []Node{},
@@ -387,34 +387,17 @@ func buildIfNode(ctx *parser.IfStatementContext) *IfNode {
 	condExpr := buildExprFromCondition(cctx)
 
 	var thenNodes []Node
-	// for _, uc := range ctx.AllUserContent() {
-	// 	thenNodes = append(thenNodes, buildUserNode(uc))
-	// }
-	// usercontentls := ctx.AllUserContent()
-
 	Thencontent := ctx.AllThencontent()
 	for _, uc := range Thencontent {
 		thenNodes = append(thenNodes, buildUserNode(uc.UserContent()))
 	}
-	// thenNodes = append(thenNodes, buildUserNode(thenNode))
-	// fmt.Println("😐thenNodes", thenNodes)
-	// for i, n := range thenNodes {
-	// 	fmt.Printf("thenNode[%d]: %#v\n", i, n)
-	// }
 	var elseNodes []Node
 	// 遍历 else 分支
 	elsecontent := ctx.AllElsecontent()
 	for _, uc := range elsecontent {
 		elseNodes = append(elseNodes, buildUserNode(uc.UserContent()))
 	}
-	// for i := 0; i < ctx.GetChildCount(); i++ {
-	// 	child := ctx.GetChild(i)
-	// 	if ruleCtx, ok := child.(parser.IUserContentContext); ok {
-	// 		elseNodes = append(elseNodes, buildUserNode(ruleCtx))
-	// 	}
-
-	// }
-
+	
 	return &IfNode{
 		Condition: *condExpr,
 		Then:      thenNodes,
