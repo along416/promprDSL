@@ -5,7 +5,10 @@ import (
 	"strings"
 )
 
-func Generateprompthandle(root *PromptNode, pkgName string) string {
+func Generateprompthandle(root *PromptNode, pkgName string, eval *final) string {
+	// fmt
+
+	// for
 	var b strings.Builder
 	outputTypeStr := "OutputContext"
 	if root.outputspectNodes.IsArray {
@@ -38,7 +41,6 @@ func Generateprompthandle(root *PromptNode, pkgName string) string {
 			pkgs = append(pkgs, req)
 		}
 	}
-
 	importBlock := renderImportSection(pkgs)
 	b.WriteString(importBlock)
 
@@ -49,6 +51,7 @@ func Generateprompthandle(root *PromptNode, pkgName string) string {
 	}
 	b.WriteString("}\n\n")
 	b.WriteString("type OutputContext struct {\n")
+
 	for _, field := range root.OutFields {
 		fieldName := capitalizeFirst(field.Name)
 		b.WriteString(fmt.Sprintf("    %s %s `json:\"%s\"`\n", fieldName, field.Type, field.JsonName))
@@ -62,12 +65,27 @@ func Generateprompthandle(root *PromptNode, pkgName string) string {
 
 	//gensystem
 	//写入sys处理逻辑
+	b.WriteString(fmt.Sprintf("func Gensys(input InputContext) string {\n"))
+	b.WriteString("    var b strings.Builder\n")
 
+	// for _, line := range eval.User {
+	// 	b.WriteString(fmt.Sprintf("    %s\n", line)) // 不加 WriteString("...")
+	// }
+	b.WriteString("    return b.String()\n")
+	b.WriteString("\n}\n\n")
+	//把dsl_gen里面生成的东西拿过来
 	//genuser
+	b.WriteString(fmt.Sprintf("func Genuser(input InputContext) string {\n"))
+	b.WriteString("    var b strings.Builder\n")
 
-	// 写入 After 函数（如果有）
+	for _, line := range eval.User {
+		b.WriteString(fmt.Sprintf("    %s\n", line)) // 不加 WriteString("...")
+	}
+	b.WriteString("    return b.String()\n")
+	b.WriteString("\n}\n\n")
 
 	if strings.TrimSpace(root.AfterCode[0]) != "" {
+
 		b.WriteString(fmt.Sprintf("func AfterProcess(output %s) %s {\n", outputTypeStr, outputTypeStr))
 		b.WriteString(root.AfterCode[0])
 		b.WriteString("\n}\n\n")

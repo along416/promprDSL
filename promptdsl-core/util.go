@@ -72,12 +72,15 @@ var symbolToImport = map[string]string{
 //eval
 
 // 构建输出规范文本，用于根据字段列表生成 JSON 字符串表示。
-func BuildOutputSpecText(fields []FieldDef, asArray bool) string {
-	var b strings.Builder
+func BuildOutputSpecLines(fields []FieldDef, asArray bool) []string {
+	var lines []string
 	if asArray {
-		b.WriteString("```json\n[\n  {\n")
+		lines = append(lines, "```json")
+		lines = append(lines, "[")
+		lines = append(lines, "  {")
 	} else {
-		b.WriteString("```json\n{\n")
+		lines = append(lines, "```json")
+		lines = append(lines, "{")
 	}
 
 	for i, f := range fields {
@@ -112,20 +115,22 @@ func BuildOutputSpecText(fields []FieldDef, asArray bool) string {
 		}
 
 		// 添加字段及注释
-		b.WriteString(fmt.Sprintf("    \"%s\": %s  // %s", f.JsonName, example, strings.Join(f.Annotations, ",")))
+		line := fmt.Sprintf("    \"%s\": %s  // %s", f.JsonName, example, strings.Join(f.Annotations, ","))
 		if i < len(fields)-1 {
-			b.WriteString(",\n")
-		} else {
-			b.WriteString("\n")
+			line += ","
 		}
+		lines = append(lines, line)
 	}
 
 	if asArray {
-		b.WriteString("  }\n]\n```")
+		lines = append(lines, "  }")
+		lines = append(lines, "]")
 	} else {
-		b.WriteString("}\n```")
+		lines = append(lines, "}")
 	}
-	return b.String()
+	lines = append(lines, "```")
+
+	return lines
 }
 
 func GenerateAfterAndFixGoCode(root *PromptNode, pkgName string) string {

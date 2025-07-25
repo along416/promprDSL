@@ -29,10 +29,7 @@ func RunPromptDSL(input string) (*final, error) {
 	rootNode := ConvertASTtoPrompt(ctx, tokenStream)
 	// fmt.Printf("%v\n", rootNode)
 	fmt.Printf("📦 OutFields: %+v\n", rootNode.OutFields)
-
-	//生成sys+user+after+fix代码
-	Generateprompthandle(rootNode, getCurrentPackageName())
-
+	fmt.Printf("📦 aftercode: %+v\n", rootNode.AfterCode)
 
 	// 3. 构造 Eval 上下文
 	str := &PromptEvalContext{
@@ -61,11 +58,21 @@ func RunPromptDSL(input string) (*final, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+		//生成sys+user+after+fix代码
+	// code:=Generateprompthandle(rootNode, getCurrentPackageName())
+	code:=Generateprompthandle(rootNode, "main",outputParts)
+
+	outputFile := "generated_prompt/generated_prompt.go"
+	err = os.WriteFile(outputFile, []byte(code), 0644)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "写入文件失败: %v\n", err)
+		os.Exit(1)
+	}
+
 	// pkgName := getCurrentPackageName()
-	code := GenerateAfterAndFixGoCode(rootNode, "main")
-	FIXcode := GenerateFIX(rootNode, "main")
-	outputParts.Fix=FIXcode
+	code = GenerateAfterAndFixGoCode(rootNode, "main")
+	// FIXcode := GenerateFIX(rootNode, "main")
+	// outputParts.Fix=FIXcode
 	// 2. 使用 go/format 美化生成代码
 	formattedCode, err := format.Source([]byte(code))
 	if err != nil {

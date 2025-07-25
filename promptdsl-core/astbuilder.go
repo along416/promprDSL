@@ -67,14 +67,6 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, tokens *antlr.Commo
 			}
 			result.ModuleDefs[modName] = contentNodes
 		case *parser.UserSectionContext:
-			if len(b.AllID()) >0{
-				// ID 模式，生成 ModuleRefNode
-				for _, id := range b.AllID() {
-					modName := id.GetText()
-					result.SysNodes = append(result.SysNodes, &ModuleRefNode{Name: modName})
-				}
-				fmt.Println("result.SysNodes:", result.SysNodes)
-			}
 			for _, uc := range b.AllUserContent() {
 				node := buildUserNode(uc)
 				result.UserNodes = append(result.UserNodes, node)
@@ -226,8 +218,9 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, tokens *antlr.Commo
 		// 		result.BeforeNodes = append(result.BeforeNodes, node)
 		// 	}
 		case *parser.AfterSectionContext:
-			result.AfterCode = extractRawText(b, tokens)
+			fmt.Println("😊AfterSection", extractRawText(b, tokens))
 
+			result.AfterCode = extractRawText(b, tokens)
 		case *parser.FixSectionContext:
 			result.FixCode = extractRawText(b, tokens)
 		}
@@ -382,9 +375,11 @@ func buildUserNode(ctx parser.IUserContentContext) Node {
 
 func buildIfNode(ctx *parser.IfStatementContext) *IfNode {
 	condList := ctx.Condition()
-	// 断言接口为具体类型
+	// // 断言接口为具体类型
 	cctx := condList.(*parser.ConditionContext)
-	condExpr := buildExprFromCondition(cctx)
+	condition := cctx.GetText()
+	// fmt.Println("😊Condition:", condition)
+	// condExpr := buildExprFromCondition(cctx)
 
 	var thenNodes []Node
 	Thencontent := ctx.AllThencontent()
@@ -397,38 +392,38 @@ func buildIfNode(ctx *parser.IfStatementContext) *IfNode {
 	for _, uc := range elsecontent {
 		elseNodes = append(elseNodes, buildUserNode(uc.UserContent()))
 	}
-	
+
 	return &IfNode{
-		Condition: *condExpr,
+		Condition: condition,
 		Then:      thenNodes,
 		Else:      elseNodes,
 	}
 }
 
-func buildExprFromCondition(ctx *parser.ConditionContext) *Expr {
-	if ctx.GetOp() != nil {
-		lhs := buildExpr(ctx.GetLhs())
-		rhs := buildExpr(ctx.GetRhs())
-		var op ExprOp
-		switch ctx.GetOp().GetText() {
-		case "==":
-			op = ExprOp_Equal
-		case "!=":
-			op = ExprOp_NotEqual
-		default:
-			op = ExprOp_None
-		}
-		return &Expr{
-			Op:       op,
-			Operant0: []*Expr{lhs},
-			Operant1: []*Expr{rhs},
-		}
-	}
-	if single := ctx.GetSingle(); single != nil {
-		return buildExpr(single)
-	}
-	return &Expr{Op: ExprOp_None}
-}
+// func buildExprFromCondition(ctx *parser.ConditionContext) *Expr {
+// 	if ctx.GetOp() != nil {
+// 		lhs := buildExpr(ctx.GetLhs())
+// 		rhs := buildExpr(ctx.GetRhs())
+// 		var op ExprOp
+// 		switch ctx.GetOp().GetText() {
+// 		case "==":
+// 			op = ExprOp_Equal
+// 		case "!=":
+// 			op = ExprOp_NotEqual
+// 		default:
+// 			op = ExprOp_None
+// 		}
+// 		return &Expr{
+// 			Op:       op,
+// 			Operant0: []*Expr{lhs},
+// 			Operant1: []*Expr{rhs},
+// 		}
+// 	}
+// 	if single := ctx.GetSingle(); single != nil {
+// 		return buildExpr(single)
+// 	}
+// 	return &Expr{Op: ExprOp_None}
+// }
 
 func buildExpr(exprCtx parser.IExprContext) *Expr {
 	switch expr := exprCtx.(type) {

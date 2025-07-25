@@ -159,7 +159,9 @@ type StringNode struct {
 }
 
 func (node *StringNode) Eval(_ *PromptEvalContext) ([]string, error) {
-	return []string{node.Val}, nil
+	escaped := strings.ReplaceAll(node.Val, `"`, `\"`)
+	return []string{fmt.Sprintf(`b.WriteString("%s\n")`, escaped)}, nil
+	// return []string{node.Val}, nil
 }
 
 type OutputSpecNode struct {
@@ -169,11 +171,18 @@ type OutputSpecNode struct {
 
 func (node *OutputSpecNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	// TODO
+	var b strings.Builder   
 	if node.IsArray {
-		// 用户没有指定字段名，输出数组形式（多个字段）
-		return []string{BuildOutputSpecText(ctx.OutFields, true)}, nil
+
+		for _, line := range BuildOutputSpecLines(ctx.OutFields, true) {
+			b.WriteString(fmt.Sprintf("    b.WriteString(\"%s\\n\")\n", strings.ReplaceAll(line, "\"", "\\\"")))
+		}
+		return []string{b.String()}, nil
 	}
-	return []string{BuildOutputSpecText(ctx.OutFields, false)}, nil
+	for _, line := range BuildOutputSpecLines(ctx.OutFields, false) {
+			b.WriteString(fmt.Sprintf("    b.WriteString(\"%s\\n\")\n", strings.ReplaceAll(line, "\"", "\\\"")))
+		}
+	return []string{b.String()}, nil
 
 	// return []string{}, nil
 }
@@ -227,44 +236,68 @@ func (m *MarkdownNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 }
 
 type IfNode struct {
-	Condition Expr
+	Condition string
 	Then      []Node
 	Else      []Node
 }
 
+func (e *Expr) String() string {
+	if e.Leaf != nil {
+		return *e.Leaf
+	}
+	if e.Op != ExprOp_None && len(e.Operant0) > 0 && len(e.Operant1) > 0 {
+		return fmt.Sprintf("%s %s %s", e.Operant0[0].String(), e.Op.String(), e.Operant1[0].String())
+	}
+	return ""
+}
+func (op ExprOp) String() string {
+	switch op {
+	case ExprOp_Equal:
+		return "=="
+	case ExprOp_NotEqual:
+		return "!="
+	default:
+		return ""
+	}
+}
 func (node *IfNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 
-	condResult, err := node.Condition.EvalToBool(ctx)
-	if err != nil {
-		return nil, err
+	var lines []string
+
+	cond := node.Condition // Expr -> string，比如 input.question != ""
+
+	// 开始 if 结构
+	lines = append(lines, fmt.Sprintf("if (%s) {", cond))
+
+	// Then 分支
+	for _, n := range node.Then {
+		vals, err := n.Eval(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("Then branch Eval failed: %w", err)
+		}
+		for _, v := range vals {
+			lines = append(lines, fmt.Sprintf("    %s", v))
+		}
 	}
 
-	var result []string
-	if condResult {
-		fmt.Println("IfNode: condition is true")
-		for _, n := range node.Then {
-			texts, err := n.Eval(ctx)
-			if err != nil {
-				return nil, err
-			}
-			result = append(result, texts...)
-		}
-		// fmt.Println("IfNode: then done",node)
-	} else {
-		fmt.Println("Else nodes count:", len(node.Else))
-
+	// else 分支（如果有）
+	if len(node.Else) > 0 {
+		lines = append(lines, "} else {")
 		for _, n := range node.Else {
-			texts, err := n.Eval(ctx)
+			vals, err := n.Eval(ctx)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("Else branch Eval failed: %w", err)
 			}
-			result = append(result, texts...)
-			fmt.Printf("Else node eval result: %#v\n", texts)
+			for _, v := range vals {
+				lines = append(lines, fmt.Sprintf("    %s", v))
+			}
 		}
-		// fmt.Println("IfNode: else done",node)
 	}
 
-	return result, nil
+	// 结束
+	lines = append(lines, "}")
+
+	return lines, nil
 }
 
 type ParamNode struct {
@@ -274,46 +307,37 @@ type ParamNode struct {
 // 实现 Node 接口的 Eval 方法
 func (p *ParamNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 
-	var section, key string
-	parts := strings.SplitN(p.Path, ".", 2)
-	if len(parts) == 2 {
-		section, key = parts[0], parts[1]
-	} else if len(parts) == 1 {
-		section = parts[0]
-		key = ""
-	} else {
-		return nil, fmt.Errorf("invalid param path: %s", p.Path)
-	}
-	// section, key := parts[0], parts[1]
+	// var section, key string
+	// parts := strings.SplitN(p.Path, ".", 2)
+	// if len(parts) == 2 {
+	// 	section, key = parts[0], parts[1]
+	// } else if len(parts) == 1 {
+	// 	section = parts[0]
+	// 	key = ""
+	// } else {
+	// 	return nil, fmt.Errorf("invalid param path: %s", p.Path)
+	// }
+	// // section, key := parts[0], parts[1]
 
-	switch section {
-	case "input":
-		// var input string
-		// 从 ctx.Input 中获取真实值
-		// fmt.Println("解释执行 ParamNode:", ctx.Input)
-		inputMap, ok := ctx.Input.(map[string]any)
-		if !ok {
-			return nil, fmt.Errorf("input is not a valid map[string]any")
-		}
-
-		if val, ok := inputMap[key]; ok {
-			return []string{fmt.Sprintf("%v", val)}, nil
-		}
-	// case "outputspec":
-	// 	if key != "" {
-	// 		// 用户没有指定字段名，输出数组形式（多个字段）
-	// 		return []string{BuildOutputSpecText(ctx.OutFields, true)}, nil
+	// switch section {
+	// case "input":
+	// 	// var input string
+	// 	// 从 ctx.Input 中获取真实值
+	// 	// fmt.Println("解释执行 ParamNode:", ctx.Input)
+	// 	inputMap, ok := ctx.Input.(map[string]any)
+	// 	if !ok {
+	// 		return nil, fmt.Errorf("input is not a valid map[string]any")
 	// 	}
-	// 	return []string{BuildOutputSpecText(ctx.OutFields, false)}, nil
-	case "output":
-		//结构体引用
-		//TODO
 
-	default:
-		return nil, fmt.Errorf("unknown param section: %s", section)
-	}
+	// 	if val, ok := inputMap[key]; ok {
+	// 		return []string{fmt.Sprintf("%v", val)}, nil
+	// 	}
+	// case "output":
+	// default:
+	// 	return nil, fmt.Errorf("unknown param section: %s", section)
+	// }
 
-	return nil, fmt.Errorf("param not found: %s", p.Path)
+	return []string{fmt.Sprintf(`b.WriteString(%s)`,p.Path)}, nil
 }
 
 type CasePair struct {
