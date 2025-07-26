@@ -42,7 +42,7 @@ func HandleGenGuide(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 调用核心模块处理 DSL
-	prompt, err := promptdslcore.RunPromptDSL(req.Input)
+	prompt, err := promptdslcore.RunPromptDSL(req.Input,"")
 	if err != nil {
 		http.Error(w, "生成失败: "+err.Error(), http.StatusInternalServerError)
 		return

@@ -1,7 +1,7 @@
 prompt SplitSolutionSteps {
     input {
-            Question: string
-            Process: string
+            question: string
+            process: string
     }
     
     @latex("严格遵守以下规定设计数学公式使用标准通用的latex格式")
@@ -28,7 +28,7 @@ prompt SplitSolutionSteps {
     }
 
     user {
-        if (input.Question != ""){
+        if (input.question != ""){
             "你好"
         }
         else{
@@ -39,9 +39,9 @@ prompt SplitSolutionSteps {
         "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
         "条件，知识点，结果"
         "题目："
-        input.Question
+        input.question
         "过程："
-        input.Process
+        input.process
         
         "请将输出内容严格按照以下格式返回："
         []outputspec
@@ -51,7 +51,7 @@ prompt SplitSolutionSteps {
     <fix>
        	// 用strings.Builder手动替换单反斜杠
         fmt.Println("response:", response)
-        var results []SplitSolutionStepsOutputContext
+        var results []OutputContext
         err := json.Unmarshal([]byte(response), &results)
         if err != nil {
             var buf strings.Builder

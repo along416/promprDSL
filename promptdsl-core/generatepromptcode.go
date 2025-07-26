@@ -5,14 +5,70 @@ import (
 	"strings"
 )
 
-func Generateprompthandle(root *PromptNode, pkgName string, eval *final) string {
-	// fmt
+var symbolToImport = map[string]string{
+	// 基础功能
+	"fmt.":     "fmt",
+	"strings.": "strings",
+	"strconv.": "strconv",
+	"bytes.":   "bytes",
+	"math.":    "math",
+	"math/rand.": "math/rand",
+	"time.":    "time",
+	"unicode.": "unicode",
+	"unicode/utf8.": "unicode/utf8",
+	"json"	: "encoding/json",
 
+	// IO 与文件
+	"io.":      "io",
+	"io/ioutil.": "io/ioutil", // 旧版兼容，Go 1.16 后用 os.ReadFile 等替代
+	"os.":      "os",
+	"path.":    "path",
+	"path/filepath.": "path/filepath",
+
+	// 网络与编码
+	"net.":     "net",
+	"net/http.": "net/http",
+	"net/url.": "net/url",
+	"encoding/json.": "encoding/json",
+	"encoding/xml.":  "encoding/xml",
+	"encoding/base64.": "encoding/base64",
+	"encoding/hex.": "encoding/hex",
+
+	// 日志与调试
+	"log.":     "log",
+	"debug/pe.": "debug/pe", // 示例：用于调试工具
+
+	// 并发与同步
+	"sync.":    "sync",
+	"sync/atomic.": "sync/atomic",
+	"context.": "context",
+
+	// 正则与错误处理
+	"regexp.":  "regexp",
+	"errors.":  "errors",
+
+	// 反射与运行时
+	"reflect.": "reflect",
+	"runtime.": "runtime",
+	"runtime/debug.": "runtime/debug",
+
+	// 测试（如果是生成测试代码时）
+	"testing.": "testing",
+
+	// 数据结构与容器
+	"container/list.": "container/list",
+	"container/heap.": "container/heap",
+}
+
+func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename string) string {
+	// fmt
+	//名字
 	// for
+	
 	var b strings.Builder
-	outputTypeStr := "OutputContext"
+	outputTypeStr := filename+"OutputContext"
 	if root.outputspectNodes.IsArray {
-		outputTypeStr = "[]OutputContext"
+		outputTypeStr = "[]"+filename+"OutputContext"
 	}
 
 	// 写包名和注释
@@ -28,7 +84,7 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final) string 
 	pkgs := inferImportsFromCode(allCode)
 
 	// 手动保证 "os" 在包列表里
-	requiredPkgs := []string{"os", "fmt"}
+	requiredPkgs := []string{"os", "fmt","service"}
 	for _, req := range requiredPkgs {
 		has := false
 		for _, pkg := range pkgs {
@@ -45,12 +101,12 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final) string 
 	b.WriteString(importBlock)
 
 	// struct
-	b.WriteString("type InputContext struct {\n")
+	b.WriteString("type "+filename+"InputContext struct {\n")
 	for _, field := range root.InFields {
 		b.WriteString(fmt.Sprintf("    %s %s `json:\"%s\"`\n", field.Name, field.Type, field.JsonName))
 	}
 	b.WriteString("}\n\n")
-	b.WriteString("type OutputContext struct {\n")
+	b.WriteString("type "+filename+"OutputContext struct {\n")
 
 	for _, field := range root.OutFields {
 		fieldName := capitalizeFirst(field.Name)
@@ -58,24 +114,24 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final) string 
 	}
 	b.WriteString("}\n\n")
 
-	b.WriteString("type FinalContext struct {\n")
-	b.WriteString("    Input  InputContext\n")
+	b.WriteString("type "+filename+"FinalContext struct {\n")
+	b.WriteString("    Input  "+filename+"InputContext\n")
 	b.WriteString(fmt.Sprintf("    Output %s\n", outputTypeStr))
 	b.WriteString("}\n\n")
 
 	//gensystem
 	//写入sys处理逻辑
-	b.WriteString(fmt.Sprintf("func Gensys(input InputContext) string {\n"))
+	b.WriteString(fmt.Sprintf("func Gen"+filename+"Sys(input "+filename+"InputContext) string {\n"))
 	b.WriteString("    var b strings.Builder\n")
 
-	// for _, line := range eval.User {
-	// 	b.WriteString(fmt.Sprintf("    %s\n", line)) // 不加 WriteString("...")
-	// }
+	for _, line := range eval.Sys {
+		b.WriteString(fmt.Sprintf("    %s\n", line)) // 不加 WriteString("...")
+	}
 	b.WriteString("    return b.String()\n")
 	b.WriteString("\n}\n\n")
 	//把dsl_gen里面生成的东西拿过来
 	//genuser
-	b.WriteString(fmt.Sprintf("func Genuser(input InputContext) string {\n"))
+	b.WriteString(fmt.Sprintf("func Gen"+filename+"User(input "+filename+"InputContext) string {\n"))
 	b.WriteString("    var b strings.Builder\n")
 
 	for _, line := range eval.User {
@@ -86,74 +142,64 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final) string 
 
 	if strings.TrimSpace(root.AfterCode[0]) != "" {
 
-		b.WriteString(fmt.Sprintf("func AfterProcess(output %s) %s {\n", outputTypeStr, outputTypeStr))
+		b.WriteString(fmt.Sprintf("func "+filename+"AfterProcess(output %s) %s {\n", outputTypeStr, outputTypeStr))
 		b.WriteString(root.AfterCode[0])
 		b.WriteString("\n}\n\n")
 	}
 
 	// 写入 Fix 函数（如果有）
 	if strings.TrimSpace(root.FixCode[0]) != "" {
-		b.WriteString(fmt.Sprintf("func FixProcess(response string) (%s ,error){\n", outputTypeStr))
+		b.WriteString(fmt.Sprintf("func "+filename+"FixProcess(response string) (%s ,error){\n", outputTypeStr))
 		b.WriteString(root.FixCode[0])
 		b.WriteString("\n}\n")
 	}
 
 	// 写 主调用 函数
-	b.WriteString("\nfunc main() {\n")
-	// 入口打印
+	b.WriteString("\nfunc "+filename+"(input "+filename+"InputContext) ("+outputTypeStr+",error) {\n")
 	b.WriteString("    fmt.Fprintln(os.Stderr, \"[main] 程序启动，等待输入...\")\n")
-	// b.WriteString("    fmt.Fprintln(os.Stderr, \"[main] 程序启动，等待输入...\")\n\n")
-
-	// b.WriteString("    inputBytes, err := io.ReadAll(os.Stdin)\n")
-	// b.WriteString("    if err != nil {\n")
-	// b.WriteString("        fmt.Fprintln(os.Stderr, \"读取输入失败:\", err)\n")
-	// b.WriteString("        os.Exit(1)\n")
-	// b.WriteString("    }\n\n")
-
-	// b.WriteString("    fmt.Fprintf(os.Stderr, \"[main] 收到输入: %s\\n\", string(inputBytes))\n\n")
-
-	// b.WriteString("    // 输出简单 JSON 测试一下 stdout 是否返回\n")
-	// b.WriteString("    fmt.Println(`[{\"result\": \"ok\"}]`)\n")
-
-	b.WriteString("    inputBytes, err := os.ReadFile(\"model_output.json\")\n")
+	b.WriteString("    sys := Gen"+filename+"Sys(input)\n")
+	b.WriteString("    user := Gen"+filename+"User(input)\n")
+	b.WriteString("    apiKey := \"sk-02e496929ecc485796d29bd94e7ce371\"\n")
+	b.WriteString("    llm := service.NewLLMClient(apiKey)\n")
+	b.WriteString("    result, err := llm.GeneratePromptResponse(sys, user)\n")
 	b.WriteString("    if err != nil {\n")
-	b.WriteString("        fmt.Fprintf(os.Stderr, \"读取输入失败: %v\\n\", err)\n")
+	b.WriteString("        fmt.Fprintf(os.Stderr, \"调用大模型失败: %v\\n\", err)\n")
 	b.WriteString("        os.Exit(1)\n")
-	b.WriteString("    }\n\n")
-
-	hasFix := strings.TrimSpace(fixCode) != ""
-	hasAfter := strings.TrimSpace(afterCode) != ""
-
-	if hasFix {
-
-		b.WriteString("    output,err := FixProcess(string(inputBytes))\n")
-		b.WriteString("    if err != nil {\n")
-		b.WriteString("        fmt.Fprintf(os.Stderr, \"解析输入 JSON 失败011111: %v\\n\", err)\n")
-		b.WriteString("        os.Exit(1)\n")
-		b.WriteString("    }\n")
-		if hasAfter {
-			b.WriteString("    output = AfterProcess(output)\n")
-		}
-
-	} else if hasAfter {
-		b.WriteString(fmt.Sprintf("    var output %s\n", outputTypeStr))
-		b.WriteString("    if err := json.Unmarshal(inputBytes, &output); err != nil {\n")
-		b.WriteString("        fmt.Fprintf(os.Stderr, \"解析输入 JSON 失败011111: %v\\n\", err)\n")
-		b.WriteString("        os.Exit(1)\n")
-		b.WriteString("    }\n")
-		b.WriteString("    output = AfterProcess(output)\n")
-	} else {
-		b.WriteString("    fmt.Println(\"未定义 FixProcess 或 AfterProcess\")\n")
-		b.WriteString("    return\n")
-	}
-
-	b.WriteString("\n    encoded, err := json.Marshal(output)\n")
+	b.WriteString("    }\n")
+	b.WriteString("    output, err := "+filename+"FixProcess(result)\n")
+	b.WriteString("    if err != nil {\n")
+	b.WriteString("        fmt.Fprintf(os.Stderr, \"解析输入 JSON 失败011111: %v\\n\", err)\n")
+	b.WriteString("        os.Exit(1)\n")
+	b.WriteString("    }\n")
+	b.WriteString("    output = "+filename+"AfterProcess(output)\n")
+	b.WriteString("    encoded, err := json.Marshal(output)\n")
 	b.WriteString("    if err != nil {\n")
 	b.WriteString("        fmt.Fprintf(os.Stderr, \"输出编码失败: %v\\n\", err)\n")
 	b.WriteString("        os.Exit(1)\n")
-	b.WriteString("}\n")
+	b.WriteString("    }\n")
 	b.WriteString("    fmt.Println(string(encoded))\n")
+	b.WriteString("    return output,err\n")
 	b.WriteString("}\n")
 
+	return b.String()
+}
+func Generatworkflow(pkgName string) string {
+	var b strings.Builder
+
+	// 写文件头注释和包名
+	b.WriteString("// Code generated by PromptDSL.\n")
+	b.WriteString("package main\n\n")
+
+	// import 区块
+	b.WriteString("import (\n")
+	b.WriteString(`	   gen "workflow/generated"`+ "\n")
+	b.WriteString(")\n")
+
+	// main 函数开始
+	b.WriteString("func main() {\n")
+	b.WriteString("    //在此组织工作流\n")
+	b.WriteString("    //\n")
+	b.WriteString("}\n")
+	
 	return b.String()
 }
