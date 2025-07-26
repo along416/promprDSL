@@ -46,34 +46,54 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, tokens *antlr.Commo
 		case *parser.ModuleDefContext:
 			// 收集模块内容
 			modName := b.ID().GetText()
-			var contentNodes []Node
-			for _, mc := range b.AllModuleContent() {
-				mcCtx := mc.(*parser.ModuleContentContext)
-				for i := 0; i < mcCtx.GetChildCount(); i++ {
-					child := mcCtx.GetChild(i)
-					switch sub := child.(type) {
-					case *parser.TextLineContext:
-						contentNodes = append(contentNodes, &StringNode{Val: cleanQuotes(sub.GetText())})
-					case *parser.ParamPathContext:
-						contentNodes = append(contentNodes, &ParamNode{Path: cleanQuotes(sub.GetText())})
-					case *parser.IfStatementContext:
-						contentNodes = append(contentNodes, buildIfNode(sub))
-					case *parser.ExprContext:
-						contentNodes = append(contentNodes, &StringNode{Val: cleanQuotes(sub.GetText())}) //表达式
-					default:
-						continue
-					}
-				}
-			}
-			result.ModuleDefs[modName] = contentNodes
-		case *parser.UserSectionContext:
-			for _, uc := range b.AllUserContent() {
-				node := buildUserNode(uc)
-				result.UserNodes = append(result.UserNodes, node)
+			var ModuleNode []Node
+			for _, uc := range b.AllModuleContent() {
+				node := BuildModuleNode(uc)
+				ModuleNode = append(ModuleNode, node)
 				if outSpec, ok := node.(*OutputSpecNode); ok {
 					result.outputspectNodes = *outSpec
 				}
 			}
+			// modName := b.ID().GetText()
+			// var contentNodes []Node
+			// for _, mc := range b.AllModuleContent() {
+			// 	mcCtx := mc.(*parser.ModuleContentContext)
+
+			// 	for i := 0; i < mcCtx.GetChildCount(); i++ {
+			// 		child := mcCtx.GetChild(i)
+			// 		switch sub := child.(type) {
+			// 		case *parser.TextLineContext:
+			// 			contentNodes = append(contentNodes, &StringNode{Val: cleanQuotes(sub.GetText())})
+			// 		case *parser.ParamPathContext:
+			// 			contentNodes = append(contentNodes, &ParamNode{Path: cleanQuotes(sub.GetText())})
+			// 		case *parser.IfStatementContext:
+			// 			contentNodes = append(contentNodes, buildIfNode(sub))
+			// 		case *parser.ExprContext:
+			// 			contentNodes = append(contentNodes, &StringNode{Val: cleanQuotes(sub.GetText())}) //表达式
+			// 		default:
+
+			// 		}
+			// 	}
+			// }
+			result.ModuleDefs[modName] = ModuleNode
+		case *parser.UserSectionContext:
+			if len(b.AllID()) > 0 {
+				// ID 模式，生成 ModuleRefNode
+				for _, id := range b.AllID() {
+					modName := id.GetText()
+					result.UserNodes = append(result.UserNodes, &ModuleRefNode{Name: modName})
+				}
+				fmt.Println("result.UserNodes:", result.UserNodes)
+			} else {
+				for _, uc := range b.AllUserContent() {
+					node := BuildUserNode(uc)
+					result.UserNodes = append(result.UserNodes, node)
+					if outSpec, ok := node.(*OutputSpecNode); ok {
+						result.outputspectNodes = *outSpec
+					}
+				}
+			}
+
 		case *parser.InputSectionContext:
 			// 解析输入字段，放到 result.InDef
 			var fields []FieldDef
@@ -212,11 +232,11 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, tokens *antlr.Commo
 				result.SysNodes = append(result.SysNodes, mdNode)
 			}
 
-		// case *parser.BeforeSectionContext:
-		// 	for _, bc := range b.AllBeforeContent() {
-		// 		node := buildNodeFromBeforeContent(bc) // 你自定义的函数，返回 Node 接口实现
-		// 		result.BeforeNodes = append(result.BeforeNodes, node)
-		// 	}
+		case *parser.BeforeSectionContext:
+			// for _, bc := range b.AllBeforeContent() {
+			// 	node := buildNodeFromBeforeContent(bc) // 你自定义的函数，返回 Node 接口实现
+			// 	result.BeforeNodes = append(result.BeforeNodes, node)
+			// }
 		case *parser.AfterSectionContext:
 			fmt.Println("😊AfterSection", extractRawText(b, tokens))
 
@@ -326,9 +346,100 @@ func BuildSysNodesC(ctx parser.ISysContentContext) Node {
 }
 
 // 构建一个 userContent 的 Node
-func buildUserNode(ctx parser.IUserContentContext) Node {
+func BuildUserNode(ctx parser.IUserContentContext) Node {
 	// fmt.Println("😊buildUserNode:")
 	nodeCtx := ctx.(*parser.UserContentContext)
+	// 优先判断 ARRAY_OUTPUTSPEC（形如 []outputspec）
+	if nodeCtx.ARRAY_OUTPUTSPEC() != nil {
+		text := nodeCtx.ARRAY_OUTPUTSPEC().GetText()
+		fmt.Println("😊ARRAY_OUTPUTSPEC:", text)
+
+		// 直接去掉前缀 []，拿到实际类型名
+		rawType := strings.TrimPrefix(text, "[]")
+		return &OutputSpecNode{
+			IsArray: true,
+			RawTyp:  rawType,
+		}
+	}
+
+	// 普通 OUTPUTSPEC（非数组形式）
+	if nodeCtx.OUTPUTSPEC() != nil {
+		text := nodeCtx.OUTPUTSPEC().GetText()
+		fmt.Println("😊OUTPUTSPEC:", text)
+		return &OutputSpecNode{
+			IsArray: false,
+			RawTyp:  text,
+		}
+	}
+
+	for i := 0; i < nodeCtx.GetChildCount(); i++ {
+		child := nodeCtx.GetChild(i)
+		switch sub := child.(type) {
+		case *parser.ParamPathContext:
+			// fmt.Println("😊param path:", sub.GetText())
+			return &ParamNode{Path: cleanQuotes(sub.GetText())}
+		case *parser.TextLineContext:
+			fmt.Println("😊stringtext:", sub.GetText())
+			return &StringNode{Val: cleanQuotes(sub.GetText())}
+		case *parser.IfStatementContext:
+			fmt.Println("😊IfStatementContext:", sub.GetText())
+			return buildIfNode(sub)
+		case *parser.ExprContext:
+			return &StringNode{Val: cleanQuotes(sub.GetText())} // 临时
+		default:
+			continue
+		}
+	}
+	return nil
+}
+// func BuildpartNode(ctx antlr.ParserRuleContext) Node {
+// 	nodeCtx := ctx.(type)
+
+// 	// 优先判断 ARRAY_OUTPUTSPEC（形如 []outputspec）
+// 	if nodeCtx.ARRAY_OUTPUTSPEC() != nil {
+// 		text := nodeCtx.ARRAY_OUTPUTSPEC().GetText()
+// 		fmt.Println("😊ARRAY_OUTPUTSPEC:", text)
+
+// 		// 直接去掉前缀 []，拿到实际类型名
+// 		rawType := strings.TrimPrefix(text, "[]")
+// 		return &OutputSpecNode{
+// 			IsArray: true,
+// 			RawTyp:  rawType,
+// 		}
+// 	}
+
+// 	// 普通 OUTPUTSPEC（非数组形式）
+// 	if nodeCtx.OUTPUTSPEC() != nil {
+// 		text := nodeCtx.OUTPUTSPEC().GetText()
+// 		fmt.Println("😊OUTPUTSPEC:", text)
+// 		return &OutputSpecNode{
+// 			IsArray: false,
+// 			RawTyp:  text,
+// 		}
+// 	}
+
+// 	for i := 0; i < nodeCtx.GetChildCount(); i++ {
+// 		child := nodeCtx.GetChild(i)
+// 		switch sub := child.(type) {
+// 		case *parser.ParamPathContext:
+// 			// fmt.Println("😊param path:", sub.GetText())
+// 			return &ParamNode{Path: cleanQuotes(sub.GetText())}
+// 		case *parser.TextLineContext:
+// 			fmt.Println("😊stringtext:", sub.GetText())
+// 			return &StringNode{Val: cleanQuotes(sub.GetText())}
+// 		case *parser.IfStatementContext:
+// 			fmt.Println("😊IfStatementContext:", sub.GetText())
+// 			return buildIfNode(sub)
+// 		case *parser.ExprContext:
+// 			return &StringNode{Val: cleanQuotes(sub.GetText())} // 临时
+// 		default:
+// 			continue
+// 		}
+// 	}
+// 	return nil
+// }
+func BuildModuleNode(ctx parser.IModuleContentContext) Node {
+	nodeCtx := ctx.(*parser.ModuleContentContext)
 	// 优先判断 ARRAY_OUTPUTSPEC（形如 []outputspec）
 	if nodeCtx.ARRAY_OUTPUTSPEC() != nil {
 		text := nodeCtx.ARRAY_OUTPUTSPEC().GetText()
@@ -384,13 +495,13 @@ func buildIfNode(ctx *parser.IfStatementContext) *IfNode {
 	var thenNodes []Node
 	Thencontent := ctx.AllThencontent()
 	for _, uc := range Thencontent {
-		thenNodes = append(thenNodes, buildUserNode(uc.UserContent()))
+		thenNodes = append(thenNodes, BuildUserNode(uc.UserContent()))
 	}
 	var elseNodes []Node
 	// 遍历 else 分支
 	elsecontent := ctx.AllElsecontent()
 	for _, uc := range elsecontent {
-		elseNodes = append(elseNodes, buildUserNode(uc.UserContent()))
+		elseNodes = append(elseNodes, BuildUserNode(uc.UserContent()))
 	}
 
 	return &IfNode{

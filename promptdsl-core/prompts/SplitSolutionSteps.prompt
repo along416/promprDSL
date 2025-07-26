@@ -24,10 +24,22 @@ prompt SplitSolutionSteps {
         "你是一个擅长拆分解题步骤的数学老师,"
     }
     sys_expertise {
-        "当前任务是将解题步骤进行合理拆分"
+        if (input.Question == ""){
+            "当前任务是将解题步骤进行合理拆分"
+        }
+        else{
+            "当前任务是将解题步骤进行合理拆分2"
+        }
     }
-
-    user {
+    user{
+        user_title
+        user_content
+    }
+    user_title {
+        "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
+    }
+    user_content {
+        "条件，知识点，结果"
         if (input.Question != ""){
             "你好"
         }
@@ -36,7 +48,6 @@ prompt SplitSolutionSteps {
             "siuehfebn"
             "siuehfebn"
         }
-        "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
         "条件，知识点，结果"
         "题目："
         input.Question

@@ -2,10 +2,10 @@
 package generated
 
 import (
-	"fmt"
 	"strings"
 	"encoding/json"
 	"unicode"
+	"fmt"
 	"os"
 	"service"
 )
@@ -29,13 +29,19 @@ type SplitSolutionStepsFinalContext struct {
 func GenSplitSolutionStepsSys(input SplitSolutionStepsInputContext) string {
     var b strings.Builder
     b.WriteString("你是一个擅长拆分解题步骤的数学老师,\n")
-    b.WriteString("当前任务是将解题步骤进行合理拆分\n")
+    if (input.Question=="") {
+        b.WriteString("当前任务是将解题步骤进行合理拆分\n")
+    } else {
+        b.WriteString("当前任务是将解题步骤进行合理拆分2\n")
+    }
     return b.String()
 
 }
 
 func GenSplitSolutionStepsUser(input SplitSolutionStepsInputContext) string {
     var b strings.Builder
+    b.WriteString("请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素：\n")
+    b.WriteString("条件，知识点，结果\n")
     if (input.Question!="") {
         b.WriteString("你好\n")
     } else {
@@ -43,7 +49,6 @@ func GenSplitSolutionStepsUser(input SplitSolutionStepsInputContext) string {
         b.WriteString("siuehfebn\n")
         b.WriteString("siuehfebn\n")
     }
-    b.WriteString("请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素：\n")
     b.WriteString("条件，知识点，结果\n")
     b.WriteString("题目：\n")
     b.WriteString(input.Question)

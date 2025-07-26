@@ -125,7 +125,7 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 	b.WriteString("    var b strings.Builder\n")
 
 	for _, line := range eval.Sys {
-		b.WriteString(fmt.Sprintf("    %s\n", line)) // 不加 WriteString("...")
+		b.WriteString(fmt.Sprintf("    %s\n", line)) 
 	}
 	b.WriteString("    return b.String()\n")
 	b.WriteString("\n}\n\n")
@@ -135,7 +135,7 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 	b.WriteString("    var b strings.Builder\n")
 
 	for _, line := range eval.User {
-		b.WriteString(fmt.Sprintf("    %s\n", line)) // 不加 WriteString("...")
+		b.WriteString(fmt.Sprintf("    %s\n", line)) 
 	}
 	b.WriteString("    return b.String()\n")
 	b.WriteString("\n}\n\n")
