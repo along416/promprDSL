@@ -8,6 +8,7 @@ import (
 	"log"
 	"os/exec"
 	"strings"
+
 	// "net/http"
 	"os"
 	"promptdslcore" // 根据实际模块路径改写
@@ -26,23 +27,23 @@ func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
 	// 指定 prompt 文件夹路径
-	promptDir := "../promptdsl-core/prompts copy"
+	promptDir := "../promptdslcore/prompts_copy"
 	entries, err := os.ReadDir(promptDir)
 	if err != nil {
 		log.Println("读取目录失败：", err)
 	}
-	
+
 	for _, entry := range entries {
-		filename:=entry.Name()
+		filename := entry.Name()
 		log.Println("开始处理文件：", filename)
 		// 只处理 .prompt 文件
 		fmt.Println("entry.Name():", filename)
 		if !strings.HasSuffix(filename, ".prompt") {
-			fmt.Println("不是 .prompt 文件")
+			log.Println("不是 .prompt 文件")
 			continue
 		}
 		// 拼接完整路径
-        path := "../promptdsl-core/prompts/" + filename
+		path := "../promptdslcore/prompts_copy/" + filename
 		// fileContent, err := os.ReadFile("./promptdsl-core/prompts/SplitSolutionSteps.prompt")
 		promptfileContent, err := os.ReadFile(path)
 		if err != nil {
@@ -51,13 +52,13 @@ func main() {
 
 		promptfileContentstr := string(promptfileContent)
 		nameWithoutExt := strings.TrimSuffix(filename, ".prompt")
-		prompt, err := promptdslcore.RunPromptDSL(promptfileContentstr,nameWithoutExt)
+		prompt, err := promptdslcore.RunPromptDSL(promptfileContentstr, nameWithoutExt)
 		if err != nil {
 			log.Fatalf("RunPromptDSL error: %v", err)
 		}
-		fmt.Println("生成的 Prompt:\n", prompt)
+		log.Println("生成的 Prompt:\n", prompt)
 	}
-	code:=promptdslcore.Generatworkflow("generated")
+	code := promptdslcore.Generatworkflow("generated")
 	outputFile := "../generated_code/workflow.go"
 	err = os.WriteFile(outputFile, []byte(code), 0644)
 	if err != nil {
@@ -65,9 +66,6 @@ func main() {
 		os.Exit(1)
 	}
 }
-
-
-
 
 // 假设 result 是 string，包含 JSON 数组（即模型返回结果）
 func CallUserPostProcessor[T any](jsonStr string) (T, error) {
