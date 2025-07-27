@@ -26,7 +26,7 @@ func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
 	// 指定 prompt 文件夹路径
-	promptDir := "../promptdsl-core/prompts"
+	promptDir := "../promptdsl-core/prompts copy"
 	entries, err := os.ReadDir(promptDir)
 	if err != nil {
 		log.Println("读取目录失败：", err)

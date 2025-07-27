@@ -24,11 +24,23 @@ prompt SplitSolutionSteps {
         "你是一个擅长拆分解题步骤的数学老师,"
     }
     sys_expertise {
-        "当前任务是将解题步骤进行合理拆分"
+        if (input.Question == ""){
+            "当前任务是将解题步骤进行合理拆分"
+        }
+        else{
+            "当前任务是将解题步骤进行合理拆分2"
+        }
     }
-
-    user {
-        if (input.question != ""){
+    user{
+        user_title
+        user_content
+    }
+    user_title {
+        "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
+    }
+    user_content {
+        "条件，知识点，结果"
+        if (input.Question != ""){
             "你好"
         }
         else{
@@ -36,22 +48,21 @@ prompt SplitSolutionSteps {
             "siuehfebn"
             "siuehfebn"
         }
-        "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
         "条件，知识点，结果"
         "题目："
-        input.question
+        input.Question
         "过程："
-        input.process
+        input.Process
         
         "请将输出内容严格按照以下格式返回："
         []outputspec
         "特别提醒：本题可能涉及 extra_hint，请根据步骤合理提取对应知识点。"
     }
 
-    <fix>
-       	// 用strings.Builder手动替换单反斜杠
+    fix{
+        // 用strings.Builder手动替换单反斜杠
         fmt.Println("response:", response)
-        var results []OutputContext
+        var results []SplitSolutionStepsOutputContext
         err := json.Unmarshal([]byte(response), &results)
         if err != nil {
             var buf strings.Builder
@@ -100,9 +111,11 @@ prompt SplitSolutionSteps {
             return results, nil
         }
         return results, nil
-    </fix>
 
-    <after>
+    }
+       
+
+    after{
         trueCount := 0
         for _, item := range output {
             if item.ProcessResult!= "" {
@@ -110,5 +123,8 @@ prompt SplitSolutionSteps {
             }
         }
         return output
-    </after>
+
+        
+    }
+
 }
