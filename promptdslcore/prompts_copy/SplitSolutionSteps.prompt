@@ -15,14 +15,16 @@ prompt SplitSolutionSteps {
 
 
 
-    system {
+    sys {
        sys_role
        sys_expertise      
     }
 
+
     sys_role{
-        "你是一个擅长拆分解题步骤的数学老师,"
+        --你是一个擅长拆分解题步骤的数学老师
     }
+
     sys_expertise {
         if (input.Question == ""){
             "当前任务是将解题步骤进行合理拆分"
@@ -31,13 +33,16 @@ prompt SplitSolutionSteps {
             "当前任务是将解题步骤进行合理拆分2"
         }
     }
+    
     user{
         user_title
         user_content
     }
+    
     user_title {
         "请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素："
     }
+    
     user_content {
         "条件，知识点，结果"
         if (input.Question != ""){
@@ -48,6 +53,10 @@ prompt SplitSolutionSteps {
             "siuehfebn"
             "siuehfebn"
         }
+
+        for 
+        switch
+        
         "条件，知识点，结果"
         "题目："
         input.Question
@@ -59,6 +68,10 @@ prompt SplitSolutionSteps {
         "特别提醒：本题可能涉及 extra_hint，请根据步骤合理提取对应知识点。"
     }
 
+    goimport{
+
+    }
+
     fix{
         // 用strings.Builder手动替换单反斜杠
         fmt.Println("response:", response)
@@ -66,7 +79,6 @@ prompt SplitSolutionSteps {
         err := json.Unmarshal([]byte(response), &results)
         
         return results, nil
-
     }
        
 

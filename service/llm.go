@@ -2,58 +2,76 @@ package service
 
 import (
 	"context"
-	"errors"
-	"os"
+	"fmt"
+	"log"
+	"regexp"
+	"strings"
 
-	openai "github.com/sashabaranov/go-openai" // 这是一个Go OpenAI客户端库，你也可以换别的
+	openai "github.com/sashabaranov/go-openai"
 )
 
-// Client 是对外调用的大模型客户端封装
-type Client struct {
-	cli *openai.Client
+// LLMClient 封装了 OpenAI 客户端
+type LLMClient struct {
+	client *openai.Client
 }
 
-// NewClient 初始化客户端
-func NewClient() *Client {
-	apiKey := os.Getenv("OPENAI_API_KEY")
-	if apiKey == "" {
-		panic("OPENAI_API_KEY 环境变量未设置")
-	}
-	return &Client{
-		cli: openai.NewClient(apiKey),
+// NewLLMClient 创建 LLMClient 实例，传入 API Key
+func NewLLMClient(apiKey string) *LLMClient {
+	cfg := openai.DefaultConfig(apiKey)
+	cfg.BaseURL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+
+	return &LLMClient{
+		client: openai.NewClientWithConfig(cfg),
 	}
 }
 
-// GenerateText 传入prompt，调用大模型生成文本
-func (c *Client) GenerateText(ctx context.Context, prompt string) (string, error) {
-	if prompt == "" {
-		return "", errors.New("prompt 不能为空")
-	}
-
-	resp, err := c.cli.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: "gpt-4o-mini", // 换成你要用的模型
+// GeneratePromptResponse 使用 GPT-3.5 Turbo 生成对话回复
+func (c *LLMClient) GeneratePromptResponse(systemPrompt, userPrompt string) (string, error) {
+	// fmt.Println("GeneratePromptResponse:")
+	req := openai.ChatCompletionRequest{
+		Model: "qwen-max", // 你这里替换成你具体的 qwen 模型名字符串
 		Messages: []openai.ChatCompletionMessage{
 			{
-				Role:    "user",
-				Content: prompt,
+				Role:    openai.ChatMessageRoleSystem,
+				Content: systemPrompt,
+			},
+			{
+				Role:    openai.ChatMessageRoleUser,
+				Content: userPrompt,
 			},
 		},
-	})
-	if err != nil {
-		return "", err
 	}
-	if len(resp.Choices) == 0 {
-		return "", errors.New("没有生成内容")
+	fmt.Println("发送给模型的内容:", req.Messages)
+	resp, err := c.client.CreateChatCompletion(context.Background(), req)
+	fmt.Println("AI thingking...")
+	// fmt.Println("GeneratePromptResponse:",resp)
+	if err != nil {
+		return "", fmt.Errorf("调用 OpenAI 失败: %w", err)
 	}
 
-	return resp.Choices[0].Message.Content, nil
+	if len(resp.Choices) == 0 {
+		return "", fmt.Errorf("OpenAI 返回空响应")
+	}
+
+	content := strings.TrimSpace(resp.Choices[0].Message.Content)
+	if content == "" {
+		return "", fmt.Errorf("OpenAI 返回空字符串")
+	}
+	log.Println("OpenAI 输出:", content)
+	jsonPart := extractJSONArray(content)
+
+	if jsonPart == "" {
+		return "", fmt.Errorf("未能从模型响应中提取 JSON 数组")
+	}
+	return jsonPart, nil
 }
-// // 提取 JSON 数组
-// func extractJSONArray(text string) string {
-// 	re := regexp.MustCompile(`(?s)(\[.*?\])`)
-// 	matches := re.FindStringSubmatch(text)
-// 	if len(matches) > 1 {
-// 		return matches[1] // 第一个子匹配是数组
-// 	}
-// 	return ""
-// }
+
+// 提取 JSON 数组
+func extractJSONArray(text string) string {
+	re := regexp.MustCompile("(?s)```json\\s*(\\{.*?\\}|\\[.*?\\])\\s*```")
+	matches := re.FindStringSubmatch(text)
+	if len(matches) > 1 {
+		return matches[1] // 第一个子匹配是数组
+	}
+	return ""
+}
