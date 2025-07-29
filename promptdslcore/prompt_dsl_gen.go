@@ -241,6 +241,9 @@ type IfNode struct {
 	Else      []Node
 }
 
+
+
+
 func (e *Expr) String() string {
 	if e.Leaf != nil {
 		return *e.Leaf
@@ -358,14 +361,32 @@ func (node *SwitchNode) Eval(_ *PromptEvalContext) ([]string, error) {
 
 type ForNode struct {
 	Init string
-	Cond Expr
+	Cond string
 	Post string
 	Body []Node
 }
 
-func (node *ForNode) Eval(_ *PromptEvalContext) ([]string, error) {
+func (node *ForNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	// TODO
-	return []string{}, nil
+	var lines []string
+
+
+	lines = append(lines, fmt.Sprintf("for (%s;%s;%s) {", node.Init,node.Cond,node.Post))
+
+	for _, n := range node.Body {
+		vals, err := n.Eval(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("Then branch Eval failed: %w", err)
+		}
+		for _, v := range vals {
+			lines = append(lines, fmt.Sprintf("    %s", v))
+		}
+	}
+
+	// 结束
+	lines = append(lines, "}")
+	return lines, nil
+
 }
 
 type PromptNode struct {
@@ -386,8 +407,6 @@ type PromptNode struct {
 type final struct {
 	User  []string
 	Sys   []string
-	After string
-	Fix   string
 }
 
 func (r *PromptNode) Eval(ctx *PromptEvalContext) (*final, error) {
@@ -412,8 +431,6 @@ func (r *PromptNode) Eval(ctx *PromptEvalContext) (*final, error) {
 	return &final{
 		User:  user,
 		Sys:   sys,
-		After: "AfterProcess",
-		Fix:   "FixProcess",
 	}, nil
 }
 

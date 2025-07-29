@@ -49,22 +49,23 @@ func main() {
 		if err != nil {
 			panic(fmt.Errorf("读取 DSL 文件失败: %v", err))
 		}
-
+		
 		promptfileContentstr := string(promptfileContent)
 		nameWithoutExt := strings.TrimSuffix(filename, ".prompt")
+		
 		prompt, err := promptdslcore.RunPromptDSL(promptfileContentstr, nameWithoutExt)
 		if err != nil {
 			log.Fatalf("RunPromptDSL error: %v", err)
 		}
 		log.Println("生成的 Prompt:\n", prompt)
 	}
-	code := promptdslcore.Generatworkflow("generated")
-	outputFile := "../generated_code/workflow.go"
-	err = os.WriteFile(outputFile, []byte(code), 0644)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "写入workflow文件失败: %v\n", err)
-		os.Exit(1)
-	}
+	// code := promptdslcore.Generatworkflow("generated")
+	// outputFile := "../generated_code/workflow.go"
+	// err = os.WriteFile(outputFile, []byte(code), 0644)
+	// if err != nil {
+	// 	fmt.Fprintf(os.Stderr, "写入workflow文件失败: %v\n", err)
+	// 	os.Exit(1)
+	// }
 }
 
 // 假设 result 是 string，包含 JSON 数组（即模型返回结果）

@@ -1,22 +1,5 @@
 grammar PromptDSL;
 
-// @lexer::header {
-// import "strings"
-// }
-
-//@lexer::members {
-//func (l *PromptDSLLexer) isKeyword(text string) bool {
-//    keywords := []string{"prompt", "params", "system", "user", "note"}
-//    trimmed := strings.TrimSpace(text)
-//    for _, kw := range keywords {
-//        if trimmed == kw {
-//            return true
-//        }
-//    }
-//    return false
-//}
-//}
-
 // 解析规则
 promptFile  : promptDef+ EOF ;
 
@@ -91,6 +74,7 @@ userSection
 userContent
     : ifStatement
     | paramPath
+    | forStatement
     | ARRAY_OUTPUTSPEC
     | OUTPUTSPEC
     | expr
@@ -113,6 +97,12 @@ condition
     : lhs=expr op=('==' | '!=') rhs=expr
     | single=expr
     ;
+// for
+forStatement
+    : 'for' '(' init=expr ';' condition ';' update=expr ')' '{' userContent* '}'
+    ;
+
+
 //note
 noteSection
     : 'note' '{' textLine+ '}'

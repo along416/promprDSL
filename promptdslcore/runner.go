@@ -4,6 +4,7 @@ package promptdslcore
 import (
 	"fmt"
 	"os"
+
 	// "service"
 	"promptdslcore/parser"
 	// "strings"
@@ -17,16 +18,17 @@ func RunPromptDSL(input string, filename string) (*final, error) {
 	// 1. 解析输入 DSL 文本，生成 Parse Tree
 	inputStream := antlr.NewInputStream(input)
 	lexer := parser.NewPromptDSLLexer(inputStream)
-	tokenStream := antlr.NewCommonTokenStream(lexer, 0)
-	p := parser.NewPromptDSLParser(tokenStream)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	p := parser.NewPromptDSLParser(stream)
 	tree := p.PromptFile()
 	fmt.Println("🌳 start...")
 	fmt.Println(tree.ToStringTree(nil, p))
 	fmt.Println("🌳 ...end")
 	// 2. 构建 AST Node
-	ctx := tree.(*parser.PromptFileContext)
 
-	rootNode := ConvertASTtoPrompt(ctx, tokenStream)
+	ctx := tree.(*parser.PromptFileContext)
+	
+	rootNode := ConvertASTtoPrompt(ctx, stream,inputStream)
 	// fmt.Printf("%v\n", rootNode)
 	fmt.Printf("📦 OutFields: %+v\n", rootNode.OutFields)
 	fmt.Printf("📦 aftercode: %+v\n", rootNode.AfterCode)
@@ -55,7 +57,7 @@ func RunPromptDSL(input string, filename string) (*final, error) {
 	}
 	//生成sys+user+after+fix
 	// code:=Generateprompthandle(rootNode, getCurrentPackageName())
-	code:=Generateprompthandle(rootNode, "generated", outputParts,filename)
+	code := Generateprompthandle(rootNode, "generated", outputParts, filename)
 	outputFile := "../generated_code/generated/" + filename + ".go"
 	err = os.WriteFile(outputFile, []byte(code), 0644)
 	if err != nil {

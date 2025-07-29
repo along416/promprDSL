@@ -50,7 +50,7 @@ func GenUser(input InputContext) string {
     b.WriteString("过程：\n")
     b.WriteString(input.Process)
     b.WriteString("请将输出内容严格按照以下格式返回：\n")
-        b.WriteString("```json\n")
+    b.WriteString("```json\n")
     b.WriteString("[\n")
     b.WriteString("  {\n")
     b.WriteString("    \"条件\": [\"\"]  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格,\n")

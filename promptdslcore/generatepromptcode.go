@@ -79,7 +79,7 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 	afterCode := strings.Join(root.AfterCode, "\n")
 	fixCode := strings.Join(root.FixCode, "\n")
 
-	allCode := afterCode + "\n" + fixCode
+	allCode :=afterCode + "\n" + fixCode
 
 	pkgs := inferImportsFromCode(allCode)
 
@@ -121,7 +121,7 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 
 	//gensystem
 	//写入sys处理逻辑
-	b.WriteString(fmt.Sprintf("func Gen"+filename+"Sys(input "+filename+"InputContext) string {\n"))
+	b.WriteString(fmt.Sprintf("func "+filename+"_GenSys(input "+filename+"InputContext) string {\n"))
 	b.WriteString("    var b strings.Builder\n")
 
 	for _, line := range eval.Sys {
@@ -131,7 +131,7 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 	b.WriteString("\n}\n\n")
 	//把dsl_gen里面生成的东西拿过来
 	//genuser
-	b.WriteString(fmt.Sprintf("func Gen"+filename+"User(input "+filename+"InputContext) string {\n"))
+	b.WriteString(fmt.Sprintf("func "+filename+"_GenUser(input "+filename+"InputContext) string {\n"))
 	b.WriteString("    var b strings.Builder\n")
 
 	for _, line := range eval.User {
@@ -142,14 +142,14 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 
 	if strings.TrimSpace(root.AfterCode[0]) != "" {
 
-		b.WriteString(fmt.Sprintf("func "+filename+"AfterProcess(output %s) %s {\n", outputTypeStr, outputTypeStr))
+		b.WriteString(fmt.Sprintf("func "+filename+"_AfterProcess(output %s) %s {\n", outputTypeStr, outputTypeStr))
 		b.WriteString(root.AfterCode[0])
 		b.WriteString("\n}\n\n")
 	}
 
 	// 写入 Fix 函数（如果有）
 	if strings.TrimSpace(root.FixCode[0]) != "" {
-		b.WriteString(fmt.Sprintf("func "+filename+"FixProcess(response string) (%s ,error){\n", outputTypeStr))
+		b.WriteString(fmt.Sprintf("func "+filename+"_FixProcess(response string) (%s ,error){\n", outputTypeStr))
 		b.WriteString(root.FixCode[0])
 		b.WriteString("\n}\n")
 	}
@@ -157,8 +157,8 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 	// 写 主调用 函数
 	b.WriteString("\nfunc "+filename+"(input "+filename+"InputContext) ("+outputTypeStr+",error) {\n")
 	b.WriteString("    fmt.Fprintln(os.Stderr, \"[main] 程序启动，等待输入...\")\n")
-	b.WriteString("    sys := Gen"+filename+"Sys(input)\n")
-	b.WriteString("    user := Gen"+filename+"User(input)\n")
+	b.WriteString("    sys := "+filename+"_GenSys(input)\n")
+	b.WriteString("    user := "+filename+"_GenUser(input)\n")
 	b.WriteString("    apiKey := \"sk-02e496929ecc485796d29bd94e7ce371\"\n")
 	b.WriteString("    llm := service.NewLLMClient(apiKey)\n")
 	b.WriteString("    result, err := llm.GeneratePromptResponse(sys, user)\n")
@@ -166,12 +166,12 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 	b.WriteString("        fmt.Fprintf(os.Stderr, \"调用大模型失败: %v\\n\", err)\n")
 	b.WriteString("        os.Exit(1)\n")
 	b.WriteString("    }\n")
-	b.WriteString("    output, err := "+filename+"FixProcess(result)\n")
+	b.WriteString("    output, err := "+filename+"_FixProcess(result)\n")
 	b.WriteString("    if err != nil {\n")
 	b.WriteString("        fmt.Fprintf(os.Stderr, \"解析输入 JSON 失败011111: %v\\n\", err)\n")
 	b.WriteString("        os.Exit(1)\n")
 	b.WriteString("    }\n")
-	b.WriteString("    output = "+filename+"AfterProcess(output)\n")
+	b.WriteString("    output = "+filename+"_AfterProcess(output)\n")
 	b.WriteString("    encoded, err := json.Marshal(output)\n")
 	b.WriteString("    if err != nil {\n")
 	b.WriteString("        fmt.Fprintf(os.Stderr, \"输出编码失败: %v\\n\", err)\n")

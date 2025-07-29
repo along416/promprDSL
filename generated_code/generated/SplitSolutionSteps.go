@@ -2,11 +2,11 @@
 package generated
 
 import (
-	"fmt"
-	"strings"
 	"encoding/json"
+	"fmt"
 	"os"
 	"service"
+	"strings"
 )
 
 type SplitSolutionStepsInputContext struct {
@@ -17,7 +17,7 @@ type SplitSolutionStepsInputContext struct {
 type SplitSolutionStepsOutputContext struct {
     Conditions []string `json:"条件"`
     KnowledgePoint string `json:"知识点"`
-    ProcessResult string `json:"过程"`
+    ProcessResult string `json:"问题"`
 }
 
 type SplitSolutionStepsFinalContext struct {
@@ -25,9 +25,9 @@ type SplitSolutionStepsFinalContext struct {
     Output []SplitSolutionStepsOutputContext
 }
 
-func GenSplitSolutionStepsSys(input SplitSolutionStepsInputContext) string {
+func SplitSolutionSteps_GenSys(input SplitSolutionStepsInputContext) string {
     var b strings.Builder
-    b.WriteString("你是一个擅长拆分解题步骤的数学老师,\n")
+    b.WriteString("你是一个擅长拆分解题步骤的数学老师\n")
     if (input.Question=="") {
         b.WriteString("当前任务是将解题步骤进行合理拆分\n")
     } else {
@@ -37,16 +37,17 @@ func GenSplitSolutionStepsSys(input SplitSolutionStepsInputContext) string {
 
 }
 
-func GenSplitSolutionStepsUser(input SplitSolutionStepsInputContext) string {
+func SplitSolutionSteps_GenUser(input SplitSolutionStepsInputContext) string {
     var b strings.Builder
     b.WriteString("请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素：\n")
-    b.WriteString("条件，知识点，结果\n")
     if (input.Question!="") {
         b.WriteString("你好\n")
     } else {
         b.WriteString("siuehfebn\n")
-        b.WriteString("siuehfebn\n")
-        b.WriteString("siuehfebn\n")
+    }
+    for _,u:= range input.Process {
+        fmt.Println(u)
+        b.WriteString(u)
     }
     b.WriteString("条件，知识点，结果\n")
     b.WriteString("题目：\n")
@@ -54,12 +55,12 @@ func GenSplitSolutionStepsUser(input SplitSolutionStepsInputContext) string {
     b.WriteString("过程：\n")
     b.WriteString(input.Process)
     b.WriteString("请将输出内容严格按照以下格式返回：\n")
-        b.WriteString("```json\n")
+    b.WriteString("```json\n")
     b.WriteString("[\n")
     b.WriteString("  {\n")
     b.WriteString("    \"条件\": [\"\"]  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格,\n")
     b.WriteString("    \"知识点\": \"\"  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格,\n")
-    b.WriteString("    \"过程\": \"\"  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格\n")
+    b.WriteString("    \"问题\": \"\"  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格\n")
     b.WriteString("  }\n")
     b.WriteString("]\n")
     b.WriteString("```\n")
@@ -69,11 +70,11 @@ func GenSplitSolutionStepsUser(input SplitSolutionStepsInputContext) string {
 
 }
 
-func SplitSolutionStepsAfterProcess(output []SplitSolutionStepsOutputContext) []SplitSolutionStepsOutputContext {
+func SplitSolutionSteps_AfterProcess(output []SplitSolutionStepsOutputContext) []SplitSolutionStepsOutputContext {
 
         trueCount := 0
         for _, item := range output {
-            if item.ProcessResult!= "" {
+            if item.KnowledgePoint!= "" {
                 trueCount++
             }
         }
@@ -81,22 +82,20 @@ func SplitSolutionStepsAfterProcess(output []SplitSolutionStepsOutputContext) []
     
 }
 
-func SplitSolutionStepsFixProcess(response string) ([]SplitSolutionStepsOutputContext ,error){
+func SplitSolutionSteps_FixProcess(response string) ([]SplitSolutionStepsOutputContext ,error){
 
         // 用strings.Builder手动替换单反斜杠
         fmt.Println("response:", response)
         var results []SplitSolutionStepsOutputContext
         err := json.Unmarshal([]byte(response), &results)
-        
         return results, err
-
     
 }
 
 func SplitSolutionSteps(input SplitSolutionStepsInputContext) ([]SplitSolutionStepsOutputContext,error) {
     fmt.Fprintln(os.Stderr, "[main] 程序启动，等待输入...")
-    sys := GenSplitSolutionStepsSys(input)
-    user := GenSplitSolutionStepsUser(input)
+    sys := SplitSolutionSteps_GenSys(input)
+    user := SplitSolutionSteps_GenUser(input)
     apiKey := "sk-02e496929ecc485796d29bd94e7ce371"
     llm := service.NewLLMClient(apiKey)
     result, err := llm.GeneratePromptResponse(sys, user)
@@ -104,12 +103,12 @@ func SplitSolutionSteps(input SplitSolutionStepsInputContext) ([]SplitSolutionSt
         fmt.Fprintf(os.Stderr, "调用大模型失败: %v\n", err)
         os.Exit(1)
     }
-    output, err := SplitSolutionStepsFixProcess(result)
+    output, err := SplitSolutionSteps_FixProcess(result)
     if err != nil {
         fmt.Fprintf(os.Stderr, "解析输入 JSON 失败011111: %v\n", err)
         os.Exit(1)
     }
-    output = SplitSolutionStepsAfterProcess(output)
+    output = SplitSolutionSteps_AfterProcess(output)
     encoded, err := json.Marshal(output)
     if err != nil {
         fmt.Fprintf(os.Stderr, "输出编码失败: %v\n", err)

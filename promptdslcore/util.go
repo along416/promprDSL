@@ -167,19 +167,6 @@ func GenerateAfterAndFixGoCode(root *PromptNode, pkgName string) string {
 	b.WriteString("\nfunc main() {\n")
 	// 入口打印
 	b.WriteString("    fmt.Fprintln(os.Stderr, \"[main] 程序启动，等待输入...\")\n")
-	// b.WriteString("    fmt.Fprintln(os.Stderr, \"[main] 程序启动，等待输入...\")\n\n")
-
-	// b.WriteString("    inputBytes, err := io.ReadAll(os.Stdin)\n")
-	// b.WriteString("    if err != nil {\n")
-	// b.WriteString("        fmt.Fprintln(os.Stderr, \"读取输入失败:\", err)\n")
-	// b.WriteString("        os.Exit(1)\n")
-	// b.WriteString("    }\n\n")
-
-	// b.WriteString("    fmt.Fprintf(os.Stderr, \"[main] 收到输入: %s\\n\", string(inputBytes))\n\n")
-
-	// b.WriteString("    // 输出简单 JSON 测试一下 stdout 是否返回\n")
-	// b.WriteString("    fmt.Println(`[{\"result\": \"ok\"}]`)\n")
-
 	b.WriteString("    inputBytes, err := os.ReadFile(\"model_output.json\")\n")
 	b.WriteString("    if err != nil {\n")
 	b.WriteString("        fmt.Fprintf(os.Stderr, \"读取输入失败: %v\\n\", err)\n")
@@ -222,16 +209,7 @@ func GenerateAfterAndFixGoCode(root *PromptNode, pkgName string) string {
 
 	return b.String()
 }
-func GenerateFIX(root *PromptNode, pkgName string) string {
-	// 写入 Fix 函数（如果有）
-	var b strings.Builder
-	if strings.TrimSpace(root.FixCode[0]) != "" {
-		b.WriteString("function FixProcess(response) {\n")
-		b.WriteString(root.FixCode[0])
-		b.WriteString("\n};\n")
-	}
-	return b.String()
-}
+
 func getCurrentPackageName() string {
 	_, file, _, ok := runtime.Caller(1)
 	if !ok {
@@ -364,5 +342,61 @@ func extractFieldDef(field parser.IFieldDefContext, defaultAnnoMap map[string][]
 		JsonName:    jsonName,
 		Annotations: annotations,
 		SubFields:   subFields,
+	}
+}
+type Range struct {
+	start int
+	end   int
+}
+
+// Function to extract code blocks from the token stream
+func extractCodeBlocks(tokens *antlr.CommonTokenStream, typ string) Range {
+
+	// Get all tokens
+	allTokens := tokens.GetAllTokens()
+
+	ret := Range{-1, -1}
+
+	t := parser.PromptDSLLexerFIX
+	if typ == "after" {
+		t = parser.PromptDSLLexerAFTER
+	}
+	fmt.Println("t:",t)
+	// Track brace nesting level
+	braceLevel := 0
+	
+	for i, token := range allTokens {
+		typel:=token.GetTokenType()
+		fmt.Println("typel:",typel)
+		if token.GetTokenType() == t {
+			fmt.Println("😮")
+			ret.start = i
+			braceLevel = 0
+			// Find the opening brace
+			for j := i + 1; j < len(allTokens); j++ {
+				if allTokens[j].GetTokenType() == parser.PromptDSLParserLBRACE {
+					// Find the matching closing brace
+					for k := j + 1; k < len(allTokens); k++ {
+						if allTokens[k].GetTokenType() == parser.PromptDSLParserLBRACE {
+							braceLevel++
+						} else if allTokens[k].GetTokenType() == parser.PromptDSLParserRBRACE {
+							if braceLevel == 0 {
+								ret.end = k
+								break
+							}
+							braceLevel--
+						}
+					}
+					break
+				}
+			}
+		}
+	}
+
+	return ret
+}
+func slej(){
+	for i := 0; i < 10; i++ {
+		fmt.Println(i)
 	}
 }

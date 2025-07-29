@@ -10,7 +10,7 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 )
 
-func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, tokens *antlr.CommonTokenStream) *PromptNode {
+func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, stream *antlr.CommonTokenStream, inputStream *antlr.InputStream) *PromptNode {
 	result := &PromptNode{
 		Vars:             make(map[string]interface{}), // 初始化空map
 		SysNodes:         []Node{},
@@ -238,14 +238,19 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, tokens *antlr.Commo
 			// 	result.BeforeNodes = append(result.BeforeNodes, node)
 			// }
 		case *parser.AfterSectionContext:
-			fmt.Println("😊AfterSection", extractRawText(b, tokens))
+			fmt.Println("😊AfterSection", extractRawText(b, stream))
 
-			result.AfterCode = extractRawText(b, tokens)
+			result.AfterCode = extractRawText(b, stream)
 		case *parser.FixSectionContext:
-			result.FixCode = extractRawText(b, tokens)
+			result.FixCode = extractRawText(b, stream)
 		}
-
 	}
+	// fix := extractCodeBlocks(stream, "fix")
+	// after := extractCodeBlocks(stream, "after")
+	// fixPos := Range{stream.Get(fix.start).GetStart(), stream.Get(fix.end).GetStop() + 1}
+	// afterPos := Range{stream.Get(after.start).GetStart(), stream.Get(after.end).GetStop() + 1}
+	// result.FixCode =inputStream.GetText(fixPos.start, fixPos.end)
+	// result.AfterCode =inputStream.GetText(afterPos.start, afterPos.end)
 
 	return result
 }
@@ -393,52 +398,6 @@ func BuildUserNode(ctx parser.IUserContentContext) Node {
 	return nil
 }
 
-// func BuildpartNode(ctx antlr.ParserRuleContext) Node {
-// 	nodeCtx := ctx.(type)
-
-// 	// 优先判断 ARRAY_OUTPUTSPEC（形如 []outputspec）
-// 	if nodeCtx.ARRAY_OUTPUTSPEC() != nil {
-// 		text := nodeCtx.ARRAY_OUTPUTSPEC().GetText()
-// 		fmt.Println("😊ARRAY_OUTPUTSPEC:", text)
-
-// 		// 直接去掉前缀 []，拿到实际类型名
-// 		rawType := strings.TrimPrefix(text, "[]")
-// 		return &OutputSpecNode{
-// 			IsArray: true,
-// 			RawTyp:  rawType,
-// 		}
-// 	}
-
-// 	// 普通 OUTPUTSPEC（非数组形式）
-// 	if nodeCtx.OUTPUTSPEC() != nil {
-// 		text := nodeCtx.OUTPUTSPEC().GetText()
-// 		fmt.Println("😊OUTPUTSPEC:", text)
-// 		return &OutputSpecNode{
-// 			IsArray: false,
-// 			RawTyp:  text,
-// 		}
-// 	}
-
-//		for i := 0; i < nodeCtx.GetChildCount(); i++ {
-//			child := nodeCtx.GetChild(i)
-//			switch sub := child.(type) {
-//			case *parser.ParamPathContext:
-//				// fmt.Println("😊param path:", sub.GetText())
-//				return &ParamNode{Path: cleanQuotes(sub.GetText())}
-//			case *parser.TextLineContext:
-//				fmt.Println("😊stringtext:", sub.GetText())
-//				return &StringNode{Val: cleanQuotes(sub.GetText())}
-//			case *parser.IfStatementContext:
-//				fmt.Println("😊IfStatementContext:", sub.GetText())
-//				return buildIfNode(sub)
-//			case *parser.ExprContext:
-//				return &StringNode{Val: cleanQuotes(sub.GetText())} // 临时
-//			default:
-//				continue
-//			}
-//		}
-//		return nil
-//	}
 func BuildModuleNode(ctx parser.IModuleContentContext) Node {
 	nodeCtx := ctx.(*parser.ModuleContentContext)
 	// 优先判断 ARRAY_OUTPUTSPEC（形如 []outputspec）
@@ -476,8 +435,12 @@ func BuildModuleNode(ctx parser.IModuleContentContext) Node {
 		case *parser.IfStatementContext:
 			fmt.Println("😊IfStatementContext:", sub.GetText())
 			return buildIfNode(sub)
+		case *parser.ForStatementContext:
+			return buildForNode(sub)
 		case *parser.ExprContext:
-			return &StringNode{Val: cleanQuotes(sub.GetText())} // 临时
+			return &StringNode{Val: cleanQuotes(sub.GetText())}
+		
+		
 		default:
 			continue
 		}
@@ -511,32 +474,35 @@ func buildIfNode(ctx *parser.IfStatementContext) *IfNode {
 		Else:      elseNodes,
 	}
 }
+func buildForNode(ctx *parser.ForStatementContext) *ForNode {
+	condList := ctx.Condition()
+	// 断言接口为具体类型
+	cctx := condList.(*parser.ConditionContext)
+	condition := cctx.GetText()
+	// fmt.Println("😊Condition:", condition)
+	
+	init := ctx.GetInit()
+	init = init.(parser.IAssignExprContext)
+	initstr := init.GetText()
+	// fmt.Println("😊Init:", initstr)
+	update := ctx.GetUpdate()
+	update = update.(parser.IUpdateExprContext)
+	updatestr := update.GetText()
+	// fmt.Println("😊Update:", updatestr)
+	var forNodes []Node
+	forcontent := ctx.AllForcontent()
+	for _, uc := range forcontent {
+		forNodes = append(forNodes, BuildUserNode(uc.UserContent()))
+	}
 
-// func buildExprFromCondition(ctx *parser.ConditionContext) *Expr {
-// 	if ctx.GetOp() != nil {
-// 		lhs := buildExpr(ctx.GetLhs())
-// 		rhs := buildExpr(ctx.GetRhs())
-// 		var op ExprOp
-// 		switch ctx.GetOp().GetText() {
-// 		case "==":
-// 			op = ExprOp_Equal
-// 		case "!=":
-// 			op = ExprOp_NotEqual
-// 		default:
-// 			op = ExprOp_None
-// 		}
-// 		return &Expr{
-// 			Op:       op,
-// 			Operant0: []*Expr{lhs},
-// 			Operant1: []*Expr{rhs},
-// 		}
-// 	}
-// 	if single := ctx.GetSingle(); single != nil {
-// 		return buildExpr(single)
-// 	}
-// 	return &Expr{Op: ExprOp_None}
-// }
+	return &ForNode{
 
+		Init: initstr,
+		Cond: condition,
+		Post: updatestr,
+		Body: forNodes,
+	}
+}
 func buildExpr(exprCtx parser.IExprContext) *Expr {
 	switch expr := exprCtx.(type) {
 	case *parser.ExprContext:

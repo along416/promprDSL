@@ -27,6 +27,7 @@ MARKDOWN : 'markdown';
 IF       : 'if';
 ELSE     : 'else';
 OUTPUTSPEC : 'outputspec';
+FOR      :'for';
 
 
 FIX: 'fix' WS* '{' -> pushMode(CODE_BLOCK);
@@ -49,6 +50,26 @@ MD       : 'md' ;
 JSON     : 'json' ;
 LBRACK : '[' ;
 RBRACK : ']' ;
+
+INCREMENT : '++' ;
+DECREMENT : '--' ;
+
+MINUS     : '-' ;
+STAR      : '*' ;
+SLASH     : '/' ;
+MOD       : '%' ;
+
+// 复合赋值
+PLUSEQ    : '+=' ;
+MINUSEQ   : '-=' ;
+MULTEQ    : '*=' ;
+DIVEQ     : '/=' ;
+MODEQ     : '%=' ;
+
+LT  : '<' ;
+LTE : '<=' ;
+GT  : '>' ;
+GTE : '>=' ;
 // 基础 Tokens
 ID     : [a-zA-Z_][a-zA-Z_0-9]* ;
 STRING : '"' ( ~["\\] | '\\' . )* '"' ;

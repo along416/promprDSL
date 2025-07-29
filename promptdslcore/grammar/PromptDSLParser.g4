@@ -12,7 +12,6 @@ promptBlock
     | outputSection
     | systemSection
     | userSection
-    | noteSection 
     | afterSection
     | fixSection
     | moduleDef
@@ -52,6 +51,24 @@ systemSection
 sysContent
     : ifStatement
     | paramPath
+    | forStatement 
+    | ARRAY_OUTPUTSPEC
+    | OUTPUTSPEC
+    | expr
+    | textLine
+    ;
+
+
+
+userSection
+    : USER LBRACE ID+ RBRACE
+    | USER LBRACE userContent+ RBRACE
+    ;
+
+userContent
+    : ifStatement
+    | paramPath
+    | forStatement 
     | ARRAY_OUTPUTSPEC
     | OUTPUTSPEC
     | expr
@@ -62,41 +79,38 @@ moduleDef : ID LBRACE moduleContent* RBRACE ;
 moduleContent
     : ifStatement
     | paramPath
+    | forStatement 
     | ARRAY_OUTPUTSPEC
     | OUTPUTSPEC
     | expr
     | textLine
     ;
-
-userSection
-    : USER LBRACE ID+ RBRACE
-    | USER LBRACE userContent+ RBRACE
-    ;
-
-userContent
-    : ifStatement
-    | paramPath
-    | ARRAY_OUTPUTSPEC
-    | OUTPUTSPEC
-    | expr
-    | textLine
-    ;
-
 thencontent : userContent ;
 elsecontent : userContent ;
+forcontent  : userContent ;
 
-ifStatement
+ifStatement 
     : IF LPAREN condition RPAREN LBRACE thencontent* RBRACE (ELSE LBRACE elsecontent* RBRACE)?
     ;
 
 condition
-    : lhs=expr op=(EQEQ | NOTEQ) rhs=expr
+    : lhs=expr op=(EQEQ | NOTEQ | LT | LTE | GT | GTE) rhs=expr
     | single=expr
     ;
 
-// noteSection改成用token
-noteSection
-    : NOTE LBRACE textLine+ RBRACE
+// 完整 forStatement 结构
+forStatement
+    : FOR LPAREN init=assignExpr SEMI condition SEMI update=updateExpr RPAREN LBRACE forcontent* RBRACE
+    ;
+
+// 支持赋值表达式
+assignExpr
+    : lhs=paramPath EQUAL rhs=expr
+    ;
+
+// 支持更新表达式：i++ / i-- / i += 1 等
+updateExpr
+    : paramPath (INCREMENT | DECREMENT | PLUSEQ expr | MINUSEQ expr | MULTEQ expr | DIVEQ expr | MODEQ expr)
     ;
 
 dslCallExpr
@@ -104,10 +118,12 @@ dslCallExpr
     ;
 
 expr
-    : paramPath
+    : expr op=(PLUS | MINUS | STAR | SLASH | MOD) expr   // 二元运算
+    | paramPath
     | STRING
     | NUMBER
     | BOOL
+    | LPAREN expr RPAREN
     ;
 
 fieldDef
