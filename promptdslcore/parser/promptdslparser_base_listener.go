@@ -146,11 +146,23 @@ func (s *BasePromptDSLParserListener) EnterCondition(ctx *ConditionContext) {}
 // ExitCondition is called when production condition is exited.
 func (s *BasePromptDSLParserListener) ExitCondition(ctx *ConditionContext) {}
 
-// EnterForStatement is called when production forStatement is entered.
-func (s *BasePromptDSLParserListener) EnterForStatement(ctx *ForStatementContext) {}
+// EnterForTraditional is called when production ForTraditional is entered.
+func (s *BasePromptDSLParserListener) EnterForTraditional(ctx *ForTraditionalContext) {}
 
-// ExitForStatement is called when production forStatement is exited.
-func (s *BasePromptDSLParserListener) ExitForStatement(ctx *ForStatementContext) {}
+// ExitForTraditional is called when production ForTraditional is exited.
+func (s *BasePromptDSLParserListener) ExitForTraditional(ctx *ForTraditionalContext) {}
+
+// EnterForRangeWithIndex is called when production ForRangeWithIndex is entered.
+func (s *BasePromptDSLParserListener) EnterForRangeWithIndex(ctx *ForRangeWithIndexContext) {}
+
+// ExitForRangeWithIndex is called when production ForRangeWithIndex is exited.
+func (s *BasePromptDSLParserListener) ExitForRangeWithIndex(ctx *ForRangeWithIndexContext) {}
+
+// EnterForRangeNoIndex is called when production ForRangeNoIndex is entered.
+func (s *BasePromptDSLParserListener) EnterForRangeNoIndex(ctx *ForRangeNoIndexContext) {}
+
+// ExitForRangeNoIndex is called when production ForRangeNoIndex is exited.
+func (s *BasePromptDSLParserListener) ExitForRangeNoIndex(ctx *ForRangeNoIndexContext) {}
 
 // EnterAssignExpr is called when production assignExpr is entered.
 func (s *BasePromptDSLParserListener) EnterAssignExpr(ctx *AssignExprContext) {}
@@ -163,6 +175,42 @@ func (s *BasePromptDSLParserListener) EnterUpdateExpr(ctx *UpdateExprContext) {}
 
 // ExitUpdateExpr is called when production updateExpr is exited.
 func (s *BasePromptDSLParserListener) ExitUpdateExpr(ctx *UpdateExprContext) {}
+
+// EnterSwitchStatement is called when production switchStatement is entered.
+func (s *BasePromptDSLParserListener) EnterSwitchStatement(ctx *SwitchStatementContext) {}
+
+// ExitSwitchStatement is called when production switchStatement is exited.
+func (s *BasePromptDSLParserListener) ExitSwitchStatement(ctx *SwitchStatementContext) {}
+
+// EnterSwitchCase is called when production switchCase is entered.
+func (s *BasePromptDSLParserListener) EnterSwitchCase(ctx *SwitchCaseContext) {}
+
+// ExitSwitchCase is called when production switchCase is exited.
+func (s *BasePromptDSLParserListener) ExitSwitchCase(ctx *SwitchCaseContext) {}
+
+// EnterSwitchDefault is called when production switchDefault is entered.
+func (s *BasePromptDSLParserListener) EnterSwitchDefault(ctx *SwitchDefaultContext) {}
+
+// ExitSwitchDefault is called when production switchDefault is exited.
+func (s *BasePromptDSLParserListener) ExitSwitchDefault(ctx *SwitchDefaultContext) {}
+
+// EnterTypeCase is called when production typeCase is entered.
+func (s *BasePromptDSLParserListener) EnterTypeCase(ctx *TypeCaseContext) {}
+
+// ExitTypeCase is called when production typeCase is exited.
+func (s *BasePromptDSLParserListener) ExitTypeCase(ctx *TypeCaseContext) {}
+
+// EnterTypeDefault is called when production typeDefault is entered.
+func (s *BasePromptDSLParserListener) EnterTypeDefault(ctx *TypeDefaultContext) {}
+
+// ExitTypeDefault is called when production typeDefault is exited.
+func (s *BasePromptDSLParserListener) ExitTypeDefault(ctx *TypeDefaultContext) {}
+
+// EnterTypeName is called when production typeName is entered.
+func (s *BasePromptDSLParserListener) EnterTypeName(ctx *TypeNameContext) {}
+
+// ExitTypeName is called when production typeName is exited.
+func (s *BasePromptDSLParserListener) ExitTypeName(ctx *TypeNameContext) {}
 
 // EnterDslCallExpr is called when production dslCallExpr is entered.
 func (s *BasePromptDSLParserListener) EnterDslCallExpr(ctx *DslCallExprContext) {}

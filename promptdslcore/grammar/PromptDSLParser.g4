@@ -80,6 +80,7 @@ moduleContent
     : ifStatement
     | paramPath
     | forStatement 
+    | switchStatement
     | ARRAY_OUTPUTSPEC
     | OUTPUTSPEC
     | expr
@@ -94,13 +95,15 @@ ifStatement
     ;
 
 condition
-    : lhs=expr op=(EQEQ | NOTEQ | LT | LTE | GT | GTE) rhs=expr
+    : lhs=expr op=(EQEQ | NOTEQ | LT | LTE | GT | GTE | DECL_ASSIGN) rhs=expr
     | single=expr
     ;
 
 // 完整 forStatement 结构
 forStatement
-    : FOR LPAREN init=assignExpr SEMI condition SEMI update=updateExpr RPAREN LBRACE forcontent* RBRACE
+    : FOR init=assignExpr SEMI condition SEMI update=updateExpr LBRACE forcontent* RBRACE              # ForTraditional
+    | FOR key=( ID | UNDERSCORE ) COMMA val=ID DECL_ASSIGN RANGE iterable=expr LBRACE forcontent* RBRACE                # ForRangeWithIndex
+    | FOR val=ID DECL_ASSIGN RANGE iterable=expr LBRACE forcontent* RBRACE                             # ForRangeNoIndex
     ;
 
 // 支持赋值表达式
@@ -111,6 +114,31 @@ assignExpr
 // 支持更新表达式：i++ / i-- / i += 1 等
 updateExpr
     : paramPath (INCREMENT | DECREMENT | PLUSEQ expr | MINUSEQ expr | MULTEQ expr | DIVEQ expr | MODEQ expr)
+    ;
+
+
+//switch case
+switchStatement
+    : SWITCH condition LBRACE switchCase* switchDefault? RBRACE
+    ;
+
+switchCase
+    : CASE condition COLON userContent*
+    ;
+
+switchDefault
+    : DEFAULT COLON userContent*
+    ;
+typeCase
+    : CASE typeName COLON userContent*
+    ;
+
+typeDefault
+    : DEFAULT COLON userContent*
+    ;
+
+typeName
+    : STAR? ID
     ;
 
 dslCallExpr
@@ -137,8 +165,9 @@ textLine
     ;
 
 paramPath
-    : (ID | INPUT | OUTPUT | AFTER | BEFORE) (DOT ID)*
+    : (ID | INPUT | OUTPUT | AFTER | BEFORE) (DOT ID | LBRACK expr RBRACK)*
     ;
+
 
 structDef
     : ID STRUCT LBRACE fieldDef+ RBRACE 

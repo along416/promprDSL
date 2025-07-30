@@ -121,7 +121,7 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 
 	//gensystem
 	//写入sys处理逻辑
-	b.WriteString(fmt.Sprintf("func "+filename+"_GenSys(input "+filename+"InputContext) string {\n"))
+	b.WriteString(fmt.Sprintf("func "+filename+"_GenSys(in "+filename+"InputContext) string {\n"))
 	b.WriteString("    var b strings.Builder\n")
 
 	for _, line := range eval.Sys {
@@ -131,7 +131,7 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 	b.WriteString("\n}\n\n")
 	//把dsl_gen里面生成的东西拿过来
 	//genuser
-	b.WriteString(fmt.Sprintf("func "+filename+"_GenUser(input "+filename+"InputContext) string {\n"))
+	b.WriteString(fmt.Sprintf("func "+filename+"_GenUser(in "+filename+"InputContext) string {\n"))
 	b.WriteString("    var b strings.Builder\n")
 
 	for _, line := range eval.User {

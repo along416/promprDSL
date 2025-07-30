@@ -344,49 +344,121 @@ func (p *ParamNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 }
 
 type CasePair struct {
-	Case Expr
+	Case string
 	Body []Node
 }
 
 type SwitchNode struct {
-	Switch  Expr
+	Switch  string
 	Cases   []CasePair
-	Default Node
+	Default []Node
 }
 
-func (node *SwitchNode) Eval(_ *PromptEvalContext) ([]string, error) {
-	// TODO
-	return []string{}, nil
-}
-
-type ForNode struct {
-	Init string
-	Cond string
-	Post string
-	Body []Node
-}
-
-func (node *ForNode) Eval(ctx *PromptEvalContext) ([]string, error) {
-	// TODO
+func (node *SwitchNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	var lines []string
 
+	cond := node.Switch   // Expr -> string，比如 input.question != ""
 
-	lines = append(lines, fmt.Sprintf("for (%s;%s;%s) {", node.Init,node.Cond,node.Post))
-
-	for _, n := range node.Body {
-		vals, err := n.Eval(ctx)
-		if err != nil {
-			return nil, fmt.Errorf("Then branch Eval failed: %w", err)
-		}
-		for _, v := range vals {
-			lines = append(lines, fmt.Sprintf("    %s", v))
+	// 开始 switch 结构
+	lines = append(lines, fmt.Sprintf("switch %s {", cond))
+	for _,caseitem:= range node.Cases{
+		lines = append(lines, fmt.Sprintf("case %s:", caseitem.Case))
+		for _, n := range caseitem.Body {
+			vals, err := n.Eval(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("Case branch Eval failed: %w", err)
+			}
+			for _, v := range vals {
+				lines = append(lines, fmt.Sprintf("    %s", v))
+			}
 		}
 	}
-
+	if node.Default != nil {
+		lines = append(lines, "default:")
+		for _, n := range node.Default {
+			vals, err := n.Eval(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("Default branch Eval failed: %w", err)
+			}
+			for _, v := range vals {
+				lines = append(lines, fmt.Sprintf("    %s", v))
+			}
+		}
+	}
 	// 结束
 	lines = append(lines, "}")
 	return lines, nil
+}
 
+type ForNode struct {
+	ForType string   // "traditional" / "rangeWithIndex" / "rangeNoIndex"
+	Init    string   // traditional
+	Cond    string   // traditional
+	Post    string   // traditional
+	Key     string   // rangeWithIndex
+	Val     string   // rangeNoIndex or rangeWithIndex
+	Range   string   // iterable expr
+	Body    []Node   // 通用内容
+}
+func (node *ForNode) Eval(ctx *PromptEvalContext) ([]string, error) {
+	// fmt.Println("解释执行 ForNode:", node.Key, node.Val, node.Range)
+    var lines []string
+
+    switch node.ForType {
+    case "traditional":
+        lines = append(lines, fmt.Sprintf("for %s; %s; %s {", node.Init, node.Cond, node.Post))
+
+        for _, n := range node.Body {
+            vals, err := n.Eval(ctx)
+            if err != nil {
+                return nil, fmt.Errorf("Then branch Eval failed: %w", err)
+            }
+            for _, v := range vals {
+                lines = append(lines, fmt.Sprintf("    %s", v))
+            }
+        }
+
+        lines = append(lines, "}")
+
+    case "rangeWithIndex":
+        // for key, val := range iterable
+		fmt.Println("解释执行 ForNode:", node.Key, node.Val, node.Range)
+        lines = append(lines, fmt.Sprintf("for %s, %s := range %s {", node.Key, node.Val, node.Range))
+		
+        for _, n := range node.Body {
+            vals, err := n.Eval(ctx)
+            if err != nil {
+                return nil, fmt.Errorf("RangeWithIndex branch Eval failed: %w", err)
+            }
+            for _, v := range vals {
+                lines = append(lines, fmt.Sprintf("    %s", v))
+            }
+        }
+
+        lines = append(lines, "}")
+
+    case "rangeNoIndex":
+		fmt.Println("解释执行 ForNode:", node.Key, node.Val, node.Range)
+        // for val := range iterable
+        lines = append(lines, fmt.Sprintf("for %s := range %s {", node.Val, node.Range))
+
+        for _, n := range node.Body {
+            vals, err := n.Eval(ctx)
+            if err != nil {
+                return nil, fmt.Errorf("RangeNoIndex branch Eval failed: %w", err)
+            }
+            for _, v := range vals {
+                lines = append(lines, fmt.Sprintf("    %s", v))
+            }
+        }
+
+        lines = append(lines, "}")
+
+    default:
+        return nil, fmt.Errorf("unknown for loop type: %s", node.ForType)
+    }
+
+    return lines, nil
 }
 
 type PromptNode struct {

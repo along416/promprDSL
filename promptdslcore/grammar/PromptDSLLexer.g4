@@ -11,10 +11,10 @@ INT_TYPE    : 'int';
 // 关键字 Tokens（必须放在 ID 之前）
 PROMPT   : 'prompt';
 PARAMS   : 'params';
-SYSTEM   : 'system';
+SYSTEM   : 'sys';
 USER     : 'user';
 NOTE     : 'note';
-INPUT    : 'input';
+INPUT    : 'in';
 OUTPUT   : 'output';
 FORMAT   : 'format';
 TYPE     : 'type';
@@ -28,7 +28,10 @@ IF       : 'if';
 ELSE     : 'else';
 OUTPUTSPEC : 'outputspec';
 FOR      :'for';
-
+RANGE    : 'range';
+SWITCH   : 'switch';
+DEFAULT  : 'default';
+CASE      : 'case';
 
 FIX: 'fix' WS* '{' -> pushMode(CODE_BLOCK);
 AFTER: 'after' WS* '{' -> pushMode(CODE_BLOCK);
@@ -58,6 +61,7 @@ MINUS     : '-' ;
 STAR      : '*' ;
 SLASH     : '/' ;
 MOD       : '%' ;
+UNDERSCORE: '_';
 
 // 复合赋值
 PLUSEQ    : '+=' ;
@@ -65,7 +69,7 @@ MINUSEQ   : '-=' ;
 MULTEQ    : '*=' ;
 DIVEQ     : '/=' ;
 MODEQ     : '%=' ;
-
+DECL_ASSIGN :':=';
 LT  : '<' ;
 LTE : '<=' ;
 GT  : '>' ;

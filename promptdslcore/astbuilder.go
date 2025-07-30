@@ -126,7 +126,7 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, stream *antlr.Commo
 			}
 			inNode := &InputNode{Fields: fields}
 			result.InFields = inNode.Fields
-
+			fmt.Println("😅inNode:", inNode)
 		case *parser.OutputSectionContext:
 
 			// 解析输出字段，放到 result.OutDef
@@ -435,12 +435,20 @@ func BuildModuleNode(ctx parser.IModuleContentContext) Node {
 		case *parser.IfStatementContext:
 			fmt.Println("😊IfStatementContext:", sub.GetText())
 			return buildIfNode(sub)
-		case *parser.ForStatementContext:
+		case *parser.ForRangeWithIndexContext:
+			fmt.Println("😊ForRangeWithIndexContext:", sub.GetText())
 			return buildForNode(sub)
+		case *parser.ForTraditionalContext:
+			fmt.Println("😊ForTraditionalContext:", sub.GetText())
+			return buildForNode(sub)
+		case *parser.ForRangeNoIndexContext:
+			fmt.Println("😊ForRangeNoIndexContext:", sub.GetText())
+			return buildForNode(sub)
+		case *parser.SwitchStatementContext:
+			fmt.Println("😊SwitchStatementContext:", sub.GetText())
+			return buildSwitchNode(sub)
 		case *parser.ExprContext:
-			return &StringNode{Val: cleanQuotes(sub.GetText())}
-		
-		
+			return &StringNode{Val: cleanQuotes(sub.GetText())}	
 		default:
 			continue
 		}
@@ -474,33 +482,88 @@ func buildIfNode(ctx *parser.IfStatementContext) *IfNode {
 		Else:      elseNodes,
 	}
 }
-func buildForNode(ctx *parser.ForStatementContext) *ForNode {
-	condList := ctx.Condition()
-	// 断言接口为具体类型
-	cctx := condList.(*parser.ConditionContext)
-	condition := cctx.GetText()
-	// fmt.Println("😊Condition:", condition)
-	
-	init := ctx.GetInit()
-	init = init.(parser.IAssignExprContext)
-	initstr := init.GetText()
-	// fmt.Println("😊Init:", initstr)
-	update := ctx.GetUpdate()
-	update = update.(parser.IUpdateExprContext)
-	updatestr := update.GetText()
-	// fmt.Println("😊Update:", updatestr)
-	var forNodes []Node
-	forcontent := ctx.AllForcontent()
-	for _, uc := range forcontent {
-		forNodes = append(forNodes, BuildUserNode(uc.UserContent()))
+func buildForNode(ctx parser.IForStatementContext) *ForNode {
+	var initStr, condStr, updateStr string
+	var keyStr, valStr, rangeExprStr string
+	var forType string
+	var body []Node
+
+	switch fc := ctx.(type) {
+
+	case *parser.ForTraditionalContext:
+		// C-style: for i := 0; i < 10; i++
+		init := fc.GetInit().(parser.IAssignExprContext)
+		update := fc.GetUpdate().(parser.IUpdateExprContext)
+		condition := fc.Condition().(*parser.ConditionContext)
+
+		initStr = init.GetText()
+		condStr = condition.GetText()
+		updateStr = update.GetText()
+		forType = "traditional"
+
+		for _, uc := range fc.AllForcontent() {
+			body = append(body, BuildUserNode(uc.UserContent()))
+		}
+
+	case *parser.ForRangeWithIndexContext:
+		keyStr = fc.GetKey().GetText()
+		valStr = fc.GetVal().GetText()
+		rangeExprStr = fc.GetIterable().GetText()
+		forType = "rangeWithIndex"
+
+		for _, uc := range fc.AllForcontent() {
+			body = append(body, BuildUserNode(uc.UserContent()))
+		}
+
+	case *parser.ForRangeNoIndexContext:
+		valStr = fc.GetVal().GetText()
+		rangeExprStr = fc.GetIterable().GetText()
+		forType = "rangeNoIndex"
+
+		for _, uc := range fc.AllForcontent() {
+			body = append(body, BuildUserNode(uc.UserContent()))
+		}
+
+	default:
+		panic("unknown for statement type")
 	}
 
 	return &ForNode{
-
-		Init: initstr,
-		Cond: condition,
-		Post: updatestr,
-		Body: forNodes,
+		ForType: forType,     // 新增字段，标明类型
+		Init:    initStr,
+		Cond:    condStr,
+		Post:    updateStr,
+		Key:     keyStr,
+		Val:     valStr,
+		Range:   rangeExprStr,
+		Body:    body,
+	}
+}
+func buildSwitchNode(ctx parser.ISwitchStatementContext) *SwitchNode {
+	condList := ctx.Condition()
+	cctx := condList.(*parser.ConditionContext)
+	condition := cctx.GetText()
+	
+	caseList:=ctx.AllSwitchCase()
+	var cases []CasePair
+	for _,caseitem := range caseList { 
+		var casest CasePair
+		casest.Case=caseitem.Condition().GetText()
+		fmt.Println("😊casestr:",casest.Case)
+		for _, uc := range caseitem.AllUserContent() {
+			casest.Body = append(casest.Body, BuildUserNode(uc))
+		}
+		cases=append(cases, casest)
+	}
+	defult:=ctx.SwitchDefault()
+	var defultNode []Node
+	for _, uc := range defult.AllUserContent() {
+		defultNode = append(defultNode, BuildUserNode(uc))
+	}
+	return &SwitchNode{
+		Switch: condition,
+		Cases: cases,
+		Default: defultNode,
 	}
 }
 func buildExpr(exprCtx parser.IExprContext) *Expr {

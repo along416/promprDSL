@@ -4,20 +4,20 @@ package generated
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"os"
 	"service"
-	"strings"
 )
 
 type SplitSolutionStepsInputContext struct {
     Question string `json:"Question"`
-    Process string `json:"Process"`
+    Process []string `json:"Process"`
 }
 
 type SplitSolutionStepsOutputContext struct {
     Conditions []string `json:"条件"`
     KnowledgePoint string `json:"知识点"`
-    ProcessResult string `json:"问题"`
+    ProcessResult string `json:"过程"`
 }
 
 type SplitSolutionStepsFinalContext struct {
@@ -25,10 +25,10 @@ type SplitSolutionStepsFinalContext struct {
     Output []SplitSolutionStepsOutputContext
 }
 
-func SplitSolutionSteps_GenSys(input SplitSolutionStepsInputContext) string {
+func SplitSolutionSteps_GenSys(in SplitSolutionStepsInputContext) string {
     var b strings.Builder
     b.WriteString("你是一个擅长拆分解题步骤的数学老师\n")
-    if (input.Question=="") {
+    if (in.Question=="") {
         b.WriteString("当前任务是将解题步骤进行合理拆分\n")
     } else {
         b.WriteString("当前任务是将解题步骤进行合理拆分2\n")
@@ -37,30 +37,36 @@ func SplitSolutionSteps_GenSys(input SplitSolutionStepsInputContext) string {
 
 }
 
-func SplitSolutionSteps_GenUser(input SplitSolutionStepsInputContext) string {
+func SplitSolutionSteps_GenUser(in SplitSolutionStepsInputContext) string {
     var b strings.Builder
     b.WriteString("请根据以下输入题目及其解答内容，将完整的解答过程拆分为多个“短链”，每个“短链”包含以下三个要素：\n")
-    if (input.Question!="") {
+    if (in.Question!="") {
         b.WriteString("你好\n")
     } else {
         b.WriteString("siuehfebn\n")
     }
-    for _,u:= range input.Process {
-        fmt.Println(u)
-        b.WriteString(u)
-    }
     b.WriteString("条件，知识点，结果\n")
     b.WriteString("题目：\n")
-    b.WriteString(input.Question)
+    b.WriteString(in.Question)
     b.WriteString("过程：\n")
-    b.WriteString(input.Process)
+    for i := range in.Process {
+        b.WriteString(in.Process[i])
+    }
+    switch in.Process[0] {
+    case "a":
+        b.WriteString("你好\n")
+    case "b":
+        b.WriteString("你好2\n")
+    default:
+        b.WriteString("你好3\n")
+    }
     b.WriteString("请将输出内容严格按照以下格式返回：\n")
-    b.WriteString("```json\n")
+        b.WriteString("```json\n")
     b.WriteString("[\n")
     b.WriteString("  {\n")
     b.WriteString("    \"条件\": [\"\"]  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格,\n")
     b.WriteString("    \"知识点\": \"\"  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格,\n")
-    b.WriteString("    \"问题\": \"\"  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格\n")
+    b.WriteString("    \"过程\": \"\"  // 严格遵守以下规定设计数学公式使用标准通用的latex格式,数学公式以美元符号包裹，$或$$与公式内容之间不允许有任何空格\n")
     b.WriteString("  }\n")
     b.WriteString("]\n")
     b.WriteString("```\n")
@@ -74,7 +80,7 @@ func SplitSolutionSteps_AfterProcess(output []SplitSolutionStepsOutputContext) [
 
         trueCount := 0
         for _, item := range output {
-            if item.KnowledgePoint!= "" {
+            if item.ProcessResult!= "" {
                 trueCount++
             }
         }

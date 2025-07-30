@@ -70,14 +70,38 @@ type PromptDSLParserListener interface {
 	// EnterCondition is called when entering the condition production.
 	EnterCondition(c *ConditionContext)
 
-	// EnterForStatement is called when entering the forStatement production.
-	EnterForStatement(c *ForStatementContext)
+	// EnterForTraditional is called when entering the ForTraditional production.
+	EnterForTraditional(c *ForTraditionalContext)
+
+	// EnterForRangeWithIndex is called when entering the ForRangeWithIndex production.
+	EnterForRangeWithIndex(c *ForRangeWithIndexContext)
+
+	// EnterForRangeNoIndex is called when entering the ForRangeNoIndex production.
+	EnterForRangeNoIndex(c *ForRangeNoIndexContext)
 
 	// EnterAssignExpr is called when entering the assignExpr production.
 	EnterAssignExpr(c *AssignExprContext)
 
 	// EnterUpdateExpr is called when entering the updateExpr production.
 	EnterUpdateExpr(c *UpdateExprContext)
+
+	// EnterSwitchStatement is called when entering the switchStatement production.
+	EnterSwitchStatement(c *SwitchStatementContext)
+
+	// EnterSwitchCase is called when entering the switchCase production.
+	EnterSwitchCase(c *SwitchCaseContext)
+
+	// EnterSwitchDefault is called when entering the switchDefault production.
+	EnterSwitchDefault(c *SwitchDefaultContext)
+
+	// EnterTypeCase is called when entering the typeCase production.
+	EnterTypeCase(c *TypeCaseContext)
+
+	// EnterTypeDefault is called when entering the typeDefault production.
+	EnterTypeDefault(c *TypeDefaultContext)
+
+	// EnterTypeName is called when entering the typeName production.
+	EnterTypeName(c *TypeNameContext)
 
 	// EnterDslCallExpr is called when entering the dslCallExpr production.
 	EnterDslCallExpr(c *DslCallExprContext)
@@ -193,14 +217,38 @@ type PromptDSLParserListener interface {
 	// ExitCondition is called when exiting the condition production.
 	ExitCondition(c *ConditionContext)
 
-	// ExitForStatement is called when exiting the forStatement production.
-	ExitForStatement(c *ForStatementContext)
+	// ExitForTraditional is called when exiting the ForTraditional production.
+	ExitForTraditional(c *ForTraditionalContext)
+
+	// ExitForRangeWithIndex is called when exiting the ForRangeWithIndex production.
+	ExitForRangeWithIndex(c *ForRangeWithIndexContext)
+
+	// ExitForRangeNoIndex is called when exiting the ForRangeNoIndex production.
+	ExitForRangeNoIndex(c *ForRangeNoIndexContext)
 
 	// ExitAssignExpr is called when exiting the assignExpr production.
 	ExitAssignExpr(c *AssignExprContext)
 
 	// ExitUpdateExpr is called when exiting the updateExpr production.
 	ExitUpdateExpr(c *UpdateExprContext)
+
+	// ExitSwitchStatement is called when exiting the switchStatement production.
+	ExitSwitchStatement(c *SwitchStatementContext)
+
+	// ExitSwitchCase is called when exiting the switchCase production.
+	ExitSwitchCase(c *SwitchCaseContext)
+
+	// ExitSwitchDefault is called when exiting the switchDefault production.
+	ExitSwitchDefault(c *SwitchDefaultContext)
+
+	// ExitTypeCase is called when exiting the typeCase production.
+	ExitTypeCase(c *TypeCaseContext)
+
+	// ExitTypeDefault is called when exiting the typeDefault production.
+	ExitTypeDefault(c *TypeDefaultContext)
+
+	// ExitTypeName is called when exiting the typeName production.
+	ExitTypeName(c *TypeNameContext)
 
 	// ExitDslCallExpr is called when exiting the dslCallExpr production.
 	ExitDslCallExpr(c *DslCallExprContext)
