@@ -171,7 +171,7 @@ type OutputSpecNode struct {
 
 func (node *OutputSpecNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	// TODO
-	var b strings.Builder   
+	var b strings.Builder
 	if node.IsArray {
 
 		for _, line := range BuildOutputSpecLines(ctx.OutFields, true) {
@@ -180,8 +180,8 @@ func (node *OutputSpecNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 		return []string{b.String()}, nil
 	}
 	for _, line := range BuildOutputSpecLines(ctx.OutFields, false) {
-			b.WriteString(fmt.Sprintf("    b.WriteString(\"%s\\n\")\n", strings.ReplaceAll(line, "\"", "\\\"")))
-		}
+		b.WriteString(fmt.Sprintf("    b.WriteString(\"%s\\n\")\n", strings.ReplaceAll(line, "\"", "\\\"")))
+	}
 	return []string{b.String()}, nil
 
 	// return []string{}, nil
@@ -240,9 +240,6 @@ type IfNode struct {
 	Then      []Node
 	Else      []Node
 }
-
-
-
 
 func (e *Expr) String() string {
 	if e.Leaf != nil {
@@ -340,7 +337,7 @@ func (p *ParamNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	// 	return nil, fmt.Errorf("unknown param section: %s", section)
 	// }
 
-	return []string{fmt.Sprintf(`b.WriteString(%s)`,p.Path)}, nil
+	return []string{fmt.Sprintf(`b.WriteString(%s)`, p.Path)}, nil
 }
 
 type CasePair struct {
@@ -357,11 +354,11 @@ type SwitchNode struct {
 func (node *SwitchNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	var lines []string
 
-	cond := node.Switch   // Expr -> string，比如 input.question != ""
+	cond := node.Switch // Expr -> string，比如 input.question != ""
 
 	// 开始 switch 结构
 	lines = append(lines, fmt.Sprintf("switch %s {", cond))
-	for _,caseitem:= range node.Cases{
+	for _, caseitem := range node.Cases {
 		lines = append(lines, fmt.Sprintf("case %s:", caseitem.Case))
 		for _, n := range caseitem.Body {
 			vals, err := n.Eval(ctx)
@@ -391,74 +388,75 @@ func (node *SwitchNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 }
 
 type ForNode struct {
-	ForType string   // "traditional" / "rangeWithIndex" / "rangeNoIndex"
-	Init    string   // traditional
-	Cond    string   // traditional
-	Post    string   // traditional
-	Key     string   // rangeWithIndex
-	Val     string   // rangeNoIndex or rangeWithIndex
-	Range   string   // iterable expr
-	Body    []Node   // 通用内容
+	ForType string // "traditional" / "rangeWithIndex" / "rangeNoIndex"
+	Init    string // traditional
+	Cond    string // traditional
+	Post    string // traditional
+	Key     string // rangeWithIndex
+	Val     string // rangeNoIndex or rangeWithIndex
+	Range   string // iterable expr
+	Body    []Node // 通用内容
 }
+
 func (node *ForNode) Eval(ctx *PromptEvalContext) ([]string, error) {
 	// fmt.Println("解释执行 ForNode:", node.Key, node.Val, node.Range)
-    var lines []string
+	var lines []string
 
-    switch node.ForType {
-    case "traditional":
-        lines = append(lines, fmt.Sprintf("for %s; %s; %s {", node.Init, node.Cond, node.Post))
+	switch node.ForType {
+	case "traditional":
+		lines = append(lines, fmt.Sprintf("for %s; %s; %s {", node.Init, node.Cond, node.Post))
 
-        for _, n := range node.Body {
-            vals, err := n.Eval(ctx)
-            if err != nil {
-                return nil, fmt.Errorf("Then branch Eval failed: %w", err)
-            }
-            for _, v := range vals {
-                lines = append(lines, fmt.Sprintf("    %s", v))
-            }
-        }
+		for _, n := range node.Body {
+			vals, err := n.Eval(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("Then branch Eval failed: %w", err)
+			}
+			for _, v := range vals {
+				lines = append(lines, fmt.Sprintf("    %s", v))
+			}
+		}
 
-        lines = append(lines, "}")
+		lines = append(lines, "}")
 
-    case "rangeWithIndex":
-        // for key, val := range iterable
+	case "rangeWithIndex":
+		// for key, val := range iterable
 		fmt.Println("解释执行 ForNode:", node.Key, node.Val, node.Range)
-        lines = append(lines, fmt.Sprintf("for %s, %s := range %s {", node.Key, node.Val, node.Range))
-		
-        for _, n := range node.Body {
-            vals, err := n.Eval(ctx)
-            if err != nil {
-                return nil, fmt.Errorf("RangeWithIndex branch Eval failed: %w", err)
-            }
-            for _, v := range vals {
-                lines = append(lines, fmt.Sprintf("    %s", v))
-            }
-        }
+		lines = append(lines, fmt.Sprintf("for %s, %s := range %s {", node.Key, node.Val, node.Range))
 
-        lines = append(lines, "}")
+		for _, n := range node.Body {
+			vals, err := n.Eval(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("RangeWithIndex branch Eval failed: %w", err)
+			}
+			for _, v := range vals {
+				lines = append(lines, fmt.Sprintf("    %s", v))
+			}
+		}
 
-    case "rangeNoIndex":
+		lines = append(lines, "}")
+
+	case "rangeNoIndex":
 		fmt.Println("解释执行 ForNode:", node.Key, node.Val, node.Range)
-        // for val := range iterable
-        lines = append(lines, fmt.Sprintf("for %s := range %s {", node.Val, node.Range))
+		// for val := range iterable
+		lines = append(lines, fmt.Sprintf("for %s := range %s {", node.Val, node.Range))
 
-        for _, n := range node.Body {
-            vals, err := n.Eval(ctx)
-            if err != nil {
-                return nil, fmt.Errorf("RangeNoIndex branch Eval failed: %w", err)
-            }
-            for _, v := range vals {
-                lines = append(lines, fmt.Sprintf("    %s", v))
-            }
-        }
+		for _, n := range node.Body {
+			vals, err := n.Eval(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("RangeNoIndex branch Eval failed: %w", err)
+			}
+			for _, v := range vals {
+				lines = append(lines, fmt.Sprintf("    %s", v))
+			}
+		}
 
-        lines = append(lines, "}")
+		lines = append(lines, "}")
 
-    default:
-        return nil, fmt.Errorf("unknown for loop type: %s", node.ForType)
-    }
+	default:
+		return nil, fmt.Errorf("unknown for loop type: %s", node.ForType)
+	}
 
-    return lines, nil
+	return lines, nil
 }
 
 type PromptNode struct {
@@ -472,13 +470,19 @@ type PromptNode struct {
 	BeforeCode       string
 	FixCode          []string
 	AfterCode        []string
+	Goimport         []goimport
 	outputspectNodes OutputSpecNode
 	// IsArray     bool
 	// 其它部分
 }
+type goimport struct{
+	Alias string 
+    Path  string 
+
+}
 type final struct {
-	User  []string
-	Sys   []string
+	User []string
+	Sys  []string
 }
 
 func (r *PromptNode) Eval(ctx *PromptEvalContext) (*final, error) {
@@ -501,8 +505,8 @@ func (r *PromptNode) Eval(ctx *PromptEvalContext) (*final, error) {
 	}
 
 	return &final{
-		User:  user,
-		Sys:   sys,
+		User: user,
+		Sys:  sys,
 	}, nil
 }
 

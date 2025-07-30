@@ -15,10 +15,20 @@ promptBlock
     | afterSection
     | fixSection
     | moduleDef
+    | goimportSection
     ;
 
+goimportSection
+    : GOIMPORT LBRACE goimportEntry* RBRACE
+    ;
+
+goimportEntry
+    : alias=ID? path=STRING
+    ;
+    
 inputSection
     : INPUT LBRACE fieldDef+ RBRACE
+    | INPUT fieldDef    
     ;
 
 outputSection
@@ -162,6 +172,7 @@ textLine
     : STRING
     | LINE_COMMENT
     | paramPath
+    // | RAW_TEXT_LINE
     ;
 
 paramPath

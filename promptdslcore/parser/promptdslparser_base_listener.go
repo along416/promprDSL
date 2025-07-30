@@ -38,6 +38,18 @@ func (s *BasePromptDSLParserListener) EnterPromptBlock(ctx *PromptBlockContext) 
 // ExitPromptBlock is called when production promptBlock is exited.
 func (s *BasePromptDSLParserListener) ExitPromptBlock(ctx *PromptBlockContext) {}
 
+// EnterGoimportSection is called when production goimportSection is entered.
+func (s *BasePromptDSLParserListener) EnterGoimportSection(ctx *GoimportSectionContext) {}
+
+// ExitGoimportSection is called when production goimportSection is exited.
+func (s *BasePromptDSLParserListener) ExitGoimportSection(ctx *GoimportSectionContext) {}
+
+// EnterGoimportEntry is called when production goimportEntry is entered.
+func (s *BasePromptDSLParserListener) EnterGoimportEntry(ctx *GoimportEntryContext) {}
+
+// ExitGoimportEntry is called when production goimportEntry is exited.
+func (s *BasePromptDSLParserListener) ExitGoimportEntry(ctx *GoimportEntryContext) {}
+
 // EnterInputSection is called when production inputSection is entered.
 func (s *BasePromptDSLParserListener) EnterInputSection(ctx *InputSectionContext) {}
 

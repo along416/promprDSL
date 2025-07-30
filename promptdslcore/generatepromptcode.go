@@ -60,10 +60,7 @@ var symbolToImport = map[string]string{
 	"container/heap.": "container/heap",
 }
 
-func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename string) string {
-	// fmt
-	//名字
-	// for
+func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename string, goimport []goimport)  string {
 	
 	var b strings.Builder
 	outputTypeStr := filename+"OutputContext"
@@ -76,14 +73,15 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 	b.WriteString(fmt.Sprintf("package %s\n\n", pkgName))
 
 	//import
+		//after+fix
 	afterCode := strings.Join(root.AfterCode, "\n")
 	fixCode := strings.Join(root.FixCode, "\n")
 
 	allCode :=afterCode + "\n" + fixCode
-
+	// renderImportSectionWithAlias()
 	pkgs := inferImportsFromCode(allCode)
 
-	// 手动保证 "os" 在包列表里
+		//main
 	requiredPkgs := []string{"os", "fmt","service"}
 	for _, req := range requiredPkgs {
 		has := false
@@ -97,7 +95,8 @@ func Generateprompthandle(root *PromptNode, pkgName string, eval *final,filename
 			pkgs = append(pkgs, req)
 		}
 	}
-	importBlock := renderImportSection(pkgs)
+	importBlock := renderImportSectionWithAlias(goimport,pkgs)
+
 	b.WriteString(importBlock)
 
 	// struct

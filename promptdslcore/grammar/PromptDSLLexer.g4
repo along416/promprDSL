@@ -31,7 +31,8 @@ FOR      :'for';
 RANGE    : 'range';
 SWITCH   : 'switch';
 DEFAULT  : 'default';
-CASE      : 'case';
+CASE     : 'case';
+GOIMPORT : 'goimport';
 
 FIX: 'fix' WS* '{' -> pushMode(CODE_BLOCK);
 AFTER: 'after' WS* '{' -> pushMode(CODE_BLOCK);
@@ -87,7 +88,10 @@ PLUS   : '+';
 WS            : [ \t\r\n]+      -> channel(HIDDEN) ;
 LINE_COMMENT  : '//' ~[\r\n]*   -> channel(HIDDEN) ;
 BLOCK_COMMENT : '/*' .*? '*/'   -> channel(HIDDEN) ;
-
+// fragment NON_CONTROL_CHAR : ~["{}\r\n];
+// RAW_TEXT_LINE
+//     : NON_CONTROL_CHAR+   // 一整行不包含控制字符的连续文本
+//     ;
 // Mode for code blocks in FIX and AFTER sections
 mode CODE_BLOCK;
 

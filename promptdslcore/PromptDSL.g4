@@ -14,8 +14,12 @@ promptBlock
     | afterSection
     | fixSection
     | moduleDef //自定义模块
+    | goimportSection
     ;
-
+//goimprot
+goimportSection
+    :STRING_TYPE*
+    ;
 //input
 inputSection
     : 'input'  '{' fieldDef+ '}'

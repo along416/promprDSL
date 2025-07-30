@@ -16,6 +16,12 @@ type PromptDSLParserListener interface {
 	// EnterPromptBlock is called when entering the promptBlock production.
 	EnterPromptBlock(c *PromptBlockContext)
 
+	// EnterGoimportSection is called when entering the goimportSection production.
+	EnterGoimportSection(c *GoimportSectionContext)
+
+	// EnterGoimportEntry is called when entering the goimportEntry production.
+	EnterGoimportEntry(c *GoimportEntryContext)
+
 	// EnterInputSection is called when entering the inputSection production.
 	EnterInputSection(c *InputSectionContext)
 
@@ -162,6 +168,12 @@ type PromptDSLParserListener interface {
 
 	// ExitPromptBlock is called when exiting the promptBlock production.
 	ExitPromptBlock(c *PromptBlockContext)
+
+	// ExitGoimportSection is called when exiting the goimportSection production.
+	ExitGoimportSection(c *GoimportSectionContext)
+
+	// ExitGoimportEntry is called when exiting the goimportEntry production.
+	ExitGoimportEntry(c *GoimportEntryContext)
 
 	// ExitInputSection is called when exiting the inputSection production.
 	ExitInputSection(c *InputSectionContext)

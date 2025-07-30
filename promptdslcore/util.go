@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -276,6 +277,33 @@ func inferImportsFromCode(code string) []string {
 	// sort.Strings(imports) // 可选：让 import 有序
 	return imports
 }
+func renderImportSectionWithAlias(goimports []goimport, pkgs []string) string {
+    var b strings.Builder
+    b.WriteString("import (\n")
+    
+    // 先把带别名的 goimports 写进去
+    for _, imp := range goimports {
+        if imp.Alias != "" {
+            b.WriteString(fmt.Sprintf("\t%s \"%s\"\n", imp.Alias, imp.Path))
+        } else {
+            b.WriteString(fmt.Sprintf("\t\"%s\"\n", imp.Path))
+        }
+    }
+
+    // 把纯路径 pkgs 里没有在 goimports 里出现的路径补上（无别名）
+    exist := map[string]bool{}
+    for _, imp := range goimports {
+        exist[imp.Path] = true
+    }
+    for _, pkg := range pkgs {
+        if !exist[pkg] {
+            b.WriteString(fmt.Sprintf("\t\"%s\"\n", pkg))
+        }
+    }
+
+    b.WriteString(")\n\n")
+    return b.String()
+}
 func extractFieldDef(field parser.IFieldDefContext, defaultAnnoMap map[string][]string) FieldDef {
 	name := field.ID().GetText()
 	typ := field.Type_().GetText()
@@ -344,6 +372,7 @@ func extractFieldDef(field parser.IFieldDefContext, defaultAnnoMap map[string][]
 		SubFields:   subFields,
 	}
 }
+
 type Range struct {
 	start int
 	end   int
@@ -361,13 +390,13 @@ func extractCodeBlocks(tokens *antlr.CommonTokenStream, typ string) Range {
 	if typ == "after" {
 		t = parser.PromptDSLLexerAFTER
 	}
-	fmt.Println("t:",t)
+	fmt.Println("t:", t)
 	// Track brace nesting level
 	braceLevel := 0
-	
+
 	for i, token := range allTokens {
-		typel:=token.GetTokenType()
-		fmt.Println("typel:",typel)
+		typel := token.GetTokenType()
+		fmt.Println("typel:", typel)
 		if token.GetTokenType() == t {
 			fmt.Println("😮")
 			ret.start = i
@@ -395,8 +424,34 @@ func extractCodeBlocks(tokens *antlr.CommonTokenStream, typ string) Range {
 
 	return ret
 }
-func slej(){
+func slej() {
 	for i := 0; i < 10; i++ {
 		fmt.Println(i)
 	}
+}
+
+// 调用 go get 安装额外的依赖
+func installGoImports(goimports []goimport, workDir string) error {
+	for _, pkg := range goimports {
+		// 标准库如 "fmt"、"os" 不需要 go get
+		if isStandardPackage(pkg.Path) {
+			continue
+		}
+
+		cmd := exec.Command("go", "get", pkg.Path)
+		cmd.Dir = workDir
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("failed to go get %s: %v\nOutput: %s", pkg, err, string(out))
+		}
+	}
+	return nil
+}
+
+// 简单判断是不是标准库
+func isStandardPackage(pkg string) bool {
+	stdPkgs := map[string]bool{
+		"fmt": true, "os": true, "io": true, "strings": true, "time": true, "bytes": true,
+	}
+	return stdPkgs[pkg]
 }

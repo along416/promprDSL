@@ -22,6 +22,7 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, stream *antlr.Commo
 		AfterCode:        []string{},
 		FixCode:          []string{},
 		BeforeNodes:      []Node{},
+		Goimport:         []goimport{},
 		outputspectNodes: OutputSpecNode{},
 	}
 	fmt.Println("Building AST...")
@@ -124,9 +125,9 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, stream *antlr.Commo
 					Annotations: annotations,
 				})
 			}
-			inNode := &InputNode{Fields: fields}
-			result.InFields = inNode.Fields
-			fmt.Println("😅inNode:", inNode)
+
+			result.InFields = append(result.InFields, fields...)
+			fmt.Println("😅inNode:", result.InFields)
 		case *parser.OutputSectionContext:
 
 			// 解析输出字段，放到 result.OutDef
@@ -243,6 +244,19 @@ func ConvertASTtoPrompt(parseTree *parser.PromptFileContext, stream *antlr.Commo
 			result.AfterCode = extractRawText(b, stream)
 		case *parser.FixSectionContext:
 			result.FixCode = extractRawText(b, stream)
+		case *parser.GoimportSectionContext:
+			var imports []goimport
+			for _, entry := range b.AllGoimportEntry() {
+				var imp goimport
+				if entry.ID() != nil {
+					imp.Alias = entry.ID().GetText()
+				} else {
+					imp.Alias = "" // 没有别名
+				}
+				imp.Path = strings.Trim(entry.STRING().GetText(), `"`)
+				imports = append(imports, imp)
+			}
+			result.Goimport = imports
 		}
 	}
 	// fix := extractCodeBlocks(stream, "fix")
@@ -448,7 +462,7 @@ func BuildModuleNode(ctx parser.IModuleContentContext) Node {
 			fmt.Println("😊SwitchStatementContext:", sub.GetText())
 			return buildSwitchNode(sub)
 		case *parser.ExprContext:
-			return &StringNode{Val: cleanQuotes(sub.GetText())}	
+			return &StringNode{Val: cleanQuotes(sub.GetText())}
 		default:
 			continue
 		}
@@ -529,7 +543,7 @@ func buildForNode(ctx parser.IForStatementContext) *ForNode {
 	}
 
 	return &ForNode{
-		ForType: forType,     // 新增字段，标明类型
+		ForType: forType, // 新增字段，标明类型
 		Init:    initStr,
 		Cond:    condStr,
 		Post:    updateStr,
@@ -543,26 +557,26 @@ func buildSwitchNode(ctx parser.ISwitchStatementContext) *SwitchNode {
 	condList := ctx.Condition()
 	cctx := condList.(*parser.ConditionContext)
 	condition := cctx.GetText()
-	
-	caseList:=ctx.AllSwitchCase()
+
+	caseList := ctx.AllSwitchCase()
 	var cases []CasePair
-	for _,caseitem := range caseList { 
+	for _, caseitem := range caseList {
 		var casest CasePair
-		casest.Case=caseitem.Condition().GetText()
-		fmt.Println("😊casestr:",casest.Case)
+		casest.Case = caseitem.Condition().GetText()
+		fmt.Println("😊casestr:", casest.Case)
 		for _, uc := range caseitem.AllUserContent() {
 			casest.Body = append(casest.Body, BuildUserNode(uc))
 		}
-		cases=append(cases, casest)
+		cases = append(cases, casest)
 	}
-	defult:=ctx.SwitchDefault()
+	defult := ctx.SwitchDefault()
 	var defultNode []Node
 	for _, uc := range defult.AllUserContent() {
 		defultNode = append(defultNode, BuildUserNode(uc))
 	}
 	return &SwitchNode{
-		Switch: condition,
-		Cases: cases,
+		Switch:  condition,
+		Cases:   cases,
 		Default: defultNode,
 	}
 }

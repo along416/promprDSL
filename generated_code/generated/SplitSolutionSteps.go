@@ -2,9 +2,10 @@
 package generated
 
 import (
+	lp "github.com/wangii/littlepool"
+	"strings"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"os"
 	"service"
 )
@@ -12,6 +13,7 @@ import (
 type SplitSolutionStepsInputContext struct {
     Question string `json:"Question"`
     Process []string `json:"Process"`
+    Add []string `json:"Add"`
 }
 
 type SplitSolutionStepsOutputContext struct {
