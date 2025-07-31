@@ -4,29 +4,28 @@
   "description": "PromptDSL syntax highlighting and support",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.102.0"
+    "vscode": "^1.75.0"
   },
+  "main": "./extension.js",
   "categories": [
     "Programming Languages"
   ],
+  
   "contributes": {
     "languages": [
       {
         "id": "promptdsl",
         "aliases": ["PromptDSL"],
-        "extensions": [".prompt"],
+        "extensions": [".pdsl"],
         "configuration": "./language-configuration.json"
       }
     ],
-  "grammars": [
-    {
-      "language": "promptdsl",
-      "scopeName": "source.promptdsl",
-      "path": "./syntaxes/promptdsl.tmLanguage.json"
-    }
-  ],
-  "activationEvents": [
-    "onLanguage:promptdsl"
-  ]
+    "grammars": [
+      {
+        "language": "promptdsl",
+        "scopeName": "source.promptdsl",
+        "path": "./syntaxes/promptdsl.tmLanguage.json"
+      }
+    ]
   }
 }
