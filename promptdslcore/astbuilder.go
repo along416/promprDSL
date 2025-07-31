@@ -587,8 +587,8 @@ func buildExpr(exprCtx parser.IExprContext) *Expr {
 			paramName := getParamName(param)
 			return &Expr{Leaf: &paramName}
 		}
-		if str := expr.STRING(); str != nil {
-			s := strings.Trim(str.GetText(), "\"")
+		if str := expr.DASH_STRING(); str != nil {
+			s := strings.Trim(str.GetText(), "-")
 			return &Expr{Leaf: &s}
 		}
 		if num := expr.NUMBER(); num != nil {
@@ -604,7 +604,13 @@ func buildExpr(exprCtx parser.IExprContext) *Expr {
 }
 
 func cleanQuotes(s string) string {
-	return strings.Trim(s, "\"")
+	// 去掉开头和结尾的双引号（如果真的是配对的）
+	if strings.HasPrefix(s, "\"") && strings.HasSuffix(s, "\"") {
+		s = strings.TrimPrefix(s, "\"")
+		s = strings.TrimSuffix(s, "\"")
+	}
+	s = strings.TrimPrefix(s, "-")
+	return s
 }
 
 func getParamName(p parser.IParamPathContext) string {

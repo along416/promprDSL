@@ -158,6 +158,7 @@ dslCallExpr
 expr
     : expr op=(PLUS | MINUS | STAR | SLASH | MOD) expr   // 二元运算
     | paramPath
+    | DASH_STRING
     | STRING
     | NUMBER
     | BOOL
@@ -169,7 +170,8 @@ fieldDef
     ;
 
 textLine
-    : STRING
+    : DASH_STRING
+    | STRING
     | LINE_COMMENT
     | paramPath
     // | RAW_TEXT_LINE
@@ -229,7 +231,8 @@ type
     ;
 
 value
-    : STRING
+    : DASH_STRING
+    | STRING
     | NUMBER
     | BOOL
     ;
