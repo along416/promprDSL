@@ -11,21 +11,24 @@ import (
 
 	// "net/http"
 	"os"
-	"promptdslcore" // 根据实际模块路径改写
+	"promptdslcore" 
+	"promptdslcore/config"
 )
 
 // var llm *service.LLMClient
 func main() {
+	config.InitConfig()
 	// 打开或创建日志文件
-	logFile, err := os.OpenFile("llm.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("无法打开日志文件: %v", err)
-	}
-	// 设置日志输出到文件
-	log.SetOutput(logFile)
-	// 可选: 添加时间戳、文件名等信息
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-
+	// logFile, err := os.OpenFile("llm.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	// if err != nil {
+	// 	log.Fatalf("无法打开日志文件: %v", err)
+	// }
+	// // 设置日志输出到文件
+	// log.SetOutput(logFile)
+	// // 可选: 添加时间戳、文件名等信息
+	// log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	config.InitLogger()
+	// log.Println()
 	// 指定 prompt 文件夹路径
 	promptDir := "../promptdslcore/prompts_copy"
 	entries, err := os.ReadDir(promptDir)
@@ -38,8 +41,8 @@ func main() {
 		log.Println("开始处理文件：", filename)
 		// 只处理 .prompt 文件
 		fmt.Println("entry.Name():", filename)
-		if !strings.HasSuffix(filename, ".prompt") {
-			log.Println("不是 .prompt 文件")
+		if !strings.HasSuffix(filename, ".pdsl") {
+			log.Println("不是 .pdsl 文件")
 			continue
 		}
 		// 拼接完整路径
@@ -51,7 +54,7 @@ func main() {
 		}
 		
 		promptfileContentstr := string(promptfileContent)
-		nameWithoutExt := strings.TrimSuffix(filename, ".prompt")
+		nameWithoutExt := strings.TrimSuffix(filename, ".pdsl")
 		
 		prompt, err := promptdslcore.RunPromptDSL(promptfileContentstr, nameWithoutExt)
 		if err != nil {
