@@ -2,23 +2,29 @@
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "PromptDSL",
   "scopeName": "source.promptdsl",
-  "patterns": [
+   "patterns": [
+    {
+      "name": "entity.name.type",
+      "match": "-[^\\r\\n]+"
+    },
+    {
+  "name": "constant.numeric.decimal.go",
+  "match": "-?\\b\\d+(\\.\\d+)?\\b"
+},
+
+    {
+      "name": "keyword.other.module.promptdsl",
+      "match": "\\b(prompt|in|output|sys|user|fix|after|goimport|before|schema|parse|jsonfix|markdown)\\b"
+    },
     {
       "name": "keyword.control.promptdsl",
-      "match": "\\b(input|output|sys|system|user|fix|after|outputsepc|if|else|for|while|return)\\b"
+      "match": "\\b(if|else|for|switch|case|default|break|continue|return)\\b"
     },
     {
-      "name": "entity.name.type.promptdsl",
-      "match": "\\b(SplitSolutionSteps|List|Conditions|KnowledgePoint|ProcessResult|Type|Urls|OCRText)\\b"
+      "name": "entity.name.function",
+      "match": "@[a-zA-Z_][a-zA-Z0-9_]*"
     },
-    {
-      "name": "variable.other.promptdsl",
-      "match": "\\b(question|sys_role|sys_expertise|in|media|regex|match|response|sub|index)\\b"
-    },
-    {
-      "name": "keyword.operator.promptdsl",
-      "match": "==|=|\\{|\\}|\\(|\\)|\\[|\\]|;|,|\\.|!|\\+|-|\\*|\\/|%"
-    },
+
     {
       "name": "string.quoted.double.promptdsl",
       "begin": "\"",
@@ -30,9 +36,33 @@
         }
       ]
     },
+
+    {
+      "name": "constant.language.boolean.promptdsl",
+      "match": "\\b(true|false)\\b"
+    },
     {
       "name": "comment.line.double-slash.promptdsl",
       "match": "//.*$"
+    },
+    {
+      "name": "comment.block.promptdsl",
+      "begin": "/\\*",
+      "end": "\\*/"
+    },
+    {
+      "name": "punctuation.bracket.promptdsl",
+      "match": "[\\{\\}\\(\\)\\[\\]]"
+    },
+    {
+      "name": "keyword.operator.promptdsl",
+      "match": "\\+\\+|--|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|<|>|=|\\-|\\+|\\*|\\/|%"
+    },
+    {
+      "name": "variable.other.promptdsl",
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
     }
-  ]
+  ],
+  "repository": {},
+  "scopeName": "source.promptdsl"
 }
